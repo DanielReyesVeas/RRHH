@@ -1,0 +1,161 @@
+
+<script type="text/ng-template" id="customTemplate.html">
+    <a style="cursor: pointer;">
+        <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+    </a>
+</script>
+<div class="modal-header">
+    <h3 class="modal-title">Administración de Usuarios</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="form" novalidate>
+        <div class="panel panel-default">
+            <div class="panel-heading">Datos del Usuario</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('rut') || erroresDatos.rut  }">
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">Rut:</label>
+                            <div class="col-sm-5">
+                                <input class="form-control form-white" type="text" name="rut" rut="objeto.rut" ng-model="objeto.rut" maxlength="15" placeholder="11.111.111-1" required />
+                                <span class="help-block" ng-show="errores('rut')">
+                                    Obligatorio!
+                                </span>
+                            </div>
+                            <span class="text-danger" ng-if="erroresDatos.rut"><b>{{ erroresDatos.rut[0] }}</b></span>
+                        </div>
+
+                        <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('nombres') }">
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">Nombres:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control form-white" type="text" name="nombres" ng-model="objeto.nombres" placeholder="Nombres" required >
+                                <span class="help-block" ng-show="errores('nombres')">
+                                    Obligatorio!
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('paterno') }">
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">Apellido Paterno:</label>
+                            <div class="col-sm-7">
+                                <input class="form-control form-white" type="text" name="paterno" ng-model="objeto.paterno" placeholder="Apellido Paterno" required >
+                                <span class="help-block" ng-show="errores('paterno')">
+                                    Obligatorio!
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('materno') }">
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">Apellido Materno</label>
+                            <div class="col-sm-7">
+                                <input class="form-control form-white" type="text" name="materno" ng-model="objeto.materno" placeholder="Apellido Materno" required >
+                                <span class="help-block" ng-show="errores('materno')">
+                                    Obligatorio!
+                                </span>
+                            </div>
+                        </div>
+                     
+
+
+                        <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('email') }">
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">E-mail:</label>
+                            <div class="col-sm-7">
+                                <input class="form-control form-white" name="email" type="text" ng-model="objeto.email" placeholder="correo@correo.cl" required >
+                                <span class="help-block" ng-show="errores('email')">
+                                    Obligatorio!
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-md">
+                            <label class="col-sm-4 control-label">Teléfono:</label>
+                            <div class="col-sm-6">
+                                <input class="form-control form-white" type="text" ng-model="objeto.telefono" placeholder="Teléfono o Anexo">
+                            </div>
+                        </div>
+                        <div class="form-group form-group-md">
+                            <label class="col-sm-4 control-label">Celular:</label>
+                            <div class="col-sm-6">
+                                <input class="form-control form-white" type="text" ng-model="objeto.celular" placeholder="Celular">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="text-align:center !important;">
+                        <div flow-init flow-name="imagen.flow" flow-file-added="obtenerImagenB64()" style="text-align:center !important;">
+                            <img ng-if="!$flow.files[0]" ng-src="{{ fotografia }}" style="max-width:150px; max-height:150px;" />
+                            <img ng-show="!creandoImagen" flow-img="$flow.files[0]" style="max-width:150px; max-height:150px;" /><br/>
+                            <progressbar ng-show="creandoImagen" class="progress-striped active" value="valorPB" type="success"></progressbar>
+                            <p style="text-align:center; margin-top:20px;">
+                                <button class="btn btn-xs btn-success" flow-btn flow-attrs="{accept:'image/*'}">Cambiar Imagen</button>
+                            </p>
+                        </div>
+
+                        <div flow-init flow-name="imagenFirma.flow" flow-file-added="obtenerImagenFirmaB64()" style="text-align:center !important;">
+                            <img ng-if="!$flow.files[0]" ng-src="{{ firma }}" style="max-width:150px; max-height:100px;" />
+                            <img ng-show="!creandoImagenFirma" flow-img="$flow.files[0]" style="max-width:150px; max-height:100px;" /><br/>
+                            <progressbar ng-show="creandoImagenFirma" class="progress-striped active" value="valorPBFirma" type="success"></progressbar>
+                            <p style="text-align:center; margin-top:20px;">
+                                <button class="btn btn-xs btn-primary" flow-btn flow-attrs="{accept:'image/*'}">Cambiar Firma</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Datos de Acceso</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group ">
+                            <label for="perfil" class="col-sm-4 control-label">
+                                Permisos de Acceso
+                            </label>
+                            <div class="col-sm-6">
+                                <button class="btn btn-primary btn-sm" ng-click="openPermisosUsuario()">
+                                    <i class="fa fa-wrench"></i> Administrar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('usuario') || erroresDatos.usuario }">
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">Nombre de Usuario:</label>
+                            <div class="col-sm-5">
+                                <input class="form-control form-white" type="text" name="usuario" ng-model="objeto.usuario" placeholder="Usuario" required >
+                                <span class="help-block" ng-show="errores('usuario')">
+                                    Obligatorio!
+                                </span>
+                            </div>
+                            <span class="text-danger" ng-if="erroresDatos.usuario"><b>{{ erroresDatos.usuario[0] }}</b></span>
+                        </div>
+                        <div ng-if="objeto.sid" class="form-group form-group-md" >
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">Modificar Contraseña:</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" ng-click="" id="reescribir" ng-model="objeto.crearPassword" />
+                                <label for="reescribir">
+                                    Reescribir la Contraseña
+                                </label>
+                            </div>
+                        </div>
+                        <div ng-if="objeto.crearPassword" class="form-group form-group-md required" ng-class="{ 'has-error': errores('contrasena') }">
+                            <label class="col-sm-4 control-label" for="formGroupInputLarge">
+                                <span ng-if="objeto.sid">Nueva </span>
+                                Contraseña:</label>
+                            <div class="col-sm-5">
+                                <input class="form-control form-white" type="text" name="contrasena" ng-model="objeto.contrasena" placeholder="Password" required >
+                                <span class="help-block" ng-show="errores('contrasena')">
+                                    Obligatorio!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="guardar()">Guardar</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancelar</button>
+</div>

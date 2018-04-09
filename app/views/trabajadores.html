@@ -1,0 +1,115 @@
+<div class="box">
+  <div class="row">
+    <h2> <i class="fa fa-user"> </i> Trabajadores</h2>
+    
+    <div class="column col-sm-12" ng-if="cargado">  
+        
+      <div class="col-sm-12">
+        <a ng-click="open()" ng-if="accesos.crear && accesos.abierto" href="" class="btn btn-primary btn-xs pull-right"><i class="fa fa-user-plus"></i> Nuevo Trabajador</a>
+      </div>
+
+      <div class="col-sm-12" style="margin-bottom: 10px;" ng-if="accesos.crear && accesos.abierto">        
+        <div class="btn-group pull-right">
+          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> <i class="fa fa-table"></i>
+          Planilla de Importación <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-sm">
+            <!--<li><a href="{{ constantes.URL }}/planillas/Planilla-Trabajadores.xlsx" download="Planilla-Trabajadores.xlsx"><i class="fa fa-download"></i> Descargar</a></li>-->
+            <li><a target="_self" id="descargarPlanillaTrabajadores" href="{{ constantes.URL }}trabajadores/planilla-trabajadores/descargar" download="trabajadores.xls"><i class="fa fa-download"></i> Descargar planilla</a></li>
+            <li><a href="javascript:void(0);" ng-click="importarPlanilla()"><i class="fa fa-upload"></i> Subir</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-sm-12" style="margin-bottom: 20px;">
+        <a ng-click="plantillasContratos()" ng-if="accesos.crear && accesos.abierto" href="" class="btn btn-primary btn-xs pull-right"><i class="fa fa-cog"></i> Gestión Plantillas de Contratos</a>
+      </div>
+
+      <div class="col-sm-12" style="margin-bottom: 20px;" ng-class="{ 'hidden' : datos.length==0}"> 
+        <div class="form-group">
+          <label for="orden" class="control-label col-md-1">
+            Ordenar:
+          </label>
+          <div class="col-md-3">
+            <select ng-model="orden" id="orden" ng-init="orden='apellidos'" class="form-control form-white" ng-change="reverse = false">
+              <option value="rut">RUT</option>
+              <option value="apellidos">Nombre</option>
+              <option value="cargoOrden">Cargo</option>
+              <option value="estado">Estado</option>
+              <option value="contratoOrden">Contrato</option>
+              <option value="fechaIngreso">Ingreso</option>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <a ng-click="reverse=!reverse" ng-init="reverse=false" href="">
+              <i ng-class="{ 'hidden' : reverse }" class="fa fa-arrow-down"></i>
+              <i ng-class="{ 'hidden' : !reverse }" class="fa fa-arrow-up"></i></a>
+          </div>
+          <label for="filtro" class="col-md-1 control-label" >Filtrar:</label>
+          <div class="col-md-4">
+            <input id="filtro" type="text"  class="form-control form-white form-white" ng-model="filtro">
+          </div>
+        </div>
+      </div>      
+
+      <div class="text-center" ng-if="datos.length<=0" style="margin-top: 40px;" >
+        <i>No se han ingresado Trabajadores</i>
+      </div>
+
+      <div class="col-sm-12">
+        <table class="table table-striped table-hover" ng-if="datos.length>0">
+          <thead>
+            <tr>    
+              <th class="col-sm-1">#</th>
+              <th class="col-sm-1">RUT</th>
+              <th class="col-sm-2">Nombre</th>
+              <th class="col-sm-2">Cargo</th>
+              <th class="col-sm-1">Fecha Ingreso</th>
+              <th class="col-sm-1">Contrato</th>
+              <th class="col-sm-1">Sueldo Base</th>
+              <th class="col-sm-1">Estado</th>
+              <th class="col-sm-1"></th>
+              <th class="col-sm-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="trabajador in datos | orderObjectBy:orden : reverse | filter : filtro">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ trabajador.rutFormato }}</td>
+              <td>{{ trabajador.nombreCompleto }}</td>
+              <td>{{ trabajador.cargo.nombre }}</td>
+              <td>{{ trabajador.fechaIngreso | date : "dd-MM-y" }}</td>
+              <td>{{ trabajador.tipoContrato.nombre }}</td>
+              <td>
+                <span ng-if="trabajador.monedaSueldo==='$' && trabajador.sueldoBase>0">${{ trabajador.sueldoBase | currency :"":0 }}</span>
+                <span ng-if="trabajador.monedaSueldo!=='$' && trabajador.sueldoBase>0">{{ trabajador.sueldoBase }} {{ trabajador.monedaSueldo }}</span>
+              </td>
+              <td>
+                <span class="text-success" ng-if="trabajador.estado==='Ingresado'">{{ trabajador.estado }}</span>
+                <span class="text-danger" ng-if="trabajador.estado==='Finiquitado'">{{ trabajador.estado }}</span>
+                <span class="text-primary" ng-if="trabajador.estado==='En Creación'">{{ trabajador.estado }}</span>
+              </td>
+              <td>
+                <a href="" ng-click="detalle(trabajador)" ng-if="trabajador.estado!=='En Creación' && false"><i class="fa fa-search" uib-tooltip-html="toolTipDetalles(trabajador.nombreCompleto)"></i></a>
+                <a href="" ng-click="editar(trabajador)" ng-if="accesos.editar && accesos.abierto"><i class="fa fa-pencil" uib-tooltip-html="toolTipEdicion(trabajador.nombreCompleto)"></i></a>
+                <a href="" ng-if="accesos.eliminar && accesos.abierto" confirmation-click="eliminar(trabajador);" confirmation-needed="El trabajador <b>{{trabajador.rutFormato}}</b> será eliminado del sistema. <br />De igual forma todos sus datos ingresados como haberes, descuentos, documentos, etc. <br />¿Desea continuar?" uib-tooltip-html="toolTipEliminar(trabajador.nombreCompleto)"><i class="fa fa-trash"></i></a>                
+              </td>
+              <td>
+                <a href="" ng-click="fichas(trabajador)" ng-if="accesos.editar && accesos.abierto && trabajador.estado !=='En Creación'"><i class="fa fa-id-card-o" uib-tooltip-html="toolTipFichas(trabajador.nombreCompleto)"></i></a>
+                <a href="" ng-click="contratos(trabajador)" ng-if="trabajador.estado !=='En Creación'"><i class="fa fa-file-text" uib-tooltip-html="toolTipContratos(trabajador.nombreCompleto)"></i></a>                
+                <!--<div class="btn-group" id="botonNoOcultar" ng-if="accesos.crear">
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="noOcultar()"><i class="fa fa-file-text"></i></a>
+                  <ul class="dropdown-menu pull-right">
+                    <li><a href="javascript:void(0);" ng-click="generarContrato(trabajador)">Generar Contrato</a></li>
+                    <li><a href="javascript:void(0);" ng-model-rejected="rejFiles" ng-model="trabajador.contrato" ngf-max-size="5MB" ngf-select>Adjuntar Contrato</a></li>
+                  </ul>
+                </div>-->
+              </td>
+            </tr>
+          </tbody>
+        </table>    
+      </div>
+
+    </div>
+  </div>  
+</div>

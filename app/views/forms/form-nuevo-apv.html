@@ -1,0 +1,139 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="apvForm" name="apvForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ encabezado }}</div>
+
+      <div class="panel-body" style="margin-bottom: 40px;">
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-if="!apv.sid">
+          <div class="form-group required">          
+            <label class="col-sm-3 control-label">Nombre:</label>
+            <div class="col-sm-7">
+              <ul class="dropdown-menu">
+                <li ng-repeat="match in matches track by $index" id="{{::match.id}}">
+                </li>
+              </ul>
+              <input type="text" ng-model="apv.trabajador" placeholder="Buscar trabajador" typeahead-editable="false" uib-typeahead="trab as trab.nombreCompleto for trab in trabajadores | filter:{nombreCompleto:$viewValue}" class="form-control" typeahead-show-hint="true" typeahead-min-length="0" required />
+            </div>           
+          </div>
+        </div> 
+
+        <div class="col-sm-12" style="margin: 0; padding: 0" ng-if="apv.trabajador || apv.sid">
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-3 control-label">Institución:</label>
+              <div class="col-sm-8">
+                <select class="form-control form-white col-sm-3" ng-model="apv.afp" ng-options="afp as afp.nombre for afp in afps" required> 
+                  <option value="">-- Seleccione una AFP --</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-3 control-label">Forma de Pago:</label>
+              <div class="col-sm-4">
+                <select class="form-control form-white" ng-model="apv.formaPago" name="formaPago" ng-options="formaPago as formaPago.alias for formaPago in formasPago" required>  
+                </select> 
+              </div>               
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-3 control-label">Régimen:</label>
+              <div class="col-sm-3">
+                <select class="form-control form-white" ng-model="apv.regimen" name="regimenApv" ng-options="regimen for regimen in regimenes" required> 
+                </select>
+              </div>
+            </div> 
+          </div>         
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-3 control-label">Monto:</label>
+              <div class="col-sm-9" style="padding: 0;">
+                <div class="col-sm-4">
+                  <select class="form-control form-white" ng-model="apv.moneda" name="monedaApv" ng-change="cambiarMonedaAPV()" ng-options="mon.nombre as mon.nombre for mon in monedas" required> 
+                  </select>
+                </div>                            
+                <div class="col-sm-6" ng-show="apv.moneda==='$'" style="padding-left: 0;">
+                  <input ng-model="apv.monto" class="form-control form-white" name="montoApv" type="text" placeholder="ingrese el monto en pesos" required>
+                </div>
+                <div class="col-sm-6" ng-show="apv.moneda==='UF'" style="padding-left: 0;">
+                  <input ng-model="apv.monto" class="form-control form-white" name="montoApv" type="text" placeholder="ingrese el monto en UF" required>
+                </div>
+                <div class="col-sm-6" ng-show="apv.moneda==='UTM'" style="padding-left: 0;">
+                  <input ng-model="apv.monto" class="form-control form-white" name="montoApv" type="text" placeholder="ingrese el monto en UTM" required>
+                </div>              
+                <div class="col-sm-2" style="padding-left: 10px;" ng-class="{ 'hidden' : apv.moneda==='$' || !apv.monto }">
+                  ${{ convertir(apv.monto, apv.moneda) | currency:'':0  }}
+                </div> 
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+              <label class="col-sm-3 control-label">N° de Contrato:</label>
+              <div class="col-sm-6">
+                <input ng-model="apv.numeroContrato" class="form-control form-white" type="text" placeholder="ingrese el n° de contrato" >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+              <label class="col-sm-3 control-label">Fecha de Pago desde:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="apv.fechaPagoDesde" is-open="popupFechaPagoDesde.opened" datepicker-options="dateOptionsMes" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaPagoDesde()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+              <label class="col-sm-3 control-label">Fecha de Pago hasta:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="apv.fechaPagoHasta" is-open="popupFechaPagoHasta.opened" datepicker-options="dateOptionsMes" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaPagoHasta()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-if="!isEdit" ng-click="guardar(apv)" ng-disabled="apvForm.$invalid">Guardar</button>
+  <button class="btn btn-primary" type="button" ng-if="isEdit" ng-click="guardar(apv)" ng-disabled="apvForm.$invalid">Modificar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+</div>

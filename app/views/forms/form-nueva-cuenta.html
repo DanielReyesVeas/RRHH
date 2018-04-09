@@ -1,0 +1,50 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ tituloFormulario }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="cuentaForm" name="cuentaForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ encabezado }}</div>
+
+      <div class="panel-body" style="margin-bottom: 40px;">        
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required" ng-class="{ 'has-error': erroresDatos.codigo[0]  }">
+            <label class="col-sm-4 control-label">Código:</label>
+            <div class="col-sm-6">
+              <input ng-model="cuenta.codigo" class="form-control form-white" type="text" placeholder="ingrese el código" required >
+              <span class="text-danger" ng-if="erroresDatos.codigo"><b>{{ erroresDatos.codigo[0] }}</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">
+            <label class="col-sm-4 control-label">Nombre:</label>
+            <div class="col-sm-6">
+              <input ng-model="cuenta.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre" required >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">
+            <label class="col-sm-4 control-label">Comportamiento:</label>
+            <div class="col-sm-5">
+              <select class="form-control form-white" ng-model="cuenta.comportamiento" ng-options="comportamiento as comportamiento.nombre for comportamiento in comportamientos" required>  
+              </select> 
+            </div>
+          </div>
+        </div>  
+
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="guardar(cuenta)" ng-disabled="cuentaForm.$invalid">Guardar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+</div>

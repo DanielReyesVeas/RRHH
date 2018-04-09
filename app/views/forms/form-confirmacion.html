@@ -1,0 +1,28 @@
+<div>
+  <div class="modal-header dialog-header-confirm">
+    <button ng-if="isCerrar" type="button" class="close" ng-click="$dismiss()">
+      <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title" ng-bind-html="titulo"></h4>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-2 text-center text-primary" style="font-size:27px;">
+        <i ng-if="isQuestion" class="fa fa-question-circle"></i>
+        <i ng-if="isExclamation" class="fa fa-exclamation-circle"></i>
+      </div>
+      <div class="col-sm-10">
+        <p ng-bind-html="mensaje"></p>
+        <div ng-repeat="error in errores">
+          <p class="text-danger">- {{ error.mes }}</p>
+        </div>
+        <p ng-bind-html="mensaje2"></p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-if="isOK" ng-click="aceptar()">{{ ok }}</button>
+    <button class="btn btn-primary" ng-if="isOK2" ng-click="aceptar2()">{{ ok2 }}</button>
+    <button class="btn btn-warning" ng-click="cerrar()" >{{ cancel }}</button>
+  </div>
+</div>

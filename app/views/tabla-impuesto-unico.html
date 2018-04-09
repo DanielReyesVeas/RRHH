@@ -1,0 +1,200 @@
+<div class="box">
+  <div class="row">
+    <div class="column col-sm-12">
+
+      <h2> <i class="fa fa-calculator"> </i> Tabla de Impuesto Único</h2>
+      <div class="col-sm-12" ng-if="accesos.ver">
+        <button ng-click="cambiarPesos()" type="button" class="btn btn-primary btn-xs pull-right" ng-class="{ 'hidden' : !isPesos }"><b>UTM</b></button>
+        <button ng-click="cambiarPesos()" type="button" class="btn btn-primary btn-xs pull-right" ng-class="{ 'hidden' : isPesos }"><i class="fa fa-usd"></i></button>
+      </div>
+      <div class="col-sm-12" ng-if="accesos.crear && accesos.abierto || accesos.editar && accesos.abierto">
+        <button confirmation-click="editar()" confirmation-needed="{{ advertencia }}" type="button" class="btn btn-primary btn-xs pull-right" ng-class="{ 'hidden' : isEdit }"><i class="fa fa-lock"></i> Editar</button>
+        <button ng-click="cancelar()" type="button" class="btn btn-primary btn-xs pull-right" ng-class="{ 'hidden' : !isEdit }">Cancelar</button>
+        <button confirmation-click="guardar()" confirmation-needed="{{ confirmacion }}" type="button" class="btn btn-primary btn-xs pull-right" ng-class="{ 'hidden' : !isEdit }"><i class="fa fa-unlock-alt"></i> Guardar</button>
+      </div>
+
+      <!--<button confirmation-click="agregarFila()" confirmation-needed="{{ confirmacion }}" type="button" class="btn btn-primary btn-xs pull-left" ng-class="{ 'hidden' : !isEdit || !isFila() }"><i class="fa fa-plus"></i> Fila</button>
+      <input class="form-control form-white" type="text" name="rut" rut="trabajador.rut" ng-model="trabajador.rut" placeholder="password" required />
+      <input name="pass" ng-model="pass" class="form-control form-white input-lg" id="pass" ng-keyup="hide($event)" placeholder="Contraseña" required type="text">-->
+      
+      <div class="container text-center" ng-if="tabla.length==0 && cargado" style="margin-top: 60px;" >
+        <i>Aún no se han ingresado datos</i>
+      </div>
+
+      <div class="col-sm-10 col-sm-offset-1" ng-if="tabla.length>0 && cargado" style="margin-top: 20px;">
+        <table class="table table-striped table-hover"> 
+          <thead>
+            <tr>    
+              <th class="col-sm-2">N° de Tramos</th>
+              <th class="col-sm-3">Renta Imponible Desde</th>
+              <th class="col-sm-3">Renta Imponible Hasta</th>
+              <th class="col-sm-1">Factor</th>
+              <th class="col-sm-3">Cantidad a Rebajar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="dato in tabla">
+              <td>{{ dato.tramo }}</td>
+              <td>
+                <span ng-if="!isEdit && isPesos && dato.imponibleMensualDesde!=0">${{ (convertirUTM(dato.imponibleMensualDesde) + 0.01) | number:2 }}</span>
+                <span ng-if="!isEdit && isPesos && dato.imponibleMensualDesde==0">-</span>
+                <span ng-if="!isEdit && !isPesos">{{ dato.imponibleMensualDesde | number }} UTM</span>
+                <span ng-if="isEdit"><input type="text" ng-model="inputDesde[$index]" style="width: 50px;"> UTM</span> 
+              </td>
+              <td> 
+                <span ng-if="dato.imponibleMensualHasta<999.99 && !isEdit && isPesos">${{ convertirUTM(dato.imponibleMensualHasta) | number:2 }}</span>
+                <span ng-if="dato.imponibleMensualHasta==99999.99 && !isEdit && isPesos">Y más</span>
+
+                <span ng-if="dato.imponibleMensualHasta<999.99 && !isEdit && !isPesos">{{ dato.imponibleMensualHasta | number }} UTM</span>
+                <span ng-if="dato.imponibleMensualHasta==99999.99 && !isEdit && !isPesos">Y más</span>
+                
+                <span ng-if="isEdit && dato.imponibleMensualHasta==999.99">Y más UTM</span>
+                <span ng-if="isEdit && dato.imponibleMensualHasta<999.99"><input type="text" ng-model="inputHasta[$index]" style="width: 50px;"> UTM</span> 
+              </td>
+              <td>
+                <span ng-if="!isEdit">{{ dato.factor | number }}%</span>
+                <input type="text" ng-model="inputFactor[$index]" ng-if="isEdit" style="width: 50px;">
+              </td>
+              <td>
+                <span ng-if="!isEdit && isPesos">${{ convertirUTM(dato.cantidadARebajar) | number:2 }}</span>
+                <span ng-if="!isEdit && !isPesos">{{ dato.cantidadARebajar | number }} UTM</span>
+                <span ng-if="isEdit"><input type="text" ng-model="inputCantidad[$index]" style="width: 50px;"> UTM</span>                 
+              </td>
+            </tr>
+          </tbody>          
+
+          <!--<tbody>
+            <tr ng-mouseenter="hoveringTramo1=true" ng-mouseleave="hoveringTramo1=false">
+              <td rowspan="7">RIGE A CONTAR DEL 01.01.2017, SEGÚN N° 30 DEL ARTÍCULO 1° LEY N° 20.780/2014 E INCISO 1° ARTÍCULO 1° TRANSITORIO DE DICHA LEY.</td>
+              <td>1</td>
+              <td ng-show="!isTramo1">{{ rentaImponible1Tramo1 }} UTM {{ rentaImponible2Tramo1 }} UTM</td>
+              <td ng-show="isTramo1"><input type="text" ng-model="tramo.rentaImponible1Tramo1" ng-show="isTramo1" style="width: 60px;"> UTM <input type="text" ng-model="tramo.rentaImponible2Tramo1" ng-show="isTramo1" style="width: 60px;"> UTM</td>
+              <td ng-show="!isTramo1">{{ factorTramo1 }}%</td>
+              <td ng-show="isTramo1"><input type="text" ng-model="tramo.factorTramo1" ng-show="isTramo1" style="width: 60px;">%</td>
+              <td ng-show="!isTramo1">{{ cantidadTramo1 }} UTM</td>
+              <td ng-show="isTramo1"><input type="text" ng-model="tramo.cantidadTramo1" ng-show="isTramo1" style="width: 60px;"> UTM</td>
+              <td ng-class="{ 'hidden' : hoveringTramo1 }">&nbsp;</td>
+              <td>
+                <button ng-class="{ 'hidden' : !hoveringTramo1 || isTramo1 }" class="btn btn-sm btn-primary" ng-click="editarTramo1()">
+                  Editar
+                </button>
+                <button ng-class="{ 'hidden' : !hoveringTramo1 || !isTramo1 }" class="btn btn-sm btn-success" ng-click="editarTramo1()">
+                  Listo
+                </button>
+              </td>
+            </tr>
+            <tr ng-mouseenter="hoveringTramo2=true" ng-mouseleave="hoveringTramo2=false">
+              <td>2</td>
+              <td ng-show="!isTramo2">{{ rentaImponible1Tramo2 }} UTM {{ rentaImponible2Tramo2 }} UTM</td>
+              <td ng-show="isTramo2"><input type="text" ng-model="tramo.rentaImponible1Tramo2" ng-show="isTramo2" style="width: 60px;"> UTM <input type="text" ng-model="tramo.rentaImponible2Tramo2" ng-show="isTramo2" style="width: 60px;"> UTM</td>
+              <td ng-show="!isTramo2">{{ factorTramo2 }}%</td>
+              <td ng-show="isTramo2"><input type="text" ng-model="tramo.factorTramo2" ng-show="isTramo2" style="width: 60px;">%</td>
+              <td ng-show="!isTramo2">{{ cantidadTramo2 }} UTM</td>
+              <td ng-show="isTramo2"><input type="text" ng-model="tramo.cantidadTramo2" ng-show="isTramo2" style="width: 60px;"> UTM</td>
+              <td ng-class="{ 'hidden' : hoveringTramo2 }">&nbsp;</td>
+              <td>
+                <button ng-class="{ 'hidden' : !hoveringTramo2 || isTramo2 }" class="btn btn-sm btn-primary" ng-click="editarTramo2()">
+                  Editar
+                </button>
+                <button ng-class="{ 'hidden' : !hoveringTramo2 || !isTramo2 }" class="btn btn-sm btn-success" ng-click="editarTramo2()">
+                  Listo
+                </button>
+              </td>
+            </tr>
+            <tr ng-mouseenter="hoveringTramo3=true" ng-mouseleave="hoveringTramo3=false">
+              <td>3</td>
+              <td ng-show="!isTramo3">{{ rentaImponible1Tramo3 }} UTM {{ rentaImponible2Tramo3 }} UTM</td>
+              <td ng-show="isTramo3"><input type="text" ng-model="tramo.rentaImponible1Tramo3" ng-show="isTramo3" style="width: 60px;"> UTM <input type="text" ng-model="tramo.rentaImponible2Tramo3" ng-show="isTramo3" style="width: 60px;"> UTM</td>
+              <td ng-show="!isTramo3">{{ factorTramo3 }}%</td>
+              <td ng-show="isTramo3"><input type="text" ng-model="tramo.factorTramo3" ng-show="isTramo3" style="width: 60px;">%</td>
+              <td ng-show="!isTramo3">{{ cantidadTramo3 }} UTM</td>
+              <td ng-show="isTramo3"><input type="text" ng-model="tramo.cantidadTramo3" ng-show="isTramo3" style="width: 60px;"> UTM</td>
+              <td ng-class="{ 'hidden' : hoveringTramo3 }">&nbsp;</td>
+              <td>
+                <button ng-class="{ 'hidden' : !hoveringTramo3 || isTramo3 }" class="btn btn-sm btn-primary" ng-click="editarTramo3()">
+                  Editar
+                </button>
+                <button ng-class="{ 'hidden' : !hoveringTramo3 || !isTramo3 }" class="btn btn-sm btn-success" ng-click="editarTramo3()">
+                  Listo
+                </button>
+              </td>
+            </tr>
+            <tr ng-mouseenter="hoveringTramo4=true" ng-mouseleave="hoveringTramo4=false">
+              <td>4</td>
+              <td ng-show="!isTramo4">{{ rentaImponible1Tramo4 }} UTM {{ rentaImponible2Tramo4 }} UTM</td>
+              <td ng-show="isTramo4"><input type="text" ng-model="tramo.rentaImponible1Tramo4" ng-show="isTramo4" style="width: 60px;"> UTM <input type="text" ng-model="tramo.rentaImponible2Tramo4" ng-show="isTramo4" style="width: 60px;"> UTM</td>
+              <td ng-show="!isTramo4">{{ factorTramo4 }}%</td>
+              <td ng-show="isTramo4"><input type="text" ng-model="tramo.factorTramo4" ng-show="isTramo4" style="width: 60px;">%</td>
+              <td ng-show="!isTramo4">{{ cantidadTramo4 }} UTM</td>
+              <td ng-show="isTramo4"><input type="text" ng-model="tramo.cantidadTramo4" ng-show="isTramo4" style="width: 60px;"> UTM</td>
+              <td ng-class="{ 'hidden' : hoveringTramo4 }">&nbsp;</td>
+              <td>
+                <button ng-class="{ 'hidden' : !hoveringTramo4 || isTramo4 }" class="btn btn-sm btn-primary" ng-click="editarTramo4()">
+                  Editar
+                </button>
+                <button ng-class="{ 'hidden' : !hoveringTramo4 || !isTramo4 }" class="btn btn-sm btn-success" ng-click="editarTramo4()">
+                  Listo
+                </button>
+              </td>
+            </tr>
+            <tr ng-mouseenter="hoveringTramo5=true" ng-mouseleave="hoveringTramo5=false">
+              <td>5</td>
+              <td ng-show="!isTramo5">{{ rentaImponible1Tramo5 }} UTM {{ rentaImponible2Tramo5 }} UTM</td>
+              <td ng-show="isTramo5"><input type="text" ng-model="tramo.rentaImponible1Tramo5" ng-show="isTramo5" style="width: 60px;"> UTM <input type="text" ng-model="tramo.rentaImponible2Tramo5" ng-show="isTramo5" style="width: 60px;"> UTM</td>
+              <td ng-show="!isTramo5">{{ factorTramo5 }}%</td>
+              <td ng-show="isTramo5"><input type="text" ng-model="tramo.factorTramo5" ng-show="isTramo5" style="width: 60px;">%</td>
+              <td ng-show="!isTramo5">{{ cantidadTramo5 }} UTM</td>
+              <td ng-show="isTramo5"><input type="text" ng-model="tramo.cantidadTramo5" ng-show="isTramo5" style="width: 60px;"> UTM</td>
+              <td ng-class="{ 'hidden' : hoveringTramo5 }">&nbsp;</td>
+              <td>
+                <button ng-class="{ 'hidden' : !hoveringTramo5 || isTramo5 }" class="btn btn-sm btn-primary" ng-click="editarTramo5()">
+                  Editar
+                </button>
+                <button ng-class="{ 'hidden' : !hoveringTramo5 || !isTramo5 }" class="btn btn-sm btn-success" ng-click="editarTramo5()">
+                  Listo
+                </button>
+              </td>
+            </tr>
+            <tr ng-mouseenter="hoveringTramo6=true" ng-mouseleave="hoveringTramo6=false">
+              <td>6</td>
+              <td ng-show="!isTramo6">{{ rentaImponible1Tramo6 }} UTM {{ rentaImponible2Tramo6 }} UTM</td>
+              <td ng-show="isTramo6"><input type="text" ng-model="tramo.rentaImponible1Tramo6" ng-show="isTramo6" style="width: 60px;"> UTM <input type="text" ng-model="tramo.rentaImponible2Tramo6" ng-show="isTramo6" style="width: 60px;"> UTM</td>
+              <td ng-show="!isTramo6">{{ factorTramo6 }}%</td>
+              <td ng-show="isTramo6"><input type="text" ng-model="tramo.factorTramo6" ng-show="isTramo6" style="width: 60px;">%</td>
+              <td ng-show="!isTramo6">{{ cantidadTramo6 }} UTM</td>
+              <td ng-show="isTramo6"><input type="text" ng-model="tramo.cantidadTramo6" ng-show="isTramo6" style="width: 60px;"> UTM</td>
+              <td ng-class="{ 'hidden' : hoveringTramo6 }">&nbsp;</td>
+              <td>
+                <button ng-class="{ 'hidden' : !hoveringTramo6 || isTramo6 }" class="btn btn-sm btn-primary" ng-click="editarTramo6()">
+                  Editar
+                </button>
+                <button ng-class="{ 'hidden' : !hoveringTramo6 || !isTramo6 }" class="btn btn-sm btn-success" ng-click="editarTramo6()">
+                  Listo
+                </button>
+              </td>
+            </tr>
+            <tr ng-mouseenter="hoveringTramo7=true" ng-mouseleave="hoveringTramo7=false">
+              <td>7</td>
+              <td ng-show="!isTramo7">{{ rentaImponible1Tramo7 }} UTM {{ rentaImponible2Tramo7 }} UTM</td>
+              <td ng-show="isTramo7"><input type="text" ng-model="tramo.rentaImponible1Tramo7" ng-show="isTramo7" style="width: 60px;"> UTM <input type="text" ng-model="tramo.rentaImponible2Tramo7" ng-show="isTramo7" style="width: 60px;"> UTM</td>
+              <td ng-show="!isTramo7">{{ factorTramo7 }}%</td>
+              <td ng-show="isTramo7"><input type="text" ng-model="tramo.factorTramo7" ng-show="isTramo7" style="width: 60px;">%</td>
+              <td ng-show="!isTramo7">{{ cantidadTramo7 }} UTM</td>
+              <td ng-show="isTramo7"><input type="text" ng-model="tramo.cantidadTramo7" ng-show="isTramo7" style="width: 60px;"> UTM</td>
+              <td ng-class="{ 'hidden' : hoveringTramo7 }">&nbsp;</td>
+              <td>
+                <button ng-class="{ 'hidden' : !hoveringTramo7 || isTramo7 }" class="btn btn-sm btn-primary" ng-click="editarTramo7()">
+                  Editar
+                </button>
+                <button ng-class="{ 'hidden' : !hoveringTramo7 || !isTramo7 }" class="btn btn-sm btn-success" ng-click="editarTramo7()">
+                  Listo
+                </button>
+              </td>
+            </tr>
+          </tbody>-->
+        </table>   
+      </div> 
+
+    </div>
+  </div>  
+</div>

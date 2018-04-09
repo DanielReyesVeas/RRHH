@@ -1,0 +1,94 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Reporte de Descuentos</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">Trabajadores</div>
+    <div class="panel-body">          
+      <div class="form-group">  
+        <label class="col-sm-2 control-label">Nombre:</label>
+        <div class="col-sm-4" style="padding:0px !important;">
+          <ul class="dropdown-menu">
+            <li ng-repeat="match in matches track by $index" id="{{::match.id}}">
+            </li>
+          </ul>
+          <input type="text" ng-model="objeto.descuento.trabajador" placeholder="Buscar trabajador" typeahead-editable="false" uib-typeahead="trab as trab.nombreCompleto for trab in datos | filter:{nombreCompleto:$viewValue}" class="form-control" typeahead-on-select="seleccionarTrabajador(objeto.descuento.trabajador.sid)" typeahead-show-hint="true" typeahead-min-length="0" required />
+        </div>          
+      </div>  
+
+      <div class="col-sm-12" ng-if="mostrar && objeto.descuento.trabajador" style="margin-top: 40px;">
+
+        <div class="text-center" ng-if="trabajador.descuentos.length<=0">
+          <i>Aun no hay registros</i>
+        </div>
+
+        <table class="table table-striped table-hover" ng-if="trabajador.descuentos.length>0">
+          <thead>
+            <tr>
+              <th class="col-sm-1">#</th>
+              <th class="col-sm-3">Descuento</th>
+              <th class="col-sm-1 text-center">Imponible</th>
+              <th class="col-sm-2">Temporalidad</th>
+              <th class="col-sm-3 text-center">Meses</th>
+              <th class="col-sm-1">Monto</th>
+              <th class="col-sm-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="dato in trabajador.descuentos">
+              <td>{{ $index+1 }}</td>
+              <td>{{ dato.tipo.nombre }}</td>
+              <td class="text-center">
+                <i class="fa fa-check" ng-if="dato.tipo.imponible" style="color: #0a0;"></i><i class="fa fa-times" ng-if="!dato.tipo.imponible" style="color: #ff3300;"></i>
+              </td>
+              <td>
+                <span ng-if="dato.porMes">Por Mes</span>
+                <span ng-if="dato.rangoMeses">Rango Meses</span>
+                <span ng-if="dato.permanente">Permanente</span>
+              </td>
+              <td class="text-center">
+                <span ng-if="dato.porMes">{{ dato.mes }}</span>
+                <span ng-if="dato.rangoMeses">{{ dato.desde }} - {{ dato.hasta }}</span>
+                <span ng-if="dato.permanente">
+                  <span ng-if="dato.hasta && dato.desde">
+                    <span style="color: #0a0;">{{ dato.desde }}</span>
+                     - 
+                     <span style="color: #ff3300;">{{ dato.hasta }}</span>
+                  </span>
+                  <span ng-if="!dato.hasta && dato.desde">
+                    <span style="color: #0a0;">Desde</span>
+                    : {{ dato.desde }}
+                  </span>
+                  <span ng-if="dato.hasta && !dato.desde">
+                    <span style="color: #ff3300;">Hasta</span>
+                    : {{ dato.hasta }}
+                  </span>
+                  <span ng-if="!dato.hasta && !dato.desde">-</span>
+                </span>
+              </td>
+              <td>
+                <div ng-if="dato.moneda==='$'">${{ dato.monto | currency:'':0 }}</div>                 
+                <div ng-if="dato.moneda!=='$'">{{ dato.monto }} {{ dato.moneda }}</div>           
+              </td>
+              <td>
+                <a href="javascript:void(0);" ng-if="accesos.editar && accesos.abierto" ng-click="editar(dato)"><i class="fa fa-pencil"></i></a>
+                <a href="javascript:void(0);" ng-if="accesos.eliminar && accesos.abierto && !dato.permanente" confirmation-click="eliminar(dato, trabajador.sid, true)" confirmation-needed="El Descuento seleccionado será eliminado del sistema. ¿Desea continuar?"><i class="fa fa-trash"></i></a>
+                <a href="javascript:void(0);" ng-if="accesos.eliminar && accesos.abierto && dato.permanente" confirmation-click="confirmacion(dato, trabajador.sid)" confirmation-needed="El Descuento seleccionado será eliminado del sistema. ¿Desea continuar?"><i class="fa fa-trash"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>    
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button>
+    </div>
+  </div>
+</div>

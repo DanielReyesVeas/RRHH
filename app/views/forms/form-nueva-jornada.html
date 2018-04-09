@@ -1,0 +1,50 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="jornadaForm" name="jornadaForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ encabezado }}</div>
+
+      <div class="panel-body" style="margin-bottom: 40px;">
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">
+            <label class="col-sm-4 control-label">Nombre:</label>
+            <div class="col-sm-6">
+              <input ng-model="jornada.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre de la jornada" required >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">          
+            <label class="col-sm-4 control-label">N° de Horas:</label>
+            <div class="col-sm-3">
+              <input ng-model="jornada.numeroHoras" class="form-control form-white" name="horas" type="text" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">          
+            <label class="col-sm-4 control-label">Tramo Horas Extra:</label>
+            <div class="col-sm-4">
+              <select class="form-control form-white" ng-model="jornada.tramoHoraExtra" ng-options="tram as tram.factor for tram in tramosHorasExtra" required> 
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-if="!isEdit" ng-click="guardar(jornada)" ng-disabled="jornadaForm.$invalid">Guardar</button>
+  <button class="btn btn-primary" type="button" ng-if="isEdit" ng-click="guardar(jornada)" ng-disabled="jornadaForm.$invalid">Modificar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+</div>

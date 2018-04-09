@@ -1,0 +1,19 @@
+<div>
+    <div class="modal-header dialog-header-confirm">
+        <h4 class="modal-title">{{ dialog.titulo }}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-2 text-center text-primary" style="font-size:27px;">
+                <i class="fa fa-question-circle"></i>
+            </div>
+            <div class="col-sm-10">
+                <div ng-bind-html="dialog.mensaje"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()" >Cancelar</button>
+        <button class="btn btn-primary" ng-click="aceptar()">Aceptar</button>
+    </div>
+</div>

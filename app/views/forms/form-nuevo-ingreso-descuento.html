@@ -1,0 +1,146 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body centered">
+
+  <form class="form-horizontal" name="descuentoForm" id="descuentoForm">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">{{descuento.nombre}}</div>
+
+      <div class="panel-body"> 
+        <div class="form-group">          
+          <label class="col-sm-2 control-label">Nombre:</label>
+          <div class="col-sm-3" style="padding:0px !important;">
+            <ul class="dropdown-menu">
+              <li ng-repeat="match in matches track by $index" id="{{::match.id}}">
+              </li>
+            </ul>
+            <input type="text" ng-model="objeto.descuento.trabajador" placeholder="Buscar trabajador" typeahead-editable="false" uib-typeahead="trab as trab.nombreCompleto for trab in datos | filter:{nombreCompleto:$viewValue}" class="form-control" typeahead-on-select="seleccionarTrabajador(objeto.descuento)" typeahead-show-hint="true" typeahead-min-length="0" required />
+          </div>   
+          <div class="form-group col-sm-7 required" ng-show="objeto.descuento.trabajador">    
+            <label class="col-sm-1 col-sm-offset-1 control-label">Monto:</label> 
+            <div class="col-sm-10">
+              <div class="col-sm-4">
+                <select class="form-control form-white" ng-model="objeto.descuento.moneda" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-change="cambiarMoneda()" > 
+                </select>
+              </div>                            
+              <div class="col-sm-6" style="padding: 0px;">
+                <input ng-model="objeto.descuento.monto" class="form-control form-white" type="text" placeholder="ingrese el monto en {{ monedaActual }}" required >
+              </div>                   
+              <div class="col-sm-2" ng-show="objeto.descuento.monto && objeto.descuento.moneda!=='$'">
+                ${{ convertir(objeto.descuento.monto, objeto.descuento.moneda) | currency:'':0  }}
+              </div>       
+            </div>
+          </div>
+        </div>     
+                      
+        <div class="container" ng-show="mostrar && objeto.descuento.trabajador">
+
+          <div class="col-sm-12" style="margin: 40px;">
+            <div class="form-group form-group-md">
+
+              <label class="col-sm-2 control-label">Por Mes:</label>         
+              <div class="col-sm-2">
+                <label class="switch switch-green">
+                  <input class="switch-input" ng-model="objeto.descuento.mensual" type="checkbox" ng-change="cambiarMes('mensual')">
+                  <span class="switch-label" data-on="SI" data-off="NO"></span>
+                  <span class="switch-handle"></span>
+                </label>
+              </div>
+
+              <label class="col-sm-2 control-label">Rango de Meses:</label>         
+              <div class="col-sm-2">
+                <label class="switch switch-green">
+                  <input class="switch-input" ng-model="objeto.descuento.rangoMeses" type="checkbox" ng-change="cambiarMes('rangoMeses')">
+                  <span class="switch-label" data-on="SI" data-off="NO"></span>
+                  <span class="switch-handle"></span>
+                </label>
+              </div>
+
+              <label class="col-sm-2 control-label">Permanente:</label>         
+              <div class="col-sm-2">
+                <label class="switch switch-green">
+                  <input class="switch-input" ng-model="objeto.descuento.permanente" type="checkbox" ng-change="cambiarMes('permanente')">
+                  <span class="switch-label" data-on="SI" data-off="NO"></span>
+                  <span class="switch-handle"></span>
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-bottom: 40px;">
+            <div class="form-group form-group-md">
+              <div ng-if="objeto.descuento.mensual" class="col-sm-5 col-sm-offset-4">
+                <label class="col-sm-3 control-label">Mes:</label>            
+                <div class="col-sm-6">{{ fechaActual | date : "MM-y" }}</div>
+              </div>
+
+              <div ng-if="objeto.descuento.rangoMeses">
+                <label class="col-sm-1 control-label required">Desde:</label>            
+                <div class="col-sm-3">{{ fechaDesde | date : "MM-y" }}</div>
+              </div>
+
+              <div ng-if="objeto.descuento.permanente && objeto.descuento.sid">
+                <label class="col-sm-2 control-label">Pagar desde:</label>            
+                <div class="col-sm-3">
+                  <div class="input-group"> 
+                    <input type="text" name="desde" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="objeto.descuento.desde" is-open="popupFechaDesde.opened" datepicker-options="dateOptionsMes" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaDesde()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-if="objeto.descuento.permanente && objeto.descuento.sid">
+                <label class="col-sm-2 col-sm-offset-1 control-label">Pagar hasta:</label>            
+                <div class="col-sm-3">
+                  <div class="input-group"> 
+                    <input type="text" name="hasta" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="objeto.descuento.hasta" is-open="popupFechaHasta.opened" datepicker-options="dateOptionsMes" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaHasta()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div ng-if="objeto.descuento.rangoMeses">
+                <label class="col-sm-1 control-label required">Hasta:</label>            
+                <div class="col-sm-3">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="objeto.descuento.rangoHasta" is-open="popupFechaRangoHasta.opened" datepicker-options="dateOptionsMes" close-text="Close" required />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaRangoHasta()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>    
+      </div>
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" confirmation-click="ingresoIndividualDescuento( objeto.descuento, descuento );" confirmation-needed="El descuento <b>{{descuento.nombre}}</b> será ingresado al trabajador <b>{{trabajador.nombreCompleto}}</b>. ¿Desea continuar?" ng-disabled="descuentoForm.$invalid" ng-class="{ 'hidden' : isEdit || objeto.descuento.permanente }">Ingresar Descuento</button>
+      <button class="btn btn-primary" type="button" confirmation-click="confirmacion( objeto.descuento, descuento );" confirmation-needed="El descuento <b>{{descuento.nombre}}</b> será ingresado al trabajador <b>{{trabajador.nombreCompleto}}</b>. ¿Desea continuar?" ng-disabled="descuentoForm.$invalid" ng-class="{ 'hidden' : isEdit || !objeto.descuento.permanente }">Ingresar Descuento</button>
+      <button class="btn btn-primary" type="button" confirmation-click="ingresoIndividualDescuento( objeto.descuento, descuento, false );" confirmation-needed="El descuento <b>{{descuento.nombre}}</b> será modificado. ¿Desea continuar?" ng-disabled="descuentoForm.$invalid" ng-if="isEdit">Modificar Descuento</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Sueldo Base</h3>
+</div>
+<div class="modal-body centered">
+  <form class="form-horizontal" name="formSueldoBase" id="formSueldoBase">
+    
+    <div class="panel panel-default" >
+      <div class="panel-heading">Detalle</div>
+      <div class="panel-body">          
+
+        <fieldset>
+          <legend>Imponibles</legend>
+          <div class="col-sm-12">
+            <label class="col-sm-8 control-label">Sueldo Base:</label>
+            <span class="col-sm-4">
+              ${{ detalle.sueldoBase | currency:'':0  }}
+            </span> 
+          </div>
+          <div class="col-sm-12" ng-if="detalle.gratificacion>0">
+            <label class="col-sm-8 control-label">Gratificación:</label>
+            <span class="col-sm-4">
+              ${{ detalle.gratificacion | currency:'':0  }}
+            </span> 
+          </div>
+          <div class="col-sm-12" ng-if="detalle.gratificacion>0">
+            <label class="col-sm-8 control-label">Renta Imponible:</label>
+            <span class="col-sm-4">
+              ${{ detalle.rentaImponible | currency:'':0  }}
+            </span> 
+          </div>
+        </fieldset>
+
+        <fieldset ng-if="detalle.asignaciones.length>0">
+          <legend>Asignaciones no Imponibles</legend>
+          <div class="col-sm-12" ng-repeat="asig in detalle.asignaciones track by $index">
+            <label class="col-sm-6 control-label">Asignación {{ $index + 1 }}:</label>
+            <div class="col-sm-6">
+              <label class="form-white">${{ asig | currency:'':0  }}</label>                 
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset ng-if="detalle.seguroCesantia.monto>0 && detalle.tipoContrato==='Indefinido' || detalle.afp.nombre!=='No está en AFP'">
+          <legend>Descuentos</legend>
+          <div class="col-sm-12" ng-if="detalle.afp.nombre!=='No está en AFP'">
+            <label class="col-sm-8 control-label">AFP {{ detalle.afp.nombre }} ({{ detalle.afp.tasa }}%):</label>
+            <span class="col-sm-4">
+              ${{ detalle.afp.monto | currency:'':0  }}
+            </span> 
+          </div>
+          <div class="col-sm-12" ng-if="detalle.salud.monto>0">
+            <label class="col-sm-8 control-label" ng-if="detalle.salud.cotizacion==='$'">Isapre {{ detalle.salud.nombre }}:</label>
+            <label class="col-sm-8 control-label" ng-if="detalle.salud.cotizacion==='UF'">Isapre {{ detalle.salud.nombre }} ({{ detalle.salud.plan }} UF):</label>
+            <label class="col-sm-8 control-label" ng-if="detalle.salud.nombre==='Fonasa'">Fonasa ({{ detalle.salud.plan }}%):</label>
+            <span class="col-sm-4">
+              ${{ detalle.salud.monto | currency:'':0  }}
+            </span> 
+          </div>
+          <div class="col-sm-12" ng-if="detalle.seguroCesantia.monto>0 && detalle.tipoContrato==='Indefinido'">
+            <label class="col-sm-8 control-label">Seguro de Cesantía ({{ detalle.seguroCesantia.tasa }}%):</label>
+            <span class="col-sm-4">
+              ${{ detalle.seguroCesantia.monto | currency:'':0  }}
+            </span> 
+          </div>
+          <div class="col-sm-12" ng-if="detalle.impuesto>0">
+            <label class="col-sm-8 control-label">Impuesto a la Renta:</label>
+            <span class="col-sm-4">
+              ${{ detalle.impuesto | currency:'':0  }}
+            </span> 
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Total</legend>
+          <div class="col-sm-12">
+            <label class="col-sm-8 control-label">Sueldo Líquido:</label>
+            <span class="col-sm-4">
+              ${{ detalle.sueldoLiquido | currency:'':0  }}
+            </span> 
+          </div>
+
+        </fieldset>
+
+        <div class="col-sm-12" style="margin: 30px;">
+          <label class="col-sm-3 col-sm-offset-2 control-label" style="font-size: 16px;">Sueldo Base:</label>
+          <span class="col-sm-6" style="font-size: 16px;">
+            <b>${{ detalle.sueldoBase | currency:'':0  }}</b>
+          </span> 
+        </div>
+
+      </div>
+    </div>
+
+    
+
+  </form>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" ng-click="asignar()">Asignar</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+    </div>
+  </div>
+</div>6

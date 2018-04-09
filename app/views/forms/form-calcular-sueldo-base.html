@@ -1,0 +1,195 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Calculadora Sueldo Base</h3>
+</div>
+<div class="modal-body centered">
+  <form class="form-horizontal" name="formSueldoBase" id="formSueldoBase">
+    
+    <div class="panel panel-default" >
+      <div class="panel-heading">Complete los siguientes campos</div>
+      <div class="panel-body">          
+
+        <fieldset>
+          <legend>Remuneración</legend>
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;" >
+            <label class="col-sm-3 control-label">Sueldo Líquido:</label>
+            <div class="col-sm-9" style="padding: 0px;">
+              <div class="col-sm-4">
+                <select class="form-control form-white" ng-model="sueldo.liquidoMoneda" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-change="cambiarMonedaSueldoLiquido()" > 
+                </select>
+              </div>                            
+              <div class="col-sm-6" ng-show="sueldo.liquidoMoneda==='$'" style="padding: 0px;">
+                <input ng-model="sueldo.liquido" class="form-control form-white" type="text" placeholder="ingrese el sueldo en pesos" ng-change="calcularSueldoLiquido()" ng-required >
+              </div>
+              <div class="col-sm-6" ng-show="sueldo.liquidoMoneda==='UF'" style="padding: 0px;">
+                <input ng-model="sueldo.liquido" class="form-control form-white" type="text" placeholder="ingrese el sueldo en UF" ng-change="calcularSueldoLiquido()" ng-required >
+              </div>
+              <div class="col-sm-6" ng-show="sueldo.liquidoMoneda==='UTM'" style="padding: 0px;">
+                <input ng-model="sueldo.liquido" class="form-control form-white" type="text" placeholder="ingrese el sueldo en UTM" ng-change="calcularSueldoLiquido()" ng-required >
+              </div>                            
+            </div>
+          </div> 
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;" >
+            <label class="col-sm-2 control-label">Contrato:</label>
+            <div class="col-sm-10">
+              <div class="radio col-sm-4">
+                <label><input type="radio" ng-model="sueldo.tipoContrato" value="Plazo Fijo" icheck required>Plazo Fijo</label>
+              </div>                  
+              <div class="radio col-sm-5">
+                <label><input type="radio" ng-model="sueldo.tipoContrato" value="Indefinido" icheck required>Indefinido</label>
+              </div>
+              <div class="col-sm-3" ng-class="{ 'hidden' : sueldo.liquidoMoneda==='$' || !sueldo.liquido }">
+                ${{ convertir(sueldo.liquido, sueldo.liquidoMoneda) | currency:'':0  }}
+              </div>                   
+            </div>
+          </div> 
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;" >
+            <div class="col-sm-10 col-sm-offset-2">
+              <div class="col-sm-12">
+                <label class="col-sm-6">
+                  <input type="checkbox" ng-model="sueldo.gratificacion" ng-change="cambiarGratificacion('mensual')" value="true" icheck> Gratificación
+                </label>   
+              </div>                               
+            </div>
+          </div> 
+
+        </fieldset>
+
+        <fieldset>
+          <legend>Descuentos Previsionales</legend>
+          <div class="form-group form-group-md required" style="margin-top: 20px;" >
+            <label class="col-sm-2 control-label">AFP:</label>
+            <div class="col-sm-4">
+              <select class="form-control form-white" ng-model="sueldo.afp" ng-options="afp as afp.nombre for afp in afps" required> 
+              </select>
+            </div>                            
+            <div class="checkbox col-sm-6" ng-class="{ 'hidden' : !sueldo.afp || sueldo.afp.nombre==='No está en AFP' }">
+              <label>
+                <input type="checkbox" ng-model="sueldo.seguroCesantia" icheck> Seguro de Cesantia
+              </label>
+            </div>
+          </div>  
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;" >
+            <label class="col-sm-2 control-label">Salud:</label>
+            <div class="col-sm-8">
+              <select class="form-control form-white" ng-model="sueldo.isapre" name="isapre" ng-options="isa as isa.nombre for isa in isapres" ng-change="cambiarIsapre()" required> 
+              </select>
+            </div>
+          </div> 
+
+          <div class="form-group form-group-md required" ng-show="sueldo.isapre && sueldo.isapre.nombre!='Sin Isapre'" style="margin-top: 20px;" >
+            <label class="col-sm-3 control-label">Plan de Salud:</label>
+            <div class="col-sm-9">
+              <div ng-show="sueldo.isapre && sueldo.isapre.nombre != 'Fonasa'" style="padding: 0px;">   
+                <div class="col-sm-3" style="padding: 0px;">
+                  <select class="form-control form-white" ng-model="sueldo.cotizacionIsapre" name="cotizacionIsapre" ng-options="cot.nombre as cot.nombre for cot in cotizaciones"> 
+                  </select>
+                </div>                                            
+                <div class="col-sm-7" ng-show="sueldo.isapre.nombre!='Fonasa' && sueldo.cotizacionIsapre==='$'">
+                  <input ng-model="sueldo.montoIsapre" class="form-control form-white" type="text" name="montoIsapre" placeholder="ingrese el monto en pesos" ng-required>
+                </div>  
+                <div class="col-sm-7" ng-show="sueldo.isapre.nombre!='Fonasa' && sueldo.cotizacionIsapre==='UF'">
+                  <input ng-model="sueldo.montoIsapre" class="form-control form-white" type="text" name="montoIsapre" placeholder="ingrese la UF del Plan" ng-required>
+                </div>            
+                <div class="col-sm-2" style="padding-left: 10px;" ng-class="{ 'hidden' : sueldo.cotizacionIsapre!=='UF' || !sueldo.montoIsapre }">
+                  ${{ convertir(sueldo.montoIsapre, sueldo.cotizacionIsapre) | currency:'':0  }}
+                </div> 
+              </div>    
+              <div class="col-sm-2" ng-show="sueldo.isapre.nombre==='Fonasa'">
+                <label class="form-group form-white">7%</label>
+              </div>
+            </div>  
+          </div>
+
+        </fieldset>
+
+        <fieldset>
+          <legend>Asignaciones no Imponibles</legend>
+
+          <div class="row">
+            <div class="col-sm-9" ng-repeat="asig in asignaciones" style="margin-top: 20px;" >
+              <div class="form-group form-group-md col-sm-12">
+                <div class="col-sm-5 col-sm-offset-3">
+                  <label class="form-white" ng-show="asig.moneda==='$'">${{ asig.monto | currency:'':0  }}</label>                
+                  <label class="form-white" ng-show="asig.moneda!=='$'">{{ asig.monto }} {{ asig.moneda }}</label>             
+                </div>
+                <div class="col-sm-4" ng-class="{ 'hidden' : isAsignacion }">
+                  <a href="" ng-click="editarAsignacion(asig)"><i class="fa fa fa fa-pencil"></i></a>
+                  <a href="" ng-click="eliminarAsignacion(asig)" ><i class="fa fa fa fa-trash"></i></a>
+                </div>
+              </div>  
+            </div>
+            <div class="col-sm-9" style="margin-top: 20px;" >
+              <div class="text-center" ng-if="asignaciones.length<=0 && !isAsignacion">
+                <i>No hay Asignaciones</i>
+              </div>  
+            </div>
+            <div class="col-sm-3 pull-right">
+              <div class="col-sm-6" ng-class="{ 'hidden' : isAsignacion }" style="margin-top: 20px;">
+                <button class="btn btn-sm btn-primary" type="button" ng-click="nuevaAsignacion()"><i class="fa fa-plus"></i> Agregar</button>
+              </div>
+            </div>
+          </div>
+
+
+          <fieldset ng-class="{ 'hidden' : !isAsignacion }">
+            <button type="button" class="close" ng-click="nuevaAsignacion()">
+              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <legend>{{ tituloAsignacion }}</legend>
+
+            <div class="form-group form-group-md" style="margin-top: 20px;" >
+              <div class="col-sm-3">
+                <select class="form-control form-white" ng-model="sueldo.asignacionMoneda" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-change="cambiarMonedaAsignaciones()" > 
+                </select>
+              </div>                            
+              <div class="col-sm-5" ng-show="sueldo.asignacionMoneda==='$'" style="padding: 0px;">
+                <input ng-model="sueldo.asignacion" class="form-control form-white" type="text" placeholder="ingrese el monto en pesos" ng-required >
+              </div>
+              <div class="col-sm-5" ng-show="sueldo.asignacionMoneda==='UF'" style="padding: 0px;">
+                <input ng-model="sueldo.asignacion" class="form-control form-white" type="text" placeholder="ingrese el monto en UF" ng-required >
+              </div>
+              <div class="col-sm-5" ng-show="sueldo.asignacionMoneda==='UTM'" style="padding: 0px;">
+                <input ng-model="sueldo.asignacion" class="form-control form-white" type="text" placeholder="ingrese el monto en UTM" ng-required >
+              </div>          
+              <div class="col-sm-2">
+                <span ng-class="{ 'hidden' : sueldo.asignacionMoneda==='$' || !sueldo.asignacion }">${{ convertir(sueldo.asignacion, sueldo.asignacionMoneda) | currency:'':0  }}</span>
+              </div>                   
+              <div class="col-sm-1" ng-class="{ 'hidden' : !isAsignacion }" style="padding: 0px;">
+                <button class="btn btn-sm btn-primary" type="button" ng-click="agregarAsignacion(sueldo)" ng-class="{ 'hidden' : isEditAsignacion }"><i class="fa fa-plus"></i></button>
+                <button type="button" ng-click="updateAsignacion(sueldo)" class="btn btn-primary btn-sm" ng-class="{ 'hidden' : !isEditAsignacion }"><i class="fa fa-check"></i></button>
+              </div>              
+            </div> 
+
+          </fieldset>
+
+        </fieldset>
+
+        
+        <div class="row" style="margin-top: 50px;">
+          <div class="col-sm-8 col-sm-offset-2" ng-show="sueldoBase">
+            <label class="col-sm-4 control-label">Sueldo Bruto:</label>
+            <label class="col-sm-3 control-label">${{ sueldoBase | currency:'':0  }}</label>
+          </div>
+          <div class="col-sm-2" ng-show="sueldoBase">
+            <button class="btn btn-success btn-sm" type="button" ng-click="asignarSueldoBase()">Asignar</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" ng-disabled="formSueldoBase.$invalid" ng-click="calcularSueldoBase()">Calcular</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button>
+    </div>
+  </div>
+</div>

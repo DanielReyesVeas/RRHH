@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Autorizar Cargas Familiares</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="autorizarCargasForm" name="autorizarCargasForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ trabajador.nombreCompleto }}</div>
+
+      <div class="panel-body">   
+
+        <table class="table table-striped table-hover" ng-if="trabajador.cargas.length>0" style="margin-top: 40px; margin-bottom: 40px;">
+          <thead>
+            <tr>
+              <th class="col-sm-1"><input type="checkbox" ng-model="objeto.todos" ng-change="selectAll()" icheck></th>
+              <th class="col-sm-3">RUT</th>
+              <th class="col-sm-3">Nombre</th>
+              <th class="col-sm-5">Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="dato in trabajador.cargas">
+              <td><input type="checkbox" ng-model="objeto[$index].check" ng-change="select($index)" icheck></td>
+              <td>{{ dato.rutFormato }}</td>
+              <td>{{ dato.nombreCompleto }}</td>
+              <td>
+                <div class="input-group" ng-class="{ 'hidden' : !objeto[$index].check }"> 
+                  <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="objeto[$index].fecha" is-open="objeto[$index].popupFecha.opened" datepicker-options="dateOptions" close-text="Close" ng-required />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openFecha($index)">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-class="{ 'hidden' : !isSelect }">
+          <div class="form-group form-group-md ">          
+            <label class="col-sm-2 col-sm-offset-3 control-label required">Tramo:</label>
+            <div class="col-sm-3">
+              <select class="form-control form-white" ng-model="carga.tramo" ng-options="tram as (tram.tramo | uppercase) for tram in tramos" required>  
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="modificar()" ng-if="isEdit" ng-disabled="autorizarCargasForm.$invalid">Modificar</button>
+  <button class="btn btn-primary" type="button" ng-click="autorizar()" ng-if="!isEdit" ng-disabled="autorizarCargasForm.$invalid">Autorizar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>

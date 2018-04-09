@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Términos y condiciones</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="terminosForm" name="terminosForm">
+      <div class="panel-body">
+        <div class="form-group">      
+          <div class="form-group form-group-md">
+            <div class="col-sm-12">
+              <fieldset>
+                <p>"Los valores de los indicadores mensuales serán cargados desde el Web Service propio de Easy Systems SPA. Sin embargo, es responsabilidad del cliente revisar la consistencia y validez de los estos, particularmente desde el sitio www.previred.com, y en caso de detectar alguna inconsitencia informar de forma inmediata a Soporte para poder corregir esta información. Por tanto, Easy Systems SPA. no asume responsabilidad alguna por cálculos erróneos que puedan presentarse por valores de indicadores mal ingresados."</p>
+              </fieldset>
+            </div>                            
+          </div>  
+          <div class="form-group col-sm-8 col-sm-offset-2" style="margin-top: 20px;">
+            <label class="checkbox">
+              <input type="checkbox" class="form-control" ng-model="objeto.condiciones" required icheck> He leído, comprendo y acepto los Términos y Condiciones generales de uso.
+            </label>
+          </div>
+        </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer" style="margin-top: 20px;">
+  <button class="btn btn-primary" type="button" ng-click="aceptar()" ng-disabled="terminosForm.$invalid">Aceptar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+</div>  

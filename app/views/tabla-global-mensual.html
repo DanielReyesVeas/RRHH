@@ -1,0 +1,309 @@
+<div class="box">
+  <div class="col-sm-12">
+    <h2> <i class="fa fa-line-chart"> </i> Indicadores Previsionales</h2>
+
+    <div class="container text-center" ng-if="tablas.length==0 && cargado" style="margin-top: 60px;" >
+      <i>Aún no se han ingresado datos</i>
+    </div>
+
+    <div class="row" ng-if="indicadores && cargado">
+      <h3><i>{{ mesActual }}</i></h3>      
+      <span>Para Cotizaciones a Pagar en {{ mesAPagar }} {{ anioAPagar }} (Remuneraciones {{ mesActual }} {{ anioActual }})</span>
+      <div class="col-sm-12" ng-if="accesos.crear && accesos.abierto || accesos.editar && accesos.abierto">
+        <button ng-class="{ 'hidden' : !isEdit }" class="btn btn-sm btn-primary pull-right" ng-click="editarUFUTM()"><i class="fa fa-usd"></i> Editar UF y UTM</button>
+      </div>
+      <div class="col-sm-12" ng-if="accesos.crear && accesos.abierto || accesos.editar && accesos.abierto">
+        <button ng-class="{ 'hidden' : isEdit }" class="btn btn-sm btn-primary pull-right" confirmation-click="editar()" confirmation-needed="{{ advertencia }}"><i class="fa fa-lock"></i> Editar valores</button>
+        <button ng-click="cancelar()" type="button" class="btn btn-primary btn-xs pull-right" ng-class="{ 'hidden' : !isEdit }">Cancelar</button>
+        <button ng-class="{ 'hidden' : !isEdit }" class="btn btn-sm btn-primary pull-right" confirmation-click="guardar()" confirmation-needed="{{ confirmacion }}"><i class="fa fa-unlock"></i> Guardar valores</button>
+      </div>
+      <!--<div class="row" style="margin-top: 50px;">
+        <div class="row col-sm-4 col-sm-offset-4">
+          <div class="col-sm-4 col-sm-offset-4">
+            <i class="fa fa-exclamation-triangle fa-5x"></i>
+          </div>
+        </div>
+        <div class="row col-sm-4 col-sm-offset-4"  style="margin-top: 50px;">
+          <div class="col-sm-12">
+            <p>Actualmente no se han cargado los indicadores previsionales, por favor seleccione un <a href="" ng-click="cargarDatos()">mes de trabajo</a>.</p>
+          </div>
+        </div>
+      </div> -->      
+
+      <div class="row">
+        <div class="col-sm-6">
+          <table class="table table-striped table-hover" style="margin-top: 20px;">
+            <thead>
+              <tr>
+                <th class="text-center">Valor UF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  al {{ ultimoDia | date:"dd" }} de {{ mesActual }} de {{ anioActual }}
+                  <span class="pull-right">${{ uf | currency:'':2 }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th>Valor</th>
+                <th>UTM</th>
+                <th>UTA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ mesActual }} {{ anioActual }}
+                </td>
+                <td>${{ utm | currency:'':0  }}</td>
+                <td>${{ uta | currency:'':0  }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" colspan="2">Rentas Topes Imponibles</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.rentasTopeImponibles">
+                <td>
+                  {{ dato.nombre }} (
+                  <span ng-if="!isEdit"> {{ dato.valor | number }} ) UF</span>                  
+                  <span ng-if="isEdit"><input type="text" ng-model="inputRTI[$index]" style="width: 50px" /> ) UF</span>                  
+                </td>
+                <td>
+                  <span ng-if="dato.nombre==='Para afiliados al IPS (ex INP)'">${{ convertirUFAnterior(dato.valor) | currency:'':0  }}</span>
+                  <span ng-if="dato.nombre!=='Para afiliados al IPS (ex INP)'">${{ convertirUF(dato.valor) | currency:'':0  }}</span>
+                </td>
+              </tr>              
+            </tbody>
+          </table>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" colspan="2">Rentas Mínimas Imponibles</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.rentasMinimasImponibles">
+                <td>{{ dato.nombre }}:</td>
+                <td>
+                  <span ng-if="!isEdit">${{ dato.valor | currency:'':0  }}</span>    
+                  <span ng-if="isEdit">$<input type="text" ng-model="inputRMI[$index]" style="width: 80px" /></span>                
+                </td>
+              </tr>              
+            </tbody>
+          </table>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" colspan="2">Ahorro Previsional Voluntario (APV)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.ahorroPrevisionalVoluntario">
+                <td>
+                  {{ dato.nombre }} (
+                  <span ng-if="!isEdit"> {{ dato.valor }} ) UF</span>  
+                  <span ng-if="isEdit"><input type="text" ng-model="inputAPV[$index]" style="width: 50px" /> ) UF</span>                   
+                </td>
+                <td>${{ convertirUF(dato.valor) | currency:'':0  }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" colspan="2">Depósito Convenido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.depositoConvenido">
+                <td>
+                  {{ dato.nombre }} (
+                  <span ng-if="!isEdit"> {{ dato.valor }} ) UF</span>                
+                  <span ng-if="isEdit"><input type="text" ng-model="inputDC[$index]" style="width: 50px" /> ) UF</span>  
+                </td>
+                <td>${{ convertirUF(dato.valor) | currency:'':0  }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" colspan="3">Seguro de Cesantía (AFC)</th>
+              </tr>
+              <tr>
+                <th rowspan="2">Tipo Contrato (*)</th> 
+                <th class="text-center" colspan="2">Financiamiento</th>
+                <tr>
+                  <th>Empleador</th>
+                  <th>Trabajador</th>
+                </tr>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.seguroDeCesantia">
+                <td>
+                  {{ dato.tipoContrato }}                  
+                </td>
+                <td class="text-center">
+                  <span ng-if="!isEdit && dato.financiamientoEmpleador">{{ dato.financiamientoEmpleador }}% R.I.</span>
+                  <span ng-if="!isEdit && !dato.financiamientoEmpleador">-</span>
+                  <span ng-if="isEdit"><input type="text" ng-model="inputSCEmpleador[$index]" style="width: 50px" />% R.I.</span>
+                </td>
+                <td class="text-center">
+                  <span ng-if="!isEdit && dato.financiamientoTrabajador>0">{{ dato.financiamientoTrabajador }}% R.I.</span>
+                  <span ng-if="!isEdit && dato.financiamientoTrabajador==0">-</span>
+                  <span ng-if="isEdit"><input type="text" ng-model="inputSCTrabajador[$index]" style="width: 50px" />% R.I.</span>
+                </td>                
+              </tr>
+            </tbody>
+          </table>       
+          <div style="margin-top: 40px; border: 1px solid grey; padding: 5px;">
+            <p><h6>(*) No aplica para Trabajador de Casa Particular.</h6></p>
+          </div> 
+        </div>
+
+        <div class="col-sm-6" style="margin-top: 45px;">
+          <table class="table table-striped table-hover" style="margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" rowspan="5">AFP</th>
+                <tr>
+                  <th class="text-center" colspan="3">Tasa Cotización Obligatorio AFP</th>
+                </tr>
+                <tr>
+                  <th class="text-center" colspan="3">Tasa AFP Trabajadores</th>
+                </tr>
+                <tr>
+                  <th class="text-center" colspan="2">Dependientes</th>
+                  <th class="text-center">Independientes</th>
+                </tr>
+                <tr>
+                  <th class="text-center">Tasa AFP</th>
+                  <th class="text-center">SIS (1) (2)</th>
+                  <th class="text-center">Tasa AFP (3)</th>
+                </tr>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.tasaCotizacionObligatorioAfp">
+                <td class="text-center">{{ dato.afp }}</td>
+                <td class="text-center">
+                  <span ng-if="!isEdit">{{ dato.tasaAfp }}%</span>
+                  <span ng-if="isEdit"><input type="text" ng-model="inputTasaAfp[$index]" style="width: 50px" />%</span>
+                </td>
+                <td class="text-center">
+                  <span ng-if="!isEdit">{{ dato.sis }}%</span>
+                  <span ng-if="isEdit"><input type="text" ng-model="inputSIS[$index]" style="width: 50px" />%</span>
+                </td>
+                <td class="text-center">{{ dato.tasaAfpIndependientes }}%</td>
+              </tr>              
+            </tbody>
+          </table>  
+
+          <div style="margin-top: 40px; border: 1px solid grey; padding: 5px;">
+            <p><h6>1) Esta cotización es de cargo del Empleador.</h6></p>
+            <p><h6>2) SIS no aplica para trabajador dependiente pensionado.</h6></p>
+            <p><h6>3) Esta tasa incluye el SIS, que es de cargo del trabajador.</h6></p>
+          </div>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" rowspan="2">Tramo</th>
+                <th class="text-center" colspan="2">Asignación Familiar</th>
+              </tr>
+              <tr>
+                <th>Monto</th> 
+                <th class="text-center">Requisito de Renta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.asignacionFamiliar">
+                <td class="text-center">{{ dato.tramo | uppercase }}</td>
+                <td class="text-center">
+                  <span ng-if="!isEdit && dato.monto">${{ dato.monto | currency:'':0  }}</span>
+                  <span ng-if="!isEdit && !dato.monto">-</span>
+                  <span ng-if="isEdit">$<input type="text" ng-model="inputAFMonto[$index]" style="width: 60px" /></span>
+                </td>
+                <td class="text-center">
+                  <span ng-if="dato.tramo==='a'">Renta &lt; ó = 
+                    <span ng-if="!isEdit">${{ dato.rentaMayor | currency:'':0  }}</span>
+                    <span ng-if="isEdit">$<input type="text" ng-model="inputAFMayor[$index]" style="width: 70px" /></span>
+                  </span>
+                  <span ng-if="dato.tramo==='b'">Renta &gt; 
+                    <span ng-if="!isEdit">${{ dato.rentaMenor | currency:'':0  }}</span>
+                    <span ng-if="isEdit">$<input type="text" ng-model="inputAFMenor[$index]" style="width: 70px" /></span>
+                     &lt; = 
+                    <span ng-if="!isEdit">${{ dato.rentaMayor | currency:'':0  }}</span>
+                    <span ng-if="isEdit">$<input type="text" ng-model="inputAFMayor[$index]" style="width: 70px" /></span>
+                  </span>
+                  <span ng-if="dato.tramo==='c'">Renta &gt; 
+                    <span ng-if="!isEdit">${{ dato.rentaMenor | currency:'':0  }}</span>
+                    <span ng-if="isEdit">$<input type="text" ng-model="inputAFMenor[$index]" style="width: 70px" /></span>
+                     &lt; = 
+                    <span ng-if="!isEdit">${{ dato.rentaMayor | currency:'':0  }}</span>
+                    <span ng-if="isEdit">$<input type="text" ng-model="inputAFMayor[$index]" style="width: 70px" /></span>
+                  </span>
+                  <span ng-if="dato.tramo==='d'">Renta &gt; 
+                    <span ng-if="!isEdit">${{ dato.rentaMenor | currency:'':0  }}</span>
+                    <span ng-if="isEdit">$<input type="text" ng-model="inputAFMenor[$index]" style="width: 70px" /></span>
+                  </span>
+                </td>
+              </tr>              
+            </tbody>
+          </table>
+
+          <table class="table table-striped table-hover" style="margin-top: 50px; margin-bottom: 50px;">
+            <thead>
+              <tr>
+                <th class="text-center" colspan="4">Cotización Trabajos Pesados (*)</th>
+              </tr>
+              <tr>
+                <th class="text-center" colspan="2">Calificación</th> 
+                <th class="text-center" colspan="2">Financiamiento</th>
+              </tr>
+              <tr>
+                <th class="text-center" colspan="2">Puesto de Trabajo</th> 
+                <th class="text-center">Empleador</th>
+                <th class="text-center">Trabajador</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in tablas.cotizacionTrabajosPesados">
+                <td>{{ dato.trabajo }}</td>
+                <td class="text-center">{{ dato.valor }}%</td>
+                <td class="text-center">
+                  <span ng-if="!isEdit">{{ dato.financiamientoEmpleador }}% R.I.</span>
+                  <span ng-if="isEdit"><input type="text" ng-model="inputCTPEmpleador[$index]" style="width: 50px" />%</span>
+                </td>
+                <td class="text-center">
+                  <span ng-if="!isEdit">{{ dato.financiamientoTrabajador }}% R.I.</span>
+                  <span ng-if="isEdit"><input type="text" ng-model="inputCTPTrabajador[$index]" style="width: 50px" />%</span>
+                </td>
+              </tr>              
+            </tbody>
+          </table>
+          <div style="margin-top: 40px; border: 1px solid grey; padding: 5px;">
+            <p><h6>(*) Ver listador en Superintendencia de Pensiones.</h6></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

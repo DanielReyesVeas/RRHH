@@ -1,0 +1,158 @@
+
+<script type="text/ng-template" id="customTemplate.html">
+    <a style="cursor: pointer;">
+        <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+    </a>
+</script>
+<div class="modal-header">
+    <h3 class="modal-title">Permisos de Acceso</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" role="form" name="formMenu" novalidate>
+
+        <div class="form-group ">
+            <label for="perfil" class="col-sm-3 control-label">
+                Empresa:
+            </label>
+            <div class="col-sm-7">
+                <select ng-model="objeto.empresa" ng-options="emp as emp.razonSocial for emp in empresas" class="form-control form-white form-white">
+                    <option value='{{ empresaGlobal }}'>{{ empresaGlobal.razonSocial }}</option>
+                </select>
+                <span ng-if="objeto.empresa.nRut=='global'" class="text-primary"><strong>
+                    Esta configuración permite copiar los accesos seleccionados para Todas las Empresas.
+                    </strong>
+                </span>
+            </div>
+        </div>
+        <div class="form-group ">
+            <label for="perfil" class="col-sm-3 control-label">
+                Perfil:
+            </label>
+            <div class="col-sm-4">
+                <select ng-model="objeto.perfil" ng-options="per as per.perfil for per in opciones.perfiles" class="form-control form-white form-white" ng-change="objeto.editar=false"></select>
+            </div>
+            <div class="col-sm-1" ng-show="objeto.perfil.sid!=='0'">
+                <button class="btn btn-success btn-sm" ng-click="cargarPerfil()">Cargar</button>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="objeto.perfil.sid!=='0' && objeto.editar">
+            <label for="perfil" class="col-sm-3 control-label">
+                Modificar Acceso:
+            </label>
+            <div class="col-sm-8">
+                <label>
+                <input type="checkbox" ng-model="objeto.modificarAcceso" class="icheckbox_flat-aero" name="check" icheck /> <small class="text-success">Modificar Accesos del Perfil para Usuario Actual</small>
+                </label>
+            </div>
+        </div>
+
+        <div class="panel panel-default" style="margin-top:20px;" ng-show="(objeto.perfil.sid==='0' || objeto.editar ) &&  objeto.empresa.nRut">
+            <div class="panel-heading">Accesos del Perfil </div>
+            <div class="panel-body">          
+                <div class="table-responsive">          
+                    <table class="table" align="center" ng-show="empresas.length > 0">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">#</th>
+                                <th rowspan="2" class="col-sm-3">Menú</th>
+                                <th rowspan="2" class="col-sm-5">Descripción</th>
+                                <th colspan="4" class="col-sm-4" style="text-align:center;">{{  objeto.empresa.razonSocial }}</th>
+                            </tr>
+                            <tr>
+                                <th ng-if="!objeto.empresa.nRut" colspan="4">&nbsp;</th>
+                                <th ng-if="objeto.empresa.nRut" class="col-sm-1" style="text-align:center;">
+                                    Crear<br/>
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['crear']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'crear' );" icheck  />
+                                    </span>
+                                </th>
+                                <th ng-if="objeto.empresa.nRut" class="col-sm-1" style="text-align:center;">
+                                    Editar<br/>
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['editar']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'editar' );" icheck  />
+                                    </span>
+                                </th>
+                                <th ng-if="objeto.empresa.nRut" class="col-sm-1" style="text-align:center;">
+                                    Eliminar<br/>
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['eliminar']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'eliminar' );" icheck  />
+                                    </span>
+                                </th>
+                                <th ng-if="objeto.empresa.nRut" class="col-sm-1" style="text-align:center;">
+                                    Ver<br/>
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['ver']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'ver' );"  icheck />
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr ng-repeat="opc in menu.datos" ng-class="{ 'bg-warning' : opc.tipo == 1 }">
+                                <td style="text-align: right; font-size: 12px; width: 20px !important; color:#000 !important;">
+                                    {{ opc.posicion }}
+                                </td>
+                                <td style="font-weight: bold; font-size: 12px; color:#000 !important;">
+                                    {{ opc.menu }}
+                                </td>
+                                <td style="color:#000 !important; font-size: 12px;">
+                                    {{ opc.title }}
+                                </td>                  
+                                <td style="text-align: center;color:#fff !important;">
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['crear']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'crear')" icheck />
+                                    </span>
+                                    <span ng-show="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['crear'] && !objeto.modificarAcceso && objeto.perfil.sid!=='0'" class="text-primary"><i class="fa fa-check"></i></span>
+                                </td>
+
+                                <td style="text-align: center;color:#fff !important;">
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['editar']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'editar')" icheck />
+                                    </span>
+                                    <span ng-show="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['editar'] && !objeto.modificarAcceso && objeto.perfil.sid!=='0'" class="text-primary"><i class="fa fa-check"></i></span>
+                                </td>
+
+                                <td style="text-align: center;color:#fff !important;">
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['eliminar']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'eliminar')" icheck />
+                                    </span>
+                                    <span ng-show="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['eliminar'] && !objeto.modificarAcceso && objeto.perfil.sid!=='0'" class="text-primary"><i class="fa fa-check"></i></span>
+                                </td>
+
+                                <td style="text-align: center;color:#fff !important;">
+                                    <span ng-if="objeto.modificarAcceso || objeto.perfil.sid==='0'">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['ver']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'ver')" icheck />
+                                    </span>
+                                    <span ng-show="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['ver'] && !objeto.modificarAcceso && objeto.perfil.sid!=='0'" class="text-primary"><i class="fa fa-check"></i></span>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table> 
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group "  ng-if="empresas.length > 0" ng-show="(objeto.modificarAcceso || objeto.perfil.sid==='0') &&  objeto.empresa.nRut">
+            <label for="perfil" class="col-sm-3 control-label">
+                Guardar Selección:<br/>
+                <small class="text-success">Puede actualizar un Perfil existente o crear uno Nuevo para asignarlo a otros usuarios</small>
+            </label>
+            <div  class="col-sm-9">
+                <div class="col-sm-4">
+                    <select ng-model="objeto.guardarPerfil" class="form-control form-white form-white" ng-options="opc as opc.opcion for opc in opcionesGuardarPerfil"></select>
+                </div>
+                <div class="col-sm-5" ng-show="objeto.guardarPerfil.id===1">               
+                    <select ng-model="objeto.modificarPerfil" ng-options="per as per.perfil for per in opciones.perfilesExistentes" class="form-control form-white form-white"></select>                    
+                </div>
+                <div class="col-sm-5"  ng-show="objeto.guardarPerfil.id===2">
+                    <input type="text" ng-model="objeto.nombrePerfil" class="form-control form-white form-white" />
+                </div>
+            </div>                
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="cancel()" >Cerrar</button>
+</div>

@@ -1,0 +1,624 @@
+<div class="box">
+  <div class="col-sm-12">
+    <h2><i class="fa fa-credit-card-alt"></i> Gestión de Cuentas</h2>
+
+    <!--<div class="col-sm-5 pull-right" ng-if="!isCuentas && cargado">
+      <div class="alert alert-danger">
+        <i class="fa fa-exclamation-triangle fa-3x" style="margin-right: 20px;"> </i>
+        <b>Hay Aportes sin sus respectivas Cuentas.</b>
+        <p>Debe asignarlas todas para poder realizar la Centralización.</p>
+      </div>
+    </div>-->
+
+    <div class="col-sm-10 col-sm-offset-1" ng-if="cargado" style="margin-top: 60px;">
+      <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+        <li ng-class="{ 'active' : tabGeneral }"><a data-toggle="tab" ng-click="openTab('generales')">General</a></li>
+        <li ng-class="{ 'active' : tabAportes }"><a data-toggle="tab" ng-click="openTab('aportes')">Aportes</a></li>
+        <li ng-class="{ 'active' : tabAfpEmpleador || tabAfpTrabajador || tabCuentasAhorroAfp }"> <a data-toggle="tab" ng-click="openTab('afpEmpleador')">AFPs</a></li>
+        <li ng-class="{ 'active' : tabSalud }"> <a data-toggle="tab" ng-click="openTab('salud')">Salud</a></li>
+        <li ng-class="{ 'active' : tabSeguroCesantiaEmpleador || tabSeguroCesantiaTrabajador }"> <a data-toggle="tab" ng-click="openTab('seguroCesantiaEmpleador')">Seguro Cesantía</a></li>
+        <li ng-class="{ 'active' : tabApvA || tabApvB || tabApvc }"> <a data-toggle="tab" ng-click="openTab('apvA')">APVs</a></li>
+        <li ng-if="empresa.isCaja" ng-class="{ 'active' : tabCCAF }"> <a data-toggle="tab" ng-click="openTab('ccaf')">CCAF</a></li>
+        <li ng-class="{ 'active' : tabHaberesImp || tabHaberesNoImp }"> <a data-toggle="tab" ng-click="openTab('imp')">Haberes</a></li>
+        <li ng-class="{ 'active' : tabDescuentos || tabDescuentosLegales }"> <a data-toggle="tab" ng-click="openTab('descuentos')">Descuentos</a></li>
+        <li ng-class="{ 'active' : tabExCaja }"> <a data-toggle="tab" ng-click="openTab('exCaja')">Ex Cajas</a></li>
+      </ul>
+
+      <div class="col-sm-12" ng-if="tabGeneral">
+
+        <table class="table table-striped table-hover" ng-if="generales.length>0">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="general in generales">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ general.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="general.cuenta.nombre">{{ general.cuenta.nombre }}</span>
+                  <span ng-if="!general.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="general.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="general.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="general.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar && accesos.abierto" ng-click="editar(general, 'generales')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabAportes">
+
+        <table class="table table-striped table-hover" ng-if="aportes.length>0">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="aporte in aportes">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ aporte.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="aporte.cuenta.nombre">{{ aporte.cuenta.nombre }}</span>
+                  <span ng-if="!aporte.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="aporte.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="aporte.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="aporte.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar && accesos.abierto" ng-click="editar(aporte, 'aportes')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabAfpEmpleador || tabAfpTrabajador || tabCuentasAhorroAfp">
+
+        <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+          <li ng-class="{ 'active' : tabAfpEmpleador }"><a data-toggle="tab" ng-click="openTab('afpEmpleador')">SIS</a></li>
+          <li ng-class="{ 'active' : tabAfpTrabajador }"> <a data-toggle="tab" ng-click="openTab('afpTrabajador')">Trabajador</a></li>
+          <li ng-class="{ 'active' : tabCuentasAhorroAfp }"> <a data-toggle="tab" ng-click="openTab('cuentasAhorroAfp')">Cuentas de Ahorro</a></li>
+        </ul>
+
+        <table class="table table-striped table-hover" ng-if="afpsEmpleador.length>0 && tabAfpEmpleador">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="afp in afpsEmpleador">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ afp.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="afp.cuenta.nombre">{{ afp.cuenta.nombre }}</span>
+                  <span ng-if="!afp.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="afp.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="afp.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="afp.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editar(afp, 'afpEmpleador')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped table-hover" ng-if="afpsTrabajador.length>0 && tabAfpTrabajador">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="afp in afpsTrabajador">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ afp.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="afp.cuenta.nombre">{{ afp.cuenta.nombre }}</span>
+                  <span ng-if="!afp.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="afp.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="afp.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="afp.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editar(afp, 'afpTrabajador')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped table-hover" ng-if="cuentasAhorroAfps.length>0 && tabCuentasAhorroAfp">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="afp in cuentasAhorroAfps">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ afp.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="afp.cuenta.nombre">{{ afp.cuenta.nombre }}</span>
+                  <span ng-if="!afp.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="afp.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="afp.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="afp.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(afp, 'cuentasAhorroAfp')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>    
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabSalud">
+
+        <table class="table table-striped table-hover" ng-if="salud.length>0 && tabSalud">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="isapre in salud">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ isapre.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="isapre.cuenta.nombre">{{ isapre.cuenta.nombre }}</span>
+                  <span ng-if="!isapre.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="isapre.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="isapre.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="isapre.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(isapre, 'salud')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabSeguroCesantiaEmpleador || tabSeguroCesantiaTrabajador">
+
+        <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+          <li ng-class="{ 'active' : tabSeguroCesantiaEmpleador }"><a data-toggle="tab" ng-click="openTab('seguroCesantiaEmpleador')">Empleador</a></li>
+          <li ng-class="{ 'active' : tabSeguroCesantiaTrabajador }"> <a data-toggle="tab" ng-click="openTab('seguroCesantiaTrabajador')">Trabajador</a></li>
+        </ul>
+
+        <table class="table table-striped table-hover" ng-if="seguroCesantiaEmpleador.length>0 && tabSeguroCesantiaEmpleador">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="seguro in seguroCesantiaEmpleador">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ seguro.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="seguro.cuenta.nombre">{{ seguro.cuenta.nombre }}</span>
+                  <span ng-if="!seguro.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="seguro.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="seguro.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="seguro.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editar(seguro,'seguroCesantiaEmpleador')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped table-hover" ng-if="seguroCesantiaTrabajador.length>0 && tabSeguroCesantiaTrabajador">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="seguro in seguroCesantiaTrabajador">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ seguro.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="seguro.cuenta.nombre">{{ seguro.cuenta.nombre }}</span>
+                  <span ng-if="!seguro.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="seguro.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="seguro.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="seguro.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editar(seguro, 'seguroCesantiaTrabajador')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabApvA || tabApvB || tabApvc">
+
+        <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+          <li ng-class="{ 'active' : tabApvA }"><a data-toggle="tab" ng-click="openTab('apvA')">Régimen A</a></li>
+          <li ng-class="{ 'active' : tabApvB }"> <a data-toggle="tab" ng-click="openTab('apvB')">Régimen B</a></li>
+          <li ng-class="{ 'active' : tabApvc }"> <a data-toggle="tab" ng-click="openTab('apvc')">APVCs</a></li>
+        </ul>
+
+        <table class="table table-striped table-hover" ng-if="apvsA.length>0 && tabApvA">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="apv in apvsA">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ apv.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="apv.cuenta.nombre">{{ apv.cuenta.nombre }}</span>
+                  <span ng-if="!apv.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="apv.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="apv.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="apv.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(apv, 'apvA')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped table-hover" ng-if="apvsB.length>0 && tabApvB">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="apv in apvsB">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ apv.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="apv.cuenta.nombre">{{ apv.cuenta.nombre }}</span>
+                  <span ng-if="!apv.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="apv.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="apv.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="apv.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(apv, 'apvB')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped table-hover" ng-if="apvcs.length>0 && tabApvc">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="apvc in apvcs">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ apvc.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="apvc.cuenta.nombre">{{ apvc.cuenta.nombre }}</span>
+                  <span ng-if="!apvc.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="apvc.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="apvc.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="apvc.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(apvc, 'apvc')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabCCAF">
+
+        <table class="table table-striped table-hover" ng-if="ccafs.length>0">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="ccaf in ccafs">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ ccaf.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="ccaf.cuenta.nombre">{{ ccaf.cuenta.nombre }}</span>
+                  <span ng-if="!ccaf.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="ccaf.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="ccaf.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="ccaf.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(ccaf, 'ccaf')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabExCaja">
+
+        <table class="table table-striped table-hover" ng-if="exCajas.length>0">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-6">Concepto</th> 
+            <th class="col-sm-4">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="exCaja in exCajas">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ exCaja.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="exCaja.cuenta.nombre">{{ exCaja.cuenta.nombre }}</span>
+                  <span ng-if="!exCaja.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="exCaja.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="exCaja.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="exCaja.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editar(exCaja, 'exCaja')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabHaberesImp || tabHaberesNoImp">
+
+        <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+          <li ng-class="{ 'active' : tabHaberesImp }"><a data-toggle="tab" ng-click="openTab('imp')">Imponibles</a></li>
+          <li ng-class="{ 'active' : tabHaberesNoImp }"> <a data-toggle="tab" ng-click="openTab('noImp')">No Imponibles</a></li>
+        </ul>
+
+        <table class="table table-striped table-hover" ng-if="haberesImp.length>0 && tabHaberesImp">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="haber in haberesImp">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ haber.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="haber.cuenta.nombre">{{ haber.cuenta.nombre }}</span>
+                  <span ng-if="!haber.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="haber.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="haber.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="haber.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarHaber(haber, 'imp')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped table-hover" ng-if="haberesNoImp.length>0 && tabHaberesNoImp">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="haber in haberesNoImp">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ haber.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="haber.cuenta.nombre">{{ haber.cuenta.nombre }}</span>
+                  <span ng-if="!haber.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="haber.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="haber.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="haber.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarHaber(haber, 'noImp')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm-12" ng-if="tabDescuentos || tabDescuentosLegales">
+
+        <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+          <li ng-class="{ 'active' : tabDescuentos }"><a data-toggle="tab" ng-click="openTab('descuentos')">Mis Descuentos</a></li>
+          <li ng-class="{ 'active' : tabDescuentosLegales }"> <a data-toggle="tab" ng-click="openTab('descuentosLegales')">Descuentos Legales</a></li>
+        </ul>
+
+        <table class="table table-striped table-hover" ng-if="descuentos.length>0 && tabDescuentos">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="descuento in descuentos">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ descuento.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="descuento.cuenta.nombre">{{ descuento.cuenta.nombre }}</span>
+                  <span ng-if="!descuento.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="descuento.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="descuento.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="descuento.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(descuento, 'descuentos')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-striped table-hover" ng-if="descuentosLegales.length>0 && tabDescuentosLegales">
+          <thead>
+          <tr>
+            <th class="col-sm-1">#</th> 
+            <th class="col-sm-5">Concepto</th> 
+            <th class="col-sm-5">Cuenta</th> 
+            <th class="col-sm-1"></th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="descuento in descuentosLegales">
+              <td>{{ $index + 1 }}</td>
+              <td>{{ descuento.nombre }}</td>
+              <td>
+                <span ng-if="!empresa.centroCosto.isCentroCosto">
+                  <span ng-if="descuento.cuenta.nombre">{{ descuento.cuenta.nombre }}</span>
+                  <span ng-if="!descuento.cuenta.nombre"><i class="text-danger">Sin Asignar</i></span>
+                </span>
+                <span ng-if="empresa.centroCosto.isCentroCosto">
+                  <span ng-if="descuento.cuenta==0"><i class="text-danger">Sin Asignar</i></span>
+                  <span ng-if="descuento.cuenta==1"><i class="text-primary">Cuentas Pendientes</i></span>
+                  <span ng-if="descuento.cuenta==2"><i class="text-success">Todas Asignadas</i></span>
+                </span>
+              </td>
+              <td class="text-right">
+                <a href="" ng-if="accesos.editar" ng-click="editarDescuento(descuento, 'descuentosLegales')"><i class="fa fa fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

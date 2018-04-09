@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Unificación de Fichas</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default">
+    <div class="panel-heading">Seleccione la Ficha que desea Mantener</div>
+
+    <div class="panel-body">
+
+      <div class="col-sm-12">
+
+        <form class="form-horizontal" autocomplete="Off" novalidate name="formUnificar" id="formUnificar">
+
+          <div class="form-group form-group-md required" style="margin-top: 40px;">
+            <label class="col-sm-3 control-label">Ficha Maestra:</label>
+            <div class="col-sm-6" style="padding: 0px;">
+              <div class="col-sm-12">
+                <select class="form-control form-white" ng-model="objeto.ficha" name="ficha" ng-options="ficha as ficha.periodo for ficha in fichas" required>  
+                  <option value="">-- Seleccione una Ficha --</option>
+                </select>
+              </div>                            
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" confirmation-click="unificar()" confirmation-needed="La fichas seleccionadas serán unificadas en una única ficha (<b>{{ objeto.ficha.periodo }}</b>). <br />La ficha tendrá vigencia desde <b>{{ desde }} a {{ hasta }}</b> . <br />¿Desea continuar?" ng-disabled="formUnificar.$invalid">Unificar Fichas</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button> 
+</div>

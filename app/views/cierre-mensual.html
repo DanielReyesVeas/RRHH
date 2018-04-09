@@ -1,0 +1,138 @@
+<div class="box">
+  <div class="row">
+    <div class="column col-sm-12">
+      <h2> <i class="fa fa-key"> </i> Cierre Mensual</h2>
+      <div class="col-sm-2" ng-if="false">
+        <button ng-click="get()" type="button" class="btn btn-primary btn-xs">Get</button>
+      </div>
+      <div class="container text-center" ng-if="cargado && !accesos.ver" style="margin-top: 30px;">
+        <i>Aún no hay datos</i>
+      </div>
+
+      <div class="panel-body" ng-if="cargado && accesos.ver">
+        <div class="col-sm-12">
+          <div class="form-group form-group-md">
+
+            <label class="col-sm-1 control-label" style="padding: 0px;">Año:</label>
+            <div class="col-sm-3">
+              <select class="form-control form-white" ng-model="cierre.anio" ng-options="anio as anio.nombre for anio in anios" ng-change="selectAnio()"> 
+              </select>
+        
+            </div> 
+            <div class="col-sm-5 pull-right" ng-if="cargado && isCME && false">
+              <a href="#liquidaciones-de-sueldo" ng-if="!isLiquidaciones">
+                <div class="alert alert-danger">
+                  <i class="fa fa-exclamation-triangle fa-3x" style="margin-right: 20px;"> </i>
+                  <b>Hay Liquidaciones pendientes en el mes actual.</b>
+                  <p>Debe ingresarlas todas para poder realizar la Centralización.</p>
+                </div>
+              </a>
+              <a href="#aportes" ng-if="!isCuentas && isLiquidaciones">
+                <div class="alert alert-danger">
+                  <i class="fa fa-exclamation-triangle fa-3x" style="margin-right: 20px;"> </i>
+                  <b>Hay Aportes sin sus respectivas Cuentas.</b>
+                  <p>Debe asignarlas todas para poder realizar la Centralización.</p>
+                </div>
+              </a>
+            </div> 
+          </div>
+
+        </div>      
+
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+
+          <div class="col-sm-6">
+
+            <table class="table table-striped table-hover table-bordered" ng-if="datos">
+              <thead>
+                <tr>    
+                  <th class="col-sm-3">Mes</th>
+                  <th class="col-sm-12">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="mes in datos.estadoMeses" ng-if="$index<6">
+                  <td>{{ mes.nombre }}</td>
+                  <td>
+                    <div class="col-sm-12">
+                      <div class="col-sm-3" ng-if="mes.iniciado">
+                        <label class="switch switch-green">
+                          <input class="switch-input" ng-model="mes.abierto" type="checkbox" ng-change="cambiarMes()">
+                          <span class="switch-label"></span>
+                          <span class="switch-handle"></span>
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <p class="text-success" ng-if="mes.iniciado && mes.abierto"><b>ABIERTO</b></p>
+                        <p class="text-danger" ng-if="mes.iniciado && !mes.abierto"><b>CERRADO</b></p>
+                        <p class="text-muted" ng-if="!mes.disponible"><b>No disponible</b></p>
+                        <p class="text-info" ng-if="mes.disponible && !mes.iniciado"><b>Disponible</b></p>
+                      </div>
+                      <div class="col-sm-2" ng-if="mes.iniciado && mes.isCentralizar && isCME && false">
+                        <button ng-click="centralizar(mes)" type="button" class="btn btn-primary btn-xs">Centralizar</button>
+                      </div>
+                      <div class="col-sm-2" ng-if="isFirst($index)">
+                        <button confirmation-click="confirmar(mes)" confirmation-needed="Se inciará el mes de {{ mes.nombre }} {{ datos.nombre }}. ¿Seguro que desea continuar?" type="button" class="btn btn-primary btn-xs">Iniciar</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="col-sm-6">
+
+            <table class="table table-striped table-hover table-bordered" ng-if="datos">
+              <thead>
+                <tr>    
+                  <th class="col-sm-3">Mes</th>
+                  <th class="col-sm-12">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="mes in datos.estadoMeses" ng-if="$index>=6">
+                  <td>{{ mes.nombre }}</td>
+                  <td>
+                    <div class="col-sm-12">
+                      <div class="col-sm-3" ng-if="mes.iniciado">
+                        <label class="switch switch-green">
+                          <input class="switch-input" ng-model="mes.abierto" type="checkbox" ng-change="cambiarMes()">
+                          <span class="switch-label"></span>
+                          <span class="switch-handle"></span>
+                        </label>
+                      </div>
+                      <div class="col-sm-4">
+                        <p class="text-success" ng-if="mes.iniciado && mes.abierto"><b>ABIERTO</b></p>
+                        <p class="text-danger" ng-if="mes.iniciado && !mes.abierto"><b>CERRADO</b></p>
+                        <p class="text-muted" ng-if="!mes.disponible"><b>No disponible</b></p>
+                        <p class="text-info" ng-if="mes.disponible && !mes.iniciado"><b>Disponible</b></p>
+                      </div>
+                      <div class="col-sm-2" ng-if="mes.iniciado && mes.isCentralizar && isCME && false">
+                        <button ng-click="centralizar(mes)" type="button" class="btn btn-primary btn-xs">Centralizar</button>
+                      </div>
+                      <div class="col-sm-2" ng-if="isFirst($index)">
+                        <button confirmation-click="confirmar(mes)" confirmation-needed="Se iniciará el mes de {{ mes.nombre }} {{ datos.nombre }}. ¿Seguro que desea continuar?" type="button" class="btn btn-primary btn-xs">Iniciar</button>
+                      </div>
+                      <div class="col-sm-2" ng-if="isNuevoAnio && mes.nombre=='Diciembre' && mes.iniciado">
+                        <button confirmation-click="confirmar({ nombre : 'NuevoAnio' })" confirmation-needed="Se inciará el mes de Enero de 2018. ¿Seguro que desea continuar?" type="button" class="btn btn-primary btn-xs">Iniciar nuevo Año</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <button ng-click="guardar()" type="button" class="btn btn-primary pull-right"><i class="fa fa-floppy-o"></i> Guardar</button>
+
+        </div>
+
+      </div>
+        
+    </div>
+  </div>  
+</div>

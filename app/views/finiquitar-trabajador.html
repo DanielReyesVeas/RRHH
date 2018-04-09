@@ -1,0 +1,153 @@
+<div class="box">
+  <div class="row">
+    <h2> <i class="fa fa-user-times"> </i> Finiquitar Trabajador</h2>
+
+    <div class="column col-sm-12" ng-if="cargado">
+
+      <div style="margin-top: 40px;">
+
+        <div class="col-sm-12" style="margin-bottom: 20px;">
+          <h3>Trabajadores Activos</h3>
+        </div>
+
+        <div class="col-sm-12" style="margin-bottom: 20px;" ng-class="{ 'hidden' : activos.length==0}">        
+          <div class="form-group">
+            <label for="orden" class="control-label col-md-1">
+              Ordenar:
+            </label>
+            <div class="col-md-3">
+              <select ng-model="orden" id="orden" ng-init="orden='apellidos'" class="form-control form-white" ng-change="reverse = false">
+                <option value="rut">RUT</option>
+                <option value="apellidos">Nombre</option>
+                <option value="cargoOrden">Cargo</option>
+                <option value="fechaIngreso">Ingreso</option>
+                <option value="contratoOrden">Contrato</option>
+              </select>
+            </div>
+            <div class="col-md-1">
+              <a ng-click="reverse=!reverse" ng-init="reverse=false" href="">
+                <i ng-class="{ 'hidden' : reverse }" class="fa fa-arrow-down"></i>
+                <i ng-class="{ 'hidden' : !reverse }" class="fa fa-arrow-up"></i></a>
+            </div>
+            <label for="filtro" class="col-md-1 control-label" >Filtrar:</label>
+            <div class="col-md-4">
+              <input id="filtro" type="text"  class="form-control form-white form-white" ng-model="filtro">
+            </div>
+          </div>
+        </div> 
+
+        <div class="container text-center" ng-if="activos.length<=0" >
+          <i>No existen trabajadores activos</i>
+        </div>
+
+        <div class="col-sm-12">
+          <table class="table table-striped table-hover" ng-if="activos.length>0">
+            <thead>
+              <tr>    
+                <th class="col-sm-1">#</th>
+                <th class="col-sm-1">RUT</th>
+                <th class="col-sm-3">Nombre</th>
+                <th class="col-sm-2">Cargo</th>
+                <th class="col-sm-1">Fecha Ingreso</th>
+                <th class="col-sm-2">Contrato</th>
+                <th class="col-sm-1">Sueldo Base</th>
+                <th class="col-sm-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="trabajador in activos | orderObjectBy:orden : reverse | filter : filtro">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ trabajador.rutFormato }}</td>
+                <td>{{ trabajador.nombreCompleto }}</td>
+                <td>{{ trabajador.cargo.nombre }}</td>
+                <td>{{ trabajador.fechaIngreso | date : "dd-MM-y" }}</td>
+                <td>{{ trabajador.tipoContrato.nombre }}</td>
+                <td>
+                  <span ng-if="trabajador.monedaSueldo==='$'">${{ trabajador.sueldoBase | currency :"":0 }}</span>
+                  <span ng-if="trabajador.monedaSueldo!=='$'">{{ trabajador.sueldoBase }} {{ trabajador.monedaSueldo }}</span>
+                </td>
+                <td>
+                  <a href="" ng-click="finiquitar(trabajador)"><i class="fa fa-times-circle-o"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>  
+        </div>
+
+      </div>
+
+      <div style="margin-top: 80px;">
+
+        <div class="col-sm-12" style="margin-bottom: 40px; margin-top: 40px;">
+          <h3>Trabajadores Finiquitados</h3>
+        </div>
+
+        <div class="col-sm-12" style="margin-bottom: 20px;" ng-class="{ 'hidden' : finiquitados.length==0}">        
+          <div class="form-group">
+            <label for="orden2" class="control-label col-md-1">
+              Ordenar:
+            </label>
+            <div class="col-md-3">
+              <select ng-model="orden2" id="orden2" ng-init="orden2='apellidos'" class="form-control form-white" ng-change="reverse2 = false">
+                <option value="rut">RUT</option>
+                <option value="apellidos">Nombre</option>
+                <option value="cargoOrden">Cargo</option>
+                <option value="fechaIngreso">Ingreso</option>
+                <option value="fechaFiniquito">Finiquito</option>
+              </select>
+            </div>
+            <div class="col-md-1">
+              <a ng-click="reverse2=!reverse2" ng-init="reverse2=false" href="">
+                <i ng-class="{ 'hidden' : reverse2 }" class="fa fa-arrow-down"></i>
+                <i ng-class="{ 'hidden' : !reverse2 }" class="fa fa-arrow-up"></i></a>
+            </div>
+            <label for="filtro2" class="col-md-1 control-label" >Filtrar:</label>
+            <div class="col-md-4">
+              <input id="filtro2" type="text"  class="form-control form-white form-white" ng-model="filtro2">
+            </div>
+          </div>
+        </div> 
+
+        <div class="container text-center" ng-if="finiquitados.length<=0" style="margin-top: 80px;" >
+          <i>No existen trabajadores finiquitados</i>
+        </div>
+
+        <div class="col-sm-12">
+          <table class="table table-striped table-hover" ng-if="finiquitados.length>0">
+            <thead>
+              <tr>    
+                <th class="col-sm-1">#</th>
+                <th class="col-sm-1">RUT</th>
+                <th class="col-sm-3">Nombre</th>
+                <th class="col-sm-2">Cargo</th>
+                <th class="col-sm-1">Fecha Ingreso</th>
+                <th class="col-sm-2">Fecha Finiquito</th>
+                <th class="col-sm-1">Sueldo Base</th>
+                <th class="col-sm-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="trabajador in finiquitados | orderObjectBy:orden2 : reverse2 | filter : filtro2">
+                <td>{{ $index + 1 }}</td>
+                <td>{{ trabajador.rutFormato }}</td>
+                <td>{{ trabajador.nombreCompleto }}</td>
+                <td>{{ trabajador.cargo.nombre }}</td>
+                <td>{{ trabajador.fechaIngreso | date : "dd-MM-y" }}</td>
+                <td>{{ trabajador.fechaFiniquito | date : "dd-MM-y" }}</td>
+                <td>
+                  <span ng-if="trabajador.monedaSueldo==='$'">${{ trabajador.sueldoBase | currency :"":0 }}</span>
+                  <span ng-if="trabajador.monedaSueldo!=='$'">{{ trabajador.sueldoBase }} {{ trabajador.monedaSueldo }}</span>
+                </td>
+                <td>
+                  <a href="" ng-click="detalle(trabajador.sid)"><i class="fa fa-folder-open-o"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table> 
+        </div>
+
+      </div>
+
+    </div>
+  </div>  
+</div>

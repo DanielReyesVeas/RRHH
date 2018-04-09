@@ -1,0 +1,46 @@
+<div class="modal-header">
+  <button type="button" class="close" confirmation-click="$dismiss()" confirmation-needed="La Plantilla de Certificado no ha sido guardada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{ encabezado }}</div>
+    <div class="panel-body">          
+
+      <div class="col-sm-12" style="margin: 20px;">
+        <div class="form-group form-group-md required">
+          <label class="col-sm-2 col-sm-offset-1 control-label">Certificado:</label>
+          <div class="col-sm-7">
+            <input ng-model="certificado.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre del certificado" required >
+          </div>
+        </div>
+      </div>
+
+      <div class="container col-sm-12 text-center" style="margin-bottom: 120px;">
+        <textarea ui-tinymce="tinymceOptions" ng-model="certificado.cuerpo"></textarea>
+      </div>        
+
+      <div class="row" style="margin-top: 100px;">
+        <div class="col-sm-3 col-sm-offset-2 text-center" style="border-bottom: 1px solid black;"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-2 text-center">Nombre Trabajador</div>
+      </div>
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-sm-3 col-sm-offset-2 text-center">c.c. carpeta personal</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-2 text-center">Inspección del Trabajo</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" confirmation-click="guardar(certificado)" confirmation-needed="La Plantilla de Certificado ha sido modificada. ¿Desea conservar los cambios?">Guardar Cambios</button>
+      <button class="btn btn-warning" type="button" confirmation-click="$dismiss()" confirmation-needed="La Plantilla de Certificado no ha sido guardada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">Cerrar</button>
+    </div>
+  </div>
+</div>

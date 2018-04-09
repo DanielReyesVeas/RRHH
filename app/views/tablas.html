@@ -1,0 +1,43 @@
+<div class="box">
+  <div class="row">
+    <h2> <i class="fa fa-database"> </i> Tablas Estructurantes</h2>
+
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2" style="margin-top: 50px;">
+
+        <uib-accordion close-others="true" ng-repeat="tabla in tablas">
+          
+          <div uib-accordion-group class="panel-default" is-open="tabla.isOpen" id="{{ tabla.id }}">
+
+            <uib-accordion-heading>{{ tabla.nombre }}<i class="pull-right fa fa-chevron-down" ng-show="!tabla.isOpen"></i><i class="pull-right fa fa-chevron-right" ng-show="tabla.isOpen"></i>
+            </uib-accordion-heading>
+            
+            <table class="table table-striped table-hover" style="margin-top: 50px;">
+              <h2 class="text-center">Tabla N°{{ tabla.numero }}: <b>{{ tabla.nombre }}</b>
+                <button type="button" class="btn btn-primary btn-sm pull-right" ng-if="accesos.editar" ng-class="{'hidden' : montoGlobal}" confirmation-click="editarTabla(tabla.id, tabla)" confirmation-needed="{{ advertencia }}" ng-hide="tabla.id===16"><i class="fa fa-pencil"> </i> Editar</button>
+              </h2>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Glosa</th>
+                  <th ng-repeat="rec in recaudadores | filter: fnRecaudadores(tabla.id)">Código {{ rec.nombre }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="dato in tabla.glosas">
+                  <td>{{ $index + 1 }}</td>
+                  <td>{{ dato.nombre }}</td>
+                  <td ng-repeat="cod in dato.codigos"><span ng-if="cod.codigo">{{ cod.codigo }}</span><span ng-if="!cod.codigo">-</span></span></td> 
+                  <!--<td colspan="2" ng-if="dato.codigo===10101010" style="background-color: #CCCCCC;">{{ dato.nombre }}</td>-->
+                </tr>
+              </tbody>
+            </table> 
+
+          </div>
+          
+        </uib-accordion>        
+
+      </div>
+    </div>
+  </div>
+</div>

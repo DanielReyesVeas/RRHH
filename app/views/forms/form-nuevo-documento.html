@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ title }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="documentosForm" name="documentosForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{trabajador.nombreCompleto}}</div>
+
+      <div class="panel-body" style="margin-bottom: 30px;">
+
+        <div class="text-center" ng-if="tiposDocumento.length<=0" style="margin-top: 30px;">
+          <i>No se han ingresado tipos de documentos</i>
+          <p class="text-center">Puedes ingresarlos en <button class="btn btn-sm btn-primary disabled" style="background-color: lightskyblue;"><i class="fa fa-cog"> </i> Gestionar Tipos de Documentos</button></p>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-if="tiposDocumento.length>0">
+          <div class="form-group form-group-md required">          
+            <label class="col-sm-4 control-label">Tipo de Documento:</label>
+            <div class="col-sm-6">
+              <select class="form-control form-white" ng-model="documento.tipo" ng-options="tipo as tipo.nombre for tipo in tiposDocumento" required> 
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-show="documento.tipo && !isEdit">
+          <div class="form-group form-group-md">
+            <!--<div class="col-sm-6">
+              <input ng-model="documento.archivo" class="form-control form-white" type="text" placeholder="seleccione un documento" required >
+            </div>-->
+            <div class="form-group form-group-md">
+              <div class="col-sm-4">
+                <button ng-model-rejected="rejFiles" ng-model="documento.file" ngf-max-size="5MB" ngf-select class="btn btn-primary btn-xs">Seleccionar Archivo</button>
+              </div>
+              <div class="col-sm-8 text-success" ng-class="{ 'hidden' : !isOK }">
+                <b>El archivo "{{ nombreArchivo }}" está listo ser importado.</b>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-class="{ 'hidden' : !isOK && !isEdit}">
+          <div class="form-group form-group-md ">          
+            <label class="col-sm-4 control-label">Descripción:</label>
+              <div class="col-sm-8">
+                <textarea ng-model="documento.descripcion" class="form-control form-white" placeholder="ingrese una descripción" rows="6" cols="6"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-if="tiposDocumento.length>0 && !isEdit" ng-click="subir(documento.file)" ng-disabled="documentosForm.$invalid || !documento.file">Subir</button>
+  <button class="btn btn-primary" type="button" ng-if="tiposDocumento.length>0 && isEdit" ng-click="modificar()" ng-disabled="documentosForm.$invalid">Modificar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>

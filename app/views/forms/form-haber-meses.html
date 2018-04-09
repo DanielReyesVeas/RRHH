@@ -1,0 +1,87 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Temporalidad Haberes</h3>
+</div>
+<div class="modal-body centered">
+  <form class="form-horizontal" name="haberMesesForm" id="haberMesesForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{haber.nombre}}</div>
+      <div class="panel-body"> 
+
+        <div class="col-sm-12" style="margin: 40px;">
+          <div class="form-group form-group-md">
+
+            <label class="col-sm-2 control-label">Por Mes:</label>         
+            <div class="col-sm-2">
+              <label class="switch switch-green">
+                <input class="switch-input" ng-model="objeto.haber.mensual" type="checkbox" ng-change="cambiarMes('mensual')">
+                <span class="switch-label" data-on="SI" data-off="NO"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>
+
+            <label class="col-sm-2 control-label">Rango de Meses:</label>         
+            <div class="col-sm-2">
+              <label class="switch switch-green">
+                <input class="switch-input" ng-model="objeto.haber.rangoMeses" type="checkbox" ng-change="cambiarMes('rangoMeses')">
+                <span class="switch-label" data-on="SI" data-off="NO"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>
+
+            <label class="col-sm-2 control-label">Permanente:</label>         
+            <div class="col-sm-2">
+              <label class="switch switch-green">
+                <input class="switch-input" ng-model="objeto.haber.permanente" type="checkbox" ng-change="cambiarMes('permanente')">
+                <span class="switch-label" data-on="SI" data-off="NO"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-bottom: 40px;" ng-show="!objeto.haber.permanente">
+          <div class="form-group form-group-md">
+            <div ng-show="objeto.haber.mensual">
+              <label class="col-sm-1 col-sm-offset-4 control-label">Mes:</label>            
+              <div class="col-sm-3">{{ objeto.haber.mes | date : "MM-y" }}</div>
+            </div>
+
+            <div ng-show="objeto.haber.rangoMeses">
+              <label class="col-sm-1 col-sm-offset-1 control-label">Desde:</label>            
+              <div class="col-sm-2">{{ objeto.haber.mes | date : "MM-y" }}</div>
+            </div>
+
+            <div ng-if="objeto.haber.rangoMeses">
+              <label class="col-sm-1 control-label required">Hasta:</label>            
+              <div class="col-sm-3">
+                <div class="input-group"> 
+                  <input type="text" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="objeto.haber.hasta" is-open="popupFechaHasta.opened" datepicker-options="dateOptionsMes" close-text="Close" required />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openFechaHasta()">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>    
+      </div>
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" confirmation-click="ingresoMasivoHaber( false );" confirmation-needed="El Haber <b>{{haber.nombre}}</b> será ingresado a los trabajadores seleccionados. ¿Desea continuar?" ng-disabled="haberMesesForm.$invalid" ng-class="{ 'hidden' : objeto.haber.permanente }">Ingresar Haber</button>
+      <button class="btn btn-primary" type="button" confirmation-click="confirmacion( datos.haber, haber );" confirmation-needed="El Haber <b>{{haber.nombre}}</b> será ingresado a los trabajadores seleccionados. ¿Desea continuar?" ng-disabled="haberMesesForm.$invalid" ng-class="{ 'hidden' : !objeto.haber.permanente }">Ingresar Haber</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+

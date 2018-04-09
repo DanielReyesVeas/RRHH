@@ -1,0 +1,734 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Ficha Trabajador</h3>
+</div>
+<div class="modal-body centered">
+  <form class="form-horizontal" autocomplete="Off" novalidate name="formTrabajador" id="formTrabajador">
+    <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+      <li class="active"><a data-toggle="tab" ng-click="openTab('datosPersonales')"><label class="required">Datos Personales</label></a></li>
+      <li class=""> <a data-toggle="tab" ng-click="openTab('domicilio')"><label class="required">Domicilio</label></a></li>
+      <li class=""> <a data-toggle="tab" ng-click="openTab('destinacion')"><label class="required">Destinación</label></a></li>
+      <li class=""> <a data-toggle="tab" ng-click="openTab('antecedentesComerciales')"><label class="required">Antecedentes Contracturales</label></a></li>
+      <li class=""> <a data-toggle="tab" ng-click="openTab('remuneracion')"><label class="required">Remuneración</label></a></li>
+      <li class=""> <a data-toggle="tab" ng-click="openTab('afp')"><label class="required">AFP / IPS</label></a></li>
+    </ul>
+    <div class="panel panel-default" ng-show="tabDatosPersonales">
+      <div class="panel-heading">Datos Personales</div>
+      <div class="panel-body">          
+
+        <div class="form-group form-group-md">
+          <div class="col-sm-4 col-sm-offset-4">
+            <img src="images/avatar.png" width="200px" />
+          </div>
+        </div>
+
+        <div class="form-group form-group-md" style="margin-top: 20px;">
+          <label class="col-sm-3 control-label">RUT:</label>
+          <div class="col-sm-6">
+            <div class="col-sm-10">
+              <span>
+                {{ trabajador.rutFormato }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Nombres:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.nombres" class="form-control form-white" name="nombres" type="text" placeholder="ingrese los nombres" ng-disabled="trabajador.estado==='Finiquitado'" required >
+            </div>              
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Apellidos:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.apellidos" class="form-control form-white" name="apellidos" type="text" placeholder="ingrese los apellidos" ng-disabled="trabajador.estado==='Finiquitado'" required >
+            </div>              
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Nacionalidad:</label>
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-12">
+              <select class="form-control form-white" ng-model="trabajador.nacionalidad" name="nacionalidad" ng-options="nac as nac.nombre for nac in opciones.nacionalidades" ng-disabled="trabajador.estado==='Finiquitado'" required>  
+                <option value="">-- Seleccione una Nacionalidad --</option>
+              <!--ng-options="opc as opc.value for opc in opciones.formasPago"-->                           
+              </select>
+            </div>                            
+          </div>
+        </div>  
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Sexo:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="row">
+              <div class="radio col-sm-4">
+                <label><input type="radio" ng-model="trabajador.sexo" name="sexo" value="f" icheck ng-disabled="trabajador.estado==='Finiquitado'" required>Femenino</label>
+              </div>
+              <div class="radio col-sm-4">
+                <label><input type="radio" ng-model="trabajador.sexo" name="sexo" value="m" icheck ng-disabled="trabajador.estado==='Finiquitado'" required>Masculino</label>
+              </div>
+            </div>                            
+          </div>
+        </div>  
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Estado Civil:</label>
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-12">
+              <select class="form-control form-white" ng-model="trabajador.estadoCivil" name="estadoCivil" ng-options="est as est.nombre for est in opciones.estadosCiviles" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                <option value="">-- Seleccione un Estado Civil --</option>
+              </select>
+            </div>                            
+          </div>
+        </div>  
+
+        <div class="form-group form-group-md" ng-class="{ 'has-error': invalidFechaNacimiento }">
+          <label class="col-sm-3 control-label required">Fecha de Nacimiento:</label>            
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-10">
+              <div class="input-group"> 
+                <input type="text" class="form-control form-white" name="fechaNacimiento" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="trabajador.fechaNacimiento" is-open="popupFechaNacimiento.opened" datepicker-options="dateOptions" close-text="Close" ng-disabled="trabajador.estado==='Finiquitado'" ng-blur="validaFecha('fechaNacimiento')" placeholder="DD-MM-AAAA" required />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="openFechaNacimiento()" ng-disabled="trabajador.estado==='Finiquitado'">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </span>                
+              </div>
+              <span class="help-block" ng-show="invalidFechaNacimiento">
+                Formato de fecha incorrecto
+              </span>
+            </div>                          
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="panel panel-default" ng-show="tabDomicilio">
+      <div class="panel-heading">Domicilio</div>
+      <div class="panel-body">
+
+        <div class="form-group form-group-md required">          
+          <label class="col-sm-3 control-label">Dirección:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.direccion" class="form-control form-white" name="direccion" type="text" placeholder="ingrese la dirección" ng-disabled="trabajador.estado==='Finiquitado'" required >
+            </div>              
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Comuna</label>
+          <div class="col-sm-6">
+            <input type="text" ng-model="trabajador.comuna" placeholder="buscar comuna" uib-typeahead="comuna as comuna.nombre for comuna in getComunas($viewValue)" typeahead-loading="loadingComuna" name="comuna" class="form-control form-white" typeahead-editable="false" typeahead-template-url="customTemplate.html" ng-disabled="trabajador.estado==='Finiquitado'" required  />
+          </div>
+          <div class="col-sm-1">
+            <i ng-show="loadingComuna" class="fa fa-refresh"></i>
+            <i ng-show="trabajador.comuna.id" class="fa fa-check" style="color: #0a0;"></i>
+          </div>
+        </div>
+
+        <div class="form-group form-group-md">
+          <label class="col-sm-3 control-label">Teléfono Fijo:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.telefono" class="form-control form-white" name="telefonoFijo" type="text" placeholder="ingrese el teléfono fijo" ng-disabled="trabajador.estado==='Finiquitado'" />
+            </div>              
+          </div>
+        </div>   
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Celular:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.celular" class="form-control form-white" name="celular" type="text" placeholder="ingrese el celular" ng-disabled="trabajador.estado==='Finiquitado'" required />
+            </div>              
+          </div>
+        </div>   
+
+        <div class="form-group form-group-md">
+          <label class="col-sm-3 control-label">Celular Empresa:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.celularEmpresa" class="form-control form-white" name="celularEmpresa" type="text" placeholder="ingrese el celular de la empresa" ng-disabled="trabajador.estado==='Finiquitado'" >
+            </div>              
+          </div>
+        </div> 
+
+        <div class="form-group form-group-md required" ng-class="{ 'has-error': formTrabajador.email.$error.email }">
+          <label class="col-sm-3 control-label">Email Personal:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.email" class="form-control form-white" name="email" type="email" placeholder="ingrese el correo electrónico" ng-disabled="trabajador.estado==='Finiquitado'" required >
+            </div>              
+          </div>
+          <span class="help-block" ng-show="formTrabajador.email.$error.email">
+            Email inválido
+          </span>
+        </div> 
+
+        <div class="form-group form-group-md">
+          <label class="col-sm-3 control-label">Email Empresa:</label>
+          <div class="col-sm-6" style="padding: 0px;">
+            <div class="col-sm-10">
+              <input ng-model="trabajador.emailEmpresa" class="form-control form-white" name="emailEmpresa" type="email" placeholder="ingrese el correo electrónico de la empresa" ng-disabled="trabajador.estado==='Finiquitado'" />
+            </div>              
+          </div>
+        </div> 
+
+      </div>
+    </div>
+
+    <div class="panel panel-default" ng-show="tabDestinacion">
+      <div class="panel-heading">Destinación</div>
+      <div class="panel-body">  
+        <fieldset>
+          <legend>Destinación</legend>
+
+          <div class="form-group form-group-md required">
+            <label class="col-sm-3 control-label">Cargo:</label>
+            <div class="col-sm-7" style="padding: 0px;">
+              <div class="col-sm-11">
+                <select class="form-control form-white" name="cargo" ng-model="trabajador.cargo" ng-options="car as car.nombre for car in opciones.cargos" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                  <option value="">-- Seleccione un Cargo --</option>
+                </select>
+              </div>                            
+            </div>
+          </div>  
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Título:</label>
+            <div class="col-sm-6" style="padding: 0px;">
+              <div class="col-sm-12">
+                <select class="form-control form-white" name="titulo" ng-model="trabajador.titulo" ng-options="tit as tit.nombre for tit in opciones.titulos" ng-disabled="trabajador.estado==='Finiquitado'"> 
+                  <option value="">-- Seleccione un Título --</option>
+                </select> 
+              </div>                            
+            </div>
+          </div>  
+
+          <div class="form-group form-group-md required">
+            <label class="col-sm-3 control-label">Sección:</label>
+            <div class="col-sm-7" style="padding: 0px;">
+              <div class="col-sm-11">
+                <select class="form-control form-white" name="seccion" ng-model="trabajador.seccion" ng-options="sec as '&nbsp;'.repeat((sec.nivel - 1) * 5 ) + sec.nombre for sec in opciones.secciones" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                  <option value="">-- Seleccione una Sección --</option>
+                </select>
+              </div>                            
+            </div>
+          </div> 
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Tienda:</label>
+            <div class="col-sm-7" style="padding: 0px;">
+              <div class="col-sm-11">
+                <select class="form-control form-white" name="tienda" ng-model="trabajador.tienda" ng-options="tienda as tienda.nombre for tienda in opciones.tiendas" ng-disabled="trabajador.estado==='Finiquitado'"> 
+                  <option value="">-- Seleccione una Tienda --</option>
+                </select>
+              </div>                            
+            </div>
+          </div>  
+
+          <div class="form-group form-group-md" ng-if="empresa.centroCosto.isCentroCosto">
+            <label class="col-sm-3 control-label">Centro de Costo:</label>
+            <div class="col-sm-7" style="padding: 0px;">
+              <div class="col-sm-11">
+                <select class="form-control form-white" name="centroCosto" ng-model="trabajador.centroCosto" ng-options="centro as centro.nombre for centro in opciones.centros" ng-disabled="trabajador.estado==='Finiquitado'"> 
+                  <option value="">-- Seleccione un Centro de Costo --</option>
+                </select>
+              </div>                            
+            </div>
+          </div>  
+
+          <div class="form-group form-group-md" ng-if="empresa.impuestoUnico=='t'">
+            <label class="col-sm-3 control-label">Zona Impuesto Único:</label>
+            <div class="col-sm-7" style="padding: 0px;">
+              <div class="col-sm-11">
+                <select class="form-control form-white" name="zonaImpuestoUnico" ng-model="trabajador.zonaImpuestoUnico" ng-options="zona as zona.select for zona in opciones.zonas" ng-disabled="trabajador.estado==='Finiquitado'"> 
+                  <option value="">-- Seleccione una Zona --</option>
+                </select>
+              </div>                            
+            </div>
+          </div> 
+
+          <div class="form-group form-group-md" ng-show="jefe">
+            <label class="col-sm-3 control-label">Jefe Directo:</label>
+            <div class="col-sm-4">
+              {{ jefe }}             
+            </div>
+          </div>  
+        </fieldset>
+
+        <fieldset>
+          <legend>Cuenta de Pago</legend>
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Tipo:</label>
+            <div class="col-sm-4" style="padding: 0px;">
+              <div class="col-sm-12">
+                <select class="form-control form-white" name="tipoCuenta" ng-model="trabajador.tipoCuenta" ng-options="cuen as cuen.nombre for cuen in opciones.tiposCuentas" ng-disabled="trabajador.estado==='Finiquitado'"> 
+                  <option value="">-- Seleccione un Tipo de Cuenta --</option>
+                </select>
+              </div>                            
+            </div>
+          </div>  
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Banco:</label>
+            <div class="col-sm-4" style="padding: 0px;">
+              <div class="col-sm-12">
+                <select class="form-control form-white" name="banco" ng-model="trabajador.banco" ng-options="ban as ban.nombre for ban in opciones.bancos" ng-disabled="trabajador.estado==='Finiquitado'"> 
+                  <option value="">-- Seleccione un Banco --</option>
+                </select> 
+              </div>                            
+            </div>
+          </div>  
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Número de cuenta:</label>
+            <div class="col-sm-4" style="padding: 0px;">
+              <div class="col-sm-10">
+                <input ng-model="trabajador.numeroCuenta" name="cuenta" class="form-control form-white" type="text" placeholder="ingrese el N° de cuenta" ng-disabled="trabajador.estado==='Finiquitado'">
+              </div>                            
+            </div>
+          </div>  
+        </fieldset>
+        
+      </div>      
+    </div>
+
+
+    <div class="panel panel-default" ng-show="tabAntecedentesComerciales">
+      <div class="panel-heading">Antecedentes Contractuales</div>
+      <div class="panel-body">  
+
+        <div class="form-group form-group-md required" ng-class="{ 'has-error': invalidFechaIngreso }">
+          <label class="col-sm-3 control-label">Fecha de Ingreso:</label>            
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-10">
+              <div class="input-group"> 
+                <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" name="fechaIngreso" ng-model="trabajador.fechaIngreso" is-open="popupFechaIngreso.opened" datepicker-options="dateOptions" close-text="Close" ng-disabled="trabajador.estado==='Finiquitado'" ng-blur="validaFecha('fechaIngreso')" placeholder="DD-MM-AAAA" required />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-disabled="trabajador.estado==='Finiquitado'" ng-click="openFechaIngreso()">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </span>
+              </div>
+              <span class="help-block" ng-show="invalidFechaIngreso">
+                Formato de fecha incorrecto
+              </span>
+            </div>                          
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required" ng-class="{ 'has-error': invalidFechaReconocimiento }">
+          <label class="col-sm-3 control-label">Fecha de Reconocimiento:</label>            
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-10">
+              <div class="input-group"> 
+                <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" name="fechaReconocimiento" ng-model="trabajador.fechaReconocimiento" is-open="popupFechaReconocimiento.opened" datepicker-options="dateOptions" close-text="Close" ng-disabled="trabajador.estado==='Finiquitado'" ng-blur="validaFecha('fechaReconocimiento')" placeholder="DD-MM-AAAA" required />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-disabled="trabajador.estado==='Finiquitado'" ng-click="openFechaReconocimiento()">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </span>
+              </div>
+              <span class="help-block" ng-show="invalidFechaReconocimiento">
+                Formato de fecha incorrecto
+              </span>
+            </div>                          
+          </div>
+        </div>
+
+        <div class="form-group form-group-md" ng-class="{ 'has-error': invalidFechaReconocimientoCesantia }">
+          <label class="col-sm-3 control-label">Fecha de Reconocimiento Seguro de Cesantía:</label>            
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-10">
+              <div class="input-group"> 
+                <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" name="fechaReconocimientoCesantia" ng-model="trabajador.fechaReconocimientoCesantia" is-open="popupFechaReconocimientoCesantia.opened" datepicker-options="dateOptions" close-text="Close" ng-disabled="trabajador.estado==='Finiquitado'" ng-blur="validaFecha('fechaReconocimientoCesantia')" placeholder="DD-MM-AAAA" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-disabled="trabajador.estado==='Finiquitado'" ng-click="openFechaReconocimientoCesantia()">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </span>
+              </div>
+              <span class="help-block" ng-show="invalidFechaReconocimientoCesantia">
+                Formato de fecha incorrecto
+              </span>
+            </div>                          
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Tipo de Contrato:</label>
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-12">
+              <select class="form-control form-white" name="tipoContrato" ng-model="trabajador.tipoContrato" ng-options="con as con.nombre for con in opciones.tiposContratos" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                <option value="">-- Seleccione una Tipo de Contrato --</option>
+              </select>
+            </div>                            
+          </div>
+        </div>  
+
+        <div class="form-group form-group-md required" ng-if="trabajador.tipoContrato.nombre!='Indefinido'" ng-class="{ 'has-error': invalidFechaVencimiento || invalidFechaVencimientoIngreso || invalidFechaVencimientoReconocimiento }">
+          <label class="col-sm-3 control-label">Fecha de Vencimiento:</label>            
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-10">
+              <div class="input-group"> 
+                <input type="text" class="form-control form-white" name="fechaVencimiento" uib-datepicker-popup="dd-MM-yyyy" ng-model="trabajador.fechaVencimiento" is-open="popupFechaVencimiento.opened" datepicker-options="dateOptions" close-text="Close" ng-disabled="trabajador.estado==='Finiquitado'" ng-blur="validaFecha('fechaVencimiento')" placeholder="DD-MM-AAAA" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-disabled="trabajador.estado==='Finiquitado'" ng-click="openFechaVencimiento()">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </span>
+              </div>
+              <span class="help-block" ng-show="invalidFechaVencimiento">
+                Formato de fecha incorrecto
+              </span>
+              <span class="help-block" ng-show="invalidFechaVencimientoIngreso">
+                La fecha no puede ser menor a la fecha de Ingreso
+              </span>
+              <span class="help-block" ng-show="invalidFechaVencimientoReconocimiento">
+                La fecha no puede ser menor a la fecha de Reconocimiento
+              </span>
+            </div>                          
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Tipo de Jornada Laboral:</label>
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-12">
+              <select class="form-control form-white" name="tipoJornada" ng-model="trabajador.tipoJornada" ng-options="jor as jor.nombre for jor in opciones.tiposJornadas" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                <option value="">-- Seleccione un Tipo de Jornada --</option>
+              </select>
+            </div>                            
+          </div>
+        </div>  
+
+        <div class="form-group form-group-md">
+          <label class="col-sm-3 control-label">Semana Corrida:</label>
+          <div class="col-sm-2">
+            <label class="switch switch-green" ng-disabled="trabajador.estado==='Finiquitado'">
+              <input class="switch-input" name="semanaCorrida" ng-model="trabajador.semanaCorrida" type="checkbox" ng-disabled="trabajador.estado==='Finiquitado'" />
+              <span class="switch-label" data-on="SI" data-off="NO" ng-disabled="trabajador.estado==='Finiquitado'"></span>
+              <span class="switch-handle" ng-disabled="trabajador.estado==='Finiquitado'"></span>
+            </label>
+          </div>  
+        </div>   
+        
+      </div>      
+    </div>
+
+    <div class="panel panel-default" ng-show="tabRemuneracion">
+      <div class="panel-heading">Remuneración</div>
+      <div class="panel-body">  
+
+        <fieldset>
+          <legend>Imponibles</legend>
+          <div class="form-group form-group-md" style="margin-top: 30px;">
+
+            <label class="col-sm-3 control-label required">Sueldo Base:</label>
+            <div class="col-sm-8" style="padding: 0px;">
+              <div class="col-sm-3">
+                <select class="form-control form-white" name="monedaSueldo" ng-model="trabajador.monedaSueldo" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-disabled="trabajador.estado==='Finiquitado'" ng-change="cambiarMonedaSueldo()" > 
+                </select>
+              </div>                            
+              <div class="col-sm-4" ng-show="trabajador.monedaSueldo==='$'" style="padding: 0px;">
+                <input ng-model="trabajador.sueldoBase" name="sueldoBase" class="form-control form-white" type="text" placeholder="ingrese el sueldo en pesos" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>
+              <div class="col-sm-4" ng-show="trabajador.monedaSueldo==='UF'" style="padding-left: 0px;">
+                <input ng-model="trabajador.sueldoBase" name="sueldoBase" class="form-control form-white" type="text" placeholder="ingrese el sueldo en UF" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>
+              <div class="col-sm-4" ng-show="trabajador.monedaSueldo==='UTM'" style="padding-left: 0px;">
+                <input ng-model="trabajador.sueldoBase" name="sueldoBase" class="form-control form-white" type="text" placeholder="ingrese el sueldo en UTM" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>                                   
+            </div>
+          </div>  
+          
+          <div class="form-group form-group-md required" style="margin-top: 30px; margin-bottom: 30px;">
+            <label class="col-sm-3 control-label">Tipo de Trabajador:</label>
+            <div class="col-sm-5" style="padding: 0px;">
+              <div class="col-sm-10">
+                <select class="form-control form-white" name="tipo" ng-model="trabajador.tipo" ng-options="tipo as tipo.nombre for tipo in opciones.tipos" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                  <option value="">-- Seleccione un Tipo de Trabajador --</option>
+                </select>
+              </div>                            
+            </div>
+          </div>
+
+          <div class="form-group form-group-md" style="margin-top: 30px;">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-5" style="padding: 0px;">
+              <div class="row">
+                <div class="radio col-sm-6">
+                  <label><input type="radio" name="tipoTrabajador" ng-model="trabajador.tipoTrabajador" value="Normal" ng-change="cambiarTipoTrabajador()" icheck ng-disabled="trabajador.estado==='Finiquitado'">Normal</label>
+                </div>
+                <div class="radio col-sm-6">
+                  <label><input type="radio" name="tipoTrabajador" ng-model="trabajador.tipoTrabajador" value="Socio" ng-change="cambiarTipoTrabajador()" icheck ng-disabled="trabajador.estado==='Finiquitado'">Socio</label>
+                </div>                  
+              </div>  
+            </div>
+            <div class="col-sm-4">
+              <div class="checkbox" ng-show="trabajador.tipoTrabajador==='Socio'">
+                <label>
+                  <input type="checkbox" name="exceso" ng-model="trabajador.excesoRetiro" ng-disabled="trabajador.estado==='Finiquitado'" icheck> Considerar exceso como retiro
+                </label>
+              </div>
+            </div>                          
+          </div>         
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;" ng-if="empresa.gratificacion=='t'">
+            <label class="col-sm-3 control-label">Tipo de Gratificación:</label>
+            <div class="col-sm-5" style="padding: 0px;">
+              <div class="row">
+                <div class="radio col-sm-6">
+                  <label><input type="radio" ng-model="trabajador.gratificacion" ng-change="cambiarGratificacion('mensual')" name="gratificacionMensual" value="m" icheck required>Mensual</label>
+                </div>
+                <div class="radio col-sm-6">
+                  <label><input type="radio" ng-model="trabajador.gratificacion" ng-change="cambiarGratificacion('anual')" name="gratificacionAnual" value="a" icheck required>Anual</label>
+                </div>                 
+              </div>
+            </div> 
+            <div class="col-sm-4" style="padding: 0px;">
+              <div class="row">
+                <div class="col-sm-6" style="padding: 0px;" ng-class="{ 'hidden' : trabajador.gratificacion=='a' }" >
+                  <label class="col-sm-12">
+                    <input type="checkbox" ng-model="trabajador.proporcionalInasistencias" value="true" icheck> Proporcional Inasistencias
+                  </label>   
+                </div>
+                <div class="col-sm-6" style="padding: 0px;" ng-class="{ 'hidden' : trabajador.gratificacion=='a' }" >
+                  <label class="col-sm-12">
+                    <input type="checkbox" ng-model="trabajador.proporcionalLicencias" value="true" icheck> Proporcional Licencias
+                  </label>   
+                </div>
+              </div>
+            </div>                 
+          </div>
+
+          <div class="form-group form-group-md" style="margin-top: 20px;" ng-if="empresa.gratificacion=='t' && trabajador.gratificacion=='m' || empresa.gratificacion=='e' && empresa.tipoGratificacion=='m'">
+            <label class="col-sm-3 control-label">Gratificación Especial:</label>
+            <div class="col-sm-2">
+              <label class="switch switch-green" ng-disabled="trabajador.estado==='Finiquitado'">
+                <input class="switch-input" name="gratificacionEspecial" ng-model="trabajador.gratificacionEspecial" type="checkbox" ng-disabled="trabajador.estado==='Finiquitado'" />
+                <span class="switch-label" data-on="SI" data-off="NO" ng-disabled="trabajador.estado==='Finiquitado'"></span>
+                <span class="switch-handle" ng-disabled="trabajador.estado==='Finiquitado'"></span>
+              </label>
+            </div>  
+            <div class="col-sm-7" ng-if="trabajador.gratificacionEspecial">
+              <div class="col-sm-3" style="padding-left: 0px;">
+                <select class="form-control form-white" ng-model="trabajador.monedaGratificacion" name="monedaGratificacion" ng-change="cambiarMonedaGratificacion()" ng-options="mon.nombre as mon.nombre for mon in monedas" > 
+                </select>
+              </div>                            
+              <div class="col-sm-6" ng-show="trabajador.monedaGratificacion==='$'">
+                <input ng-model="trabajador.montoGratificacion" class="form-control form-white" name="montoImponible" type="text" placeholder="ingrese el monto en pesos" />
+              </div>
+              <div class="col-sm-6" ng-show="trabajador.monedaGratificacion==='UF'">
+                <input ng-model="trabajador.montoGratificacion" class="form-control form-white" name="montoImponible" type="text" placeholder="ingrese el monto en UF" />
+              </div>
+              <div class="col-sm-6" ng-show="trabajador.monedaGratificacion==='UTM'">
+                <input ng-model="trabajador.montoGratificacion" class="form-control form-white" name="montoImponible" type="text" placeholder="ingrese el monto en UTM" />
+              </div>
+            </div>
+          </div> 
+
+        </fieldset>
+
+        <fieldset>
+          <legend>No Imponibles</legend>
+          <div class="form-group form-group-md" style="margin-top: 30px;">
+            <label class="col-sm-2 control-label">Colación:</label>
+            <div class="col-sm-8" style="padding: 0px;">
+              <div class="col-sm-3">
+                <select class="form-control form-white" ng-model="trabajador.monedaColacion" name="monedaColacion" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-change="cambiarMonedaColacion()" ng-disabled="trabajador.estado==='Finiquitado'" > 
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <input ng-model="trabajador.montoColacion" name="colacion" ng-class="{'hidden' : trabajador.monedaColacion!='$'}" class="form-control form-white" type="text" placeholder="ingrese el monto en pesos de colación" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div> 
+              <div class="col-sm-6">
+                <input ng-model="trabajador.montoColacion" name="colacion" ng-class="{'hidden' : trabajador.monedaColacion!='UF'}" class="form-control form-white" type="text" placeholder="ingrese el monto en UF de colación" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div> 
+              <div class="col-sm-6">
+                <input ng-model="trabajador.montoColacion" name="colacion" ng-class="{'hidden' : trabajador.monedaColacion!='UTM'}" class="form-control form-white" type="text" placeholder="ingrese el monto en UTM de colación" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>                           
+            </div>
+            <div class="col-sm-2" style="padding: 0px;" ng-class="{ 'hidden' : !trabajador.montoColacion }" >
+              <label class="col-sm-12">
+                <input type="checkbox" ng-model="trabajador.proporcionalColacion" value="true" icheck> Proporcional
+              </label>   
+            </div>  
+          </div>  
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-2 control-label">Movilización:</label>
+            <div class="col-sm-8" style="padding: 0px;">
+              <div class="col-sm-3">
+                <select class="form-control form-white" name="monedaMovilizacion" ng-model="trabajador.monedaMovilizacion" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-change="cambiarMonedaMovilizacion()" ng-disabled="trabajador.estado==='Finiquitado'" > 
+                </select>
+              </div>
+              <div class="col-sm-7">
+                <input ng-model="trabajador.montoMovilizacion" name="movilizacion" ng-class="{'hidden' : trabajador.monedaMovilizacion!='$'}" class="form-control form-white" type="text" placeholder="ingrese el monto en pesos de movilización" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div> 
+              <div class="col-sm-7">
+                <input ng-model="trabajador.montoMovilizacion" name="movilizacion" ng-class="{'hidden' : trabajador.monedaMovilizacion!='UF'}" class="form-control form-white" type="text" placeholder="ingrese el monto en UF de movilización" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>   
+              <div class="col-sm-7">
+                <input ng-model="trabajador.montoMovilizacion" name="movilizacion" ng-class="{'hidden' : trabajador.monedaMovilizacion!='UTM'}" class="form-control form-white" type="text" placeholder="ingrese el monto en UTM de movilización" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>                           
+            </div>
+            <div class="col-sm-2" style="padding: 0px;" ng-class="{ 'hidden' : !trabajador.montoMovilizacion }" >
+              <label class="col-sm-12">
+                <input type="checkbox" ng-model="trabajador.proporcionalMovilizacion" value="true" icheck> Proporcional
+              </label>   
+            </div> 
+          </div>  
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-2 control-label">Viático:</label>
+            <div class="col-sm-8" style="padding: 0px;">
+              <div class="col-sm-3">
+                <select class="form-control form-white" name="monedaViatico" ng-model="trabajador.monedaViatico" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-change="cambiarMonedaViatico()" ng-disabled="trabajador.estado==='Finiquitado'" > 
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <input ng-model="trabajador.montoViatico" name="viatico" ng-class="{'hidden' : trabajador.monedaViatico!='$'}" class="form-control form-white" type="text" placeholder="ingrese el monto en pesos de viático" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>    
+              <div class="col-sm-6">
+                <input ng-model="trabajador.montoViatico" name="viatico" ng-class="{'hidden' : trabajador.monedaViatico!='UF'}" class="form-control form-white" type="text" placeholder="ingrese el monto en UF de viático" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>  
+              <div class="col-sm-6">
+                <input ng-model="trabajador.montoViatico" name="viatico" ng-class="{'hidden' : trabajador.monedaViatico!='UTM'}" class="form-control form-white" type="text" placeholder="ingrese el monto en UTM de viático" ng-disabled="trabajador.estado==='Finiquitado'" >
+              </div>                       
+            </div>
+            <div class="col-sm-2" style="padding: 0px;" ng-class="{ 'hidden' : !trabajador.montoViatico }" >
+              <label class="col-sm-12">
+                <input type="checkbox" ng-model="trabajador.proporcionalViatico" value="true" icheck> Proporcional
+              </label>   
+            </div> 
+          </div>  
+
+        </fieldset>
+
+      </div>      
+    </div>
+
+    <div class="panel panel-default" ng-show="tabAFP">
+      <div class="panel-heading">AFP - IPS</div>
+      <div class="panel-body">  
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Previsión:</label>
+          <div class="col-sm-5" style="padding: 0px;">
+            <div class="col-sm-8">
+              <select class="form-control form-white" ng-model="trabajador.prevision" name="prevision" ng-options="prevision as prevision.nombre for prevision in opciones.previsiones" ng-disabled="trabajador.estado==='Finiquitado'" ng-change="cambiarPrevision" required> 
+                <option value="">-- Seleccione la Previsión --</option>
+              </select>
+            </div>                            
+          </div>
+        </div> 
+
+        <div class="form-group form-group-md required" ng-if="trabajador.prevision.id===8">
+          <label class="col-sm-3 control-label">AFP:</label>
+          <div class="col-sm-4" style="padding: 0px;">
+            <div class="col-sm-10">
+              <select class="form-control form-white" ng-model="trabajador.afp" name="afp" ng-change="cambiarAFP()" ng-options="afp as afp.nombre for afp in opciones.afps" ng-disabled="trabajador.estado==='Finiquitado'" required>                 
+                <option value="">-- Seleccione una AFP --</option>
+              </select>
+            </div>                            
+          </div>
+        </div> 
+
+        <div class="form-group form-group-md required" ng-if="trabajador.prevision.id===9">
+          <label class="col-sm-3 control-label">Ex-Caja:</label>
+          <div class="col-sm-8" style="padding: 0px;">
+            <div class="col-sm-10">
+              <select class="form-control form-white" ng-model="trabajador.afp" name="caja" ng-options="caja as caja.nombre for caja in opciones.exCajas" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                <option value="">-- Seleccione una Ex-Caja --</option>
+              </select>
+            </div>                            
+          </div>
+        </div>  
+
+        <div class="form-group form-group-md" ng-if="trabajador.prevision">
+          <label class="col-sm-3 control-label">Seguro de Cesantía:</label>
+          <div class="col-sm-9">
+            <div class="checkbox col-sm-4" style="padding-right: 0px;">
+              <label>
+                <input type="checkbox" ng-model="trabajador.seguroDesempleo" name="seguroDesempleo" ng-change="seguro()" ng-disabled="trabajador.estado==='Finiquitado'" icheck> Seguro de Cesantía
+              </label>
+            </div>
+            <div ng-show="trabajador.seguroDesempleo">
+              <div class="col-sm-2" style="padding: 0px;">
+                <label ng-class="{'hidden' : isEditAFPSeguro}">{{ trabajador.afpSeguro.nombre }}</label>
+                <select class="form-control form-white" name="afpSeguro" ng-click="selectSeguro()" ng-model="trabajador.afpSeguro" ng-options="afp as afp.nombre for afp in opciones.afpsSeguro" ng-class="{'hidden' : !isEditAFPSeguro}" ng-disabled="trabajador.estado==='Finiquitado'"> 
+                  <option value="">-- Seleccione una AFP --</option>
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-sm btn-primary" type="button" ng-disabled="trabajador.estado==='Finiquitado'" ng-click="editAFPSeguro()" ng-class="{'hidden' : isEditAFPSeguro}">Cambiar</button>
+                <button class="btn btn-sm btn-primary" type="button" ng-disabled="trabajador.estado==='Finiquitado'" ng-click="editAFPSeguro()" ng-class="{'hidden' : !isEditAFPSeguro}">Confirmar</button>
+              </div>
+            </div>            
+          </div>
+        </div>  
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Salud:</label>
+          <div class="col-sm-9">
+            <div class="col-sm-5" style="padding: 0px;">
+              <div class="col-sm-12" style="padding: 0px;">
+                <select class="form-control form-white" ng-model="trabajador.isapre" name="isapre" ng-options="isa as isa.nombre for isa in opciones.isapres" ng-change="cambiarIsapre()" ng-disabled="trabajador.estado==='Finiquitado'" required> 
+                  <option value="">-- Seleccione la Institución de Salud --</option>
+                </select>
+              </div>    
+            </div>
+          </div>
+        </div> 
+
+        <div class="form-group form-group-md required" ng-show="trabajador.isapre && trabajador.isapre.nombre!='Sin Isapre'">
+          <label class="col-sm-3 control-label">Plan de Salud:</label>
+          <div class="col-sm-9">
+            <div ng-show="trabajador.isapre && trabajador.isapre.nombre != 'Fonasa'" style="padding: 0px;">   
+              <div class="col-sm-2" style="padding: 0px;">
+                <select class="form-control form-white" ng-model="trabajador.cotizacionIsapre" name="cotizacionIsapre" ng-options="cot.nombre as cot.nombre for cot in cotizaciones" ng-change="cotizacionIsapre()" ng-disabled="trabajador.estado==='Finiquitado'" > 
+                </select>
+              </div>                                            
+              <div class="col-sm-5" ng-show="trabajador.isapre.nombre!='Fonasa' && trabajador.cotizacionIsapre==='$'">
+                <input ng-model="trabajador.montoIsapre" class="form-control form-white" type="text" name="montoIsapre" placeholder="ingrese el monto en pesos" ng-disabled="trabajador.estado==='Finiquitado'">
+              </div>  
+              <div class="col-sm-5" ng-show="trabajador.isapre.nombre!='Fonasa' && trabajador.cotizacionIsapre==='UF' || trabajador.cotizacionIsapre==='7% + UF'">
+                <input ng-model="trabajador.montoIsapre" class="form-control form-white" type="text" name="montoIsapre" placeholder="ingrese la UF del Plan" ng-disabled="trabajador.estado==='Finiquitado'">
+              </div>            
+            </div>    
+            <div class="col-sm-2" ng-show="trabajador.isapre.nombre==='Fonasa'" style="margin-left: 30px; margin-top: 10px;">
+              <label class="form-group form-white">{{ trabajador.montoIsapre | number:0 }}%</label>
+            </div>
+          </div>  
+        </div>                        
+        
+      </div>      
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" confirmation-click="guardar()" confirmation-needed="La ficha del trabajador <b>{{ trabajador.nombreCompleto }}</b> será modificada. ¿Desea continuar?" ng-disabled="formTrabajador.$invalid">Modificar Ficha</button>
+      <button class="btn btn-primary" type="button" confirmation-click="reincorporar()" confirmation-needed="El trabajador <b>{{ trabajador.nombreCompleto }}</b> será reincorporado a la empresa. ¿Desea continuar?" ng-class="{ 'hidden' : trabajador.estado!=='Finiquitado' }">Reincorporar Trabajador</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+    </div>
+  </div>
+</div>
+<script type="text/ng-template" id="customTemplate.html">
+  <a style="cursor: pointer;">
+    <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+  </a>
+</script>

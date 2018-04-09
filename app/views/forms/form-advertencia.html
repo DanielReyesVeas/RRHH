@@ -1,0 +1,79 @@
+<div class="modal-header">
+  <h3 class="modal-title">Indicadores {{ mesActivo }}</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default">
+
+    <form class="simple-form" id="valorIndicadoresForm" name="valorIndicadoresForm">
+      <div class="panel-body">
+
+        <div style="margin: 40px;" ng-if="!isEdit">
+          <div class="row col-sm-4 col-sm-offset-4" style="margin-top: 40px;">
+            <div class="col-sm-4 col-sm-offset-3">
+              <i class="fa fa-exclamation-triangle fa-5x"></i>
+            </div>
+          </div>
+          <div class="row col-sm-12" style="margin-top: 50px;">
+            <div class="col-sm-12">
+              <p class="text-center">No se han ingresado los valores de los indicadores para este mes.</p>
+              <p class="text-center">Por favor ingréselos para comenzar a trabajar.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin: 40px;" ng-if="isEdit">
+          <div class="row col-sm-4 col-sm-offset-4">
+            <div class="col-sm-4 col-sm-offset-3">
+              <i class="fa fa-usd fa-5x"></i>
+            </div>
+          </div>
+          <div class="row col-sm-12" style="margin-top: 50px;">
+            <div class="col-sm-12">
+              <p class="text-center">Recuerde que la modificación de estos valores afecta todos los cálculos asociados.</p>
+              <p class="text-center">Puede consultar estos valores en: <a target="_blank" href="http://www.previred.com/web/previred/indicadores-previsionales">PREVIRED.</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin: 40px;">
+          <div class="form-group form-group-md">  
+            <div class="row">    
+              <label class="col-sm-2 col-sm-offset-3 control-label required">UF:</label>            
+              <div class="col-sm-3" >
+                <div class="input-group"> 
+                  <input type="text" class="form-control form-white" ng-model="indicadores.uf.valor" required />
+                </div>
+              </div>  
+            </div>
+          </div>
+
+          <div class="form-group form-group-md">      
+            <div class="row"> 
+              <label class="col-sm-2 col-sm-offset-3 control-label required">UTM:</label>            
+              <div class="col-sm-3" >
+                <div class="input-group"> 
+                  <input type="text" class="form-control form-white" ng-model="indicadores.utm.valor" required />
+                </div>
+              </div>  
+            </div>
+          </div>
+
+          <div class="col-sm-12" ng-if="!isEdit" style="margin-top: 30px;">
+            <div class="col-sm-12">
+              <p class="text-center">Los demás valores han sido cargados desde el mes anterior.</p>
+              <p class="text-center">Si desea modificarlos, lo puede hacer en <button class="btn btn-sm btn-primary disabled" style="background-color: lightskyblue;"><i class="fa fa-lock"> </i> Editar valores</button></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>          
+
+  </div>
+  
+</div>
+<div class="modal-footer" style="margin-top: 40px;">
+  <button class="btn btn-primary" ng-if="!isEdit" type="button" ng-click="guardar(indicadores)" ng-disabled="valorIndicadoresForm.$invalid">Ingresar</button>
+  <button class="btn btn-primary" ng-if="isEdit" type="button" ng-click="modificar(indicadores)" ng-disabled="valorIndicadoresForm.$invalid">Modificar</button>
+  <button class="btn btn-primary" ng-if="isEdit" type="button" ng-click="$dismiss()">Cancelar</button>
+</div>  

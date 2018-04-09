@@ -1,0 +1,70 @@
+<div class="header">
+  <h2>Administración de <b>Usuarios</b></h2>
+</div>
+<div class="row">
+
+  <div class="col-md-2 pull-right">
+    <button class="btn btn-primary btn-md" ng-click="open({});">
+      <i class="fa fa-plus"></i> Nuevo
+    </button>
+  </div>
+
+  <div class="col-md-12" style="margin-top: 40px;" ng-class="{ 'hidden' : datos.length==0}">        
+    <div class="form-group">
+      <label for="orden" class="control-label col-md-1">
+        Ordenar:
+      </label>
+      <div class="col-md-3">
+        <select ng-model="orden" id="orden" ng-init="orden='apellidos'" class="form-control form-white" ng-change="reverse = false">
+          <option value="rut">RUT</option>
+          <option value="apellidos">Nombre</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+      <div class="col-md-1">
+        <a ng-click="reverse=!reverse" ng-init="reverse=false" href="">
+          <i ng-class="{ 'hidden' : reverse }" class="fa fa-arrow-down"></i>
+          <i ng-class="{ 'hidden' : !reverse }" class="fa fa-arrow-up"></i></a>
+      </div>
+      <label for="filtro" class="col-md-1 control-label" >Filtrar:</label>
+      <div class="col-md-4">
+        <input id="filtro" type="text"  class="form-control form-white form-white" ng-model="filtro">
+      </div>      
+    </div>
+    <div class="col-md-12" style="margin-top: 40px;">
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="col-sm-1">#</th>
+          <th class="col-sm-1"></th>
+          <th class="col-sm-1">RUT</th>
+          <th class="col-sm-2">Nombre</th>
+          <th class="col-sm-2">Usuario</th>
+          <th class="col-sm-2">Correo Electrónico</th>
+          <th class="col-sm-2">Perfil</th>
+          <th class="col-sm-1">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="dato in datos | orderBy:orden : reverse  | filter : filtro">
+            <td>{{ $index + 1 }}</td>
+            <td><img ng-src="{{ dato.fotografia }}" style="max-width: 50px; max-height: 40px" /></td>
+            <td>{{ dato.rutFormato }}</td>
+            <td>{{ dato.funcionario }}</td>
+            <td>{{ dato.username }}</td>
+            <td>{{ dato.email }}</td>
+            <td>{{ dato.perfil.nombre }}</td>
+            <td>
+              <a class="btn-acciones btn btn-default" href="javascript:void(0);" ng-click="editar(dato);" uib-tooltip-html="toolTipEdicion(dato.funcionario)">
+                <i class="fa fa-pencil"></i>
+              </a>
+              <a class="btn-acciones btn btn-danger" href="javascript:void(0);" confirmation-click="eliminar( dato );" confirmation-needed="El Funcionario: <b>{{ dato.funcionario }}</b> será eliminado.Desea continuar?">
+                <i class="fa fa-remove"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

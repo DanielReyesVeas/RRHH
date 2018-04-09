@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Ingreso Vacaciones</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{ trabajador.nombreCompleto }}</div>
+    <div class="panel-body">          
+
+      <div class="col-sm-12" style="margin-top: 40px;">
+
+        <div class="col-sm-8">  
+          <div uib-datepicker ng-model='activeDate' multi-select='selectedDates' select-range='true' datepicker-options='options' ng-click="select()"></div>
+        </div>
+
+        <div class="col-sm-4">
+          
+          <b>Vacaciones:</b>
+
+          <div class='well well-sm col-sm-12 pull-right' ng-if='selectedDates.length > 0' style="margin-top: 10px;">
+            <b>{{(selectedDates | orderBy)[0] | date:"fullDate" | capitalize }}</b>
+            <a href="" ng-click="removeFromSelected((selectedDates | orderBy)[0])">
+              <i class="fa fa-times" style="color: #ff3300;"></i>
+            </a>
+            <span ng-if='selectedDates.length > 1'>
+            <br /> al 
+            <br /><b>{{(selectedDates | orderBy : '-')[0] | date:"fullDate" | capitalize }}</b>
+            <a href="" ng-click="removeFromSelected((selectedDates | orderBy : '-')[0])">
+              <i class="fa fa-times" style="color: #ff3300;"></i>
+            </a>
+            </span>
+            <br />
+            <br />
+            <span>
+            {{ totalDias }} 
+            <span ng-if="totalDias>1"> días</span>
+            <span ng-if="totalDias==1"> día</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" ng-disabled="!isSelect" confirmation-needed="Se Las Vacaciones seleccionadas se ingresarán al trabajador <b>{{ trabajador.nombreCompleto }}</b>. ¿Desea Continuar?" confirmation-click="guardar()">Guardar</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+    </div>
+  </div>
+</div>

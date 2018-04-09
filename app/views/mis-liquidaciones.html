@@ -1,0 +1,53 @@
+<div class="box">
+  <div class="row">
+    <div class="column col-sm-12">
+      <div class="padding">
+        <h2> <i class="fa fa-clipboard"> </i> Mis Liquidaciones</h2>
+
+        <div class="col-sm-12" style="margin-top: 30px; margin-bottom: 30px;" ng-if="cargado">
+
+          <label class="col-sm-1 control-label" style="padding: 0px;">Año:</label>
+          <div class="col-sm-3">
+            <select class="form-control form-white" ng-model="objeto.anio" ng-options="anio as anio.nombre for anio in anios" ng-change="selectAnio()"> 
+            </select>
+          </div> 
+
+
+          <div class="col-sm-12" style="margin-top: 40px;">
+            
+            <div class="text-center" ng-if="datos.liquidaciones.length<=0">
+              <i>Aun no hay registros</i>
+            </div>
+            
+            <table class="table table-striped table-hover" ng-if="datos.liquidaciones.length>0">
+              <thead>
+                <tr>
+                  <th class="col-sm-1">#</th>
+                  <th class="col-sm-3">Nombre</th>
+                  <th class="col-sm-7">Descripción</th>
+                  <th class="col-sm-1"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="dato in datos.liquidaciones">
+                  <td>{{ $index + 1 }}</td>
+                  <td>{{ dato.periodo }}</td>
+                  <td>
+                    <span ng-if="dato.documento.descripcion">{{ dato.documento.descripcion }}</span>
+                  </td>
+                  <td>
+                    <a href="javascript:void(0);" ng-click="detalle(dato, false)"><i class="fa fa-window-maximize"></i></a>
+                    <a href="javascript:void(0);" ng-click="detalle(dato, true)"><i class="fa fa-window-restore"></i></a>
+                    <a href="{{ constantes.URL }}/stories/{{ dato.documento.nombre }}" download="{{ dato.documento.alias }}"><i class="fa fa-download"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>  
+</div>

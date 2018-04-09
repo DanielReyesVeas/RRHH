@@ -1,0 +1,71 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="haberesForm" name="haberesForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ encabezado }}</div>
+
+      <div class="panel-body">
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group col-sm-3 required" ng-class="{ 'has-error': erroresDatos.codigo }">
+            <label class="control-label">Código:</label>
+            <input ng-model="tipoHaber.codigo" ng-change="erroresDatos.codigo=null" class="form-control form-white" min="0" type="number" placeholder="cod" required >
+          </div>
+          <div class="form-group col-sm-8 required">
+            <label class="control-label">Nombre:</label>
+            <input ng-model="tipoHaber.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre" ng-disabled="tipoHaber.id<15" required >
+          </div>
+          <span class="col-sm-12 text-danger" ng-if="erroresDatos.codigo"><b>{{ erroresDatos.codigo[0] }}</b></span>
+        </div>
+
+        <div class="form-group col-sm-12" style="margin-top: 40px;" ng-if="!tipoHaber.id || tipoHaber.id>15">
+          <div class="col-sm-6">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="inlineCheckbox1" ng-model="tipoHaber.imponible" icheck> Imponible
+            </label>
+          </div>
+          <div class="col-sm-6">            
+            <label class="checkbox-inline">
+              <input type="checkbox" id="inlineCheckbox1" ng-model="tipoHaber.tributable" icheck> Tributable
+            </label>
+          </div>          
+        </div>
+
+        <div class="form-group col-sm-12" style="margin-top: 40px;" ng-if="!tipoHaber.id || tipoHaber.id>15">
+          
+          <div class="col-sm-4">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="inlineCheckbox3" ng-model="tipoHaber.gratificacion" icheck> Gratificación
+            </label>
+          </div>
+          <div class="col-sm-8">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="inlineCheckbox2" ng-model="tipoHaber.proporcionalDiasTrabajados" icheck> Proporcional días Trabajados
+            </label>
+          </div>
+        </div>     
+           
+        <div class="form-group col-sm-12" style="margin-top: 40px;" ng-if="!tipoHaber.id || tipoHaber.id>15">
+          <div class="col-sm-6">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="inlineCheckbox2" ng-model="tipoHaber.calculaHorasExtras" icheck> Calcular Horas Extras
+            </label>
+          </div>
+          <!--<div class="col-sm-6">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="inlineCheckbox1" ng-model="tipoHaber.calculaSemanaCorrida" icheck> Calcula Semana Corrida
+            </label>
+          </div>-->
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="guardar(tipoHaber)" ng-disabled="haberesForm.$invalid">Guardar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
+</div>

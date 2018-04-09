@@ -1,0 +1,74 @@
+<div class="row" style="height: 500px;">    
+ <div class="col-md-12" style="margin-top: 80px;">        
+  	<div class="col-md-10 col-md-offset-1" style="box-shadow: 5px 5px 5px grey; background-color: #fff;">
+  		<div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/trabajadores')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+  			 <img src="images/accesos/TRABAJADORES.png" style="width: 130px;" />
+  		  </a>
+      </div>   
+  		 
+  		<div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/empresas')" class="boton-accesos">
+  			 <img src="images/accesos/EMPRESAS.png" style="width: 130px;" />
+  		  </a>
+      </div>   
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/tabla-global-mensual')" class="boton-accesos">
+          <img src="images/accesos/TABLA_GLOBAL.png" style="width: 130px;" />
+        </a>
+      </div>   
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/funcionarios')" class="boton-accesos">
+          <img src="images/accesos/USUARIOS.png" style="width: 130px;" />
+        </a>
+      </div>  
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/liquidaciones-de-sueldo')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+          <img src="images/accesos/LIQUIDACIONES.png" style="width: 130px;" />
+        </a>
+      </div>   
+      
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/certificados')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+         <img src="images/accesos/CERTIFICADOS.png" style="width: 130px;" />
+        </a>
+      </div>  
+
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/ingreso-haberes')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+          <img src="images/accesos/HABERES.png" style="width: 130px;" />
+        </a>
+      </div>   
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/ingreso-descuentos')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+          <img src="images/accesos/DESCUENTOS.png" style="width: 130px;" />
+        </a>
+      </div>   
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/ingreso-inasistencias')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+          <img src="images/accesos/INASISTENCIAS.png" style="width: 130px;" />
+        </a>
+      </div>   
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/ingreso-licencias')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+          <img src="images/accesos/LICENCIAS.png" style="width: 130px;" />
+        </a>
+      </div>   
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/cartas-de-notificacion')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+          <img src="images/accesos/CARTAS_NOTIFICACION.png" style="width: 130px;" />
+        </a> 
+      </div>   
+      <div class="col-md-2">
+        <a href="" ng-click="comprobarAcceso('/asociar-documentos')" class="boton-accesos" ng-if="globals.currentUser.empresas.length>0">
+          <img src="images/accesos/ARCHIVOS_TRABAJADOR.png" style="width: 130px;" />
+        </a>           
+      </div>   
+  	</div> 
+  </div>
+  <!--<div class="col-md-6" style="text-align: center; padding: 0px;">
+      <div class="publicidad" style="width:100%; text-align: center;">
+          <img ng-src="images/principal.png" style="width: 85%;" align="center" />
+      </div>
+  </div>-->
+</div>

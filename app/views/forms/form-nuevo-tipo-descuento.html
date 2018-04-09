@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="descuentosForm" name="descuentosForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ encabezado }}</div>
+
+      <div class="panel-body">        
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group col-sm-3 required" ng-class="{ 'has-error': erroresDatos.codigo }">
+            <label class="control-label">Código:</label>
+            <input ng-model="tipoDescuento.codigo" ng-change="erroresDatos.codigo=null" class="form-control form-white" min="0" type="number" placeholder="cod" required >
+          </div>
+          <div class="form-group col-sm-8 required">
+            <label class="control-label">Nombre:</label>
+            <input ng-model="tipoDescuento.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre" ng-disabled="tipoDescuento.idEstructura>2 || tipoDescuento.nombre=='Anticipo' || tipoDescuento.nombre=='Sobregiro Mes Anterior'" required >
+          </div>
+          <span class="col-sm-12 text-danger" ng-if="erroresDatos.codigo"><b>{{ erroresDatos.codigo[0] }}</b></span>
+        </div>        
+
+        <div style="margin-top: 20px;" ng-if="tipoDescuento.tipo.id<3 && tipoDescuento.nombre!='Anticipo' && tipoDescuento.nombre!='Sobregiro Mes Anterior'">
+          <div class="col-sm-12">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-3 control-label">Tipo:</label>
+              <div class="col-sm-5">
+                <select class="form-control form-white" ng-model="tipoDescuento.tipo" ng-options="tipo as tipo.nombre for tipo in tipos" required>  
+                </select> 
+              </div>
+            </div> 
+          </div>
+        </div>
+
+        <div class="form-group col-sm-12" style="margin-top: 40px;">
+          <label class="col-sm-3 control-label">Descripción:</label>
+          <div class="col-sm-9">
+            <textarea ng-model="tipoDescuento.descripcion" class="form-control form-white" placeholder="ingrese una descripción" rows="6" cols="6"></textarea>
+          </div>
+        </div>
+     
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="guardar(tipoDescuento)" ng-disabled="descuentosForm.$invalid">Guardar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
+</div>

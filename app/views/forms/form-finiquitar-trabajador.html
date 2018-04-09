@@ -1,0 +1,162 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ title }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="finiquitoForm" name="finiquitoForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{trabajador.nombreCompleto}}</div>
+
+      <div class="panel-body">
+          
+        <fieldset>
+          <legend>Finiquito</legend>
+          <div class="col-sm-12" style="margin-top: 20px; margin-left: 0px;">
+            <div class="form-group form-group-md">
+
+              <label class="col-sm-3 control-label required" style="padding: 0px;">Causal:</label>
+              <div class="col-sm-9">
+                <select class="form-control form-white" ng-model="finiquito.causal" ng-options="cau as cau.nombre for cau in causales" required> 
+                </select>
+              </div>              
+              
+            </div>
+          </div>  
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+
+              <label class="col-sm-3 control-label required" style="padding: 0px;">Fecha:</label>            
+              <div class="col-sm-6" >
+                <div class="input-group"> 
+                  <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="finiquito.fecha" is-open="popupFecha.opened" datepicker-options="dateOptions" close-text="Close" required />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openFecha()">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>                  
+                </div>
+                <div>
+                  <i>*El día del Finiquito será considerado como día trabajado.</i>
+                </div>
+              </div>   
+            </div>
+          </div>
+          
+          <div class="col-sm-12" style="margin-top: 30px;" ng-if="trabajador.mesesAntiguedad>0">
+            <div class="form-group form-group-md"> 
+              <label class="col-sm-3 control-label required" style="padding: 0px;">Mes de Aviso:</label>
+              <div class="col-sm-3">
+                <label class="switch switch-green">
+                  <input class="switch-input" ng-model="finiquito.mesAviso" type="checkbox">
+                  <span class="switch-label" data-on="SI" data-off="NO"></span>
+                  <span class="switch-handle"></span>
+                </label>
+              </div>  
+              <div class="col-sm-3" ng-if="finiquito.mesAviso">
+                <label>
+                  <input type="checkbox" ng-model="finiquito.noImponibles" value="true" icheck> No Imponibles
+                </label>
+              </div>  
+              <div class="col-sm-3" ng-if="finiquito.mesAviso">
+                <label>
+                  <input type="checkbox" ng-model="finiquito.gratificacionMesAviso" value="true" icheck> Gratificación
+                </label>
+              </div>  
+            </div>
+          </div>      
+
+          <div class="col-sm-12" style="margin-top: 30px;" ng-if="trabajador.mesesAntiguedad>0">
+            <div class="form-group form-group-md"> 
+              <label class="col-sm-3 control-label required" style="padding: 0px;">Indemnización Años de Servicio:</label>
+              <div class="col-sm-3">
+                <label class="switch switch-green">
+                  <input class="switch-input" ng-model="finiquito.indemnizacion" type="checkbox">
+                  <span class="switch-label" data-on="SI" data-off="NO"></span>
+                  <span class="switch-handle"></span>
+                </label>
+              </div>  
+              <div class="col-sm-6" ng-if="finiquito.indemnizacion">
+                <label class="control-label col-sm-4" style="padding: 0px;">Tope: </label>
+                <div class="col-sm-8">
+                  <select class="form-control form-white" ng-model="finiquito.tope" ng-options="anio as anio.nombre for anio in anios" > 
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6" ng-if="finiquito.indemnizacion" style="margin-top: 20px;">
+                <label>
+                  <input type="checkbox" ng-model="finiquito.gratificacionIndemnizacion" value="true" icheck> Gratificación
+                </label>
+              </div>  
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;" ng-if="trabajador.mesesAntiguedad>0">
+            <div class="form-group form-group-md"> 
+              <label class="col-sm-5 control-label required" style="padding: 0px;">Vacaciones Disponibles:</label>
+              <div class="col-sm-4">
+                <label class="switch switch-green">
+                  <input class="switch-input" ng-model="finiquito.vacaciones" type="checkbox" ng-change="cambiarMes('mensual')">
+                  <span class="switch-label" data-on="SI" data-off="NO"></span>
+                  <span class="switch-handle"></span>
+                </label>
+              </div>                          
+            </div>
+          </div>
+
+          <div class="col-sm-12" ng-if="finiquito.vacaciones" style="margin-top: 30px;">
+            <div class="form-group form-group-md"> 
+              <div class="col-sm-4">
+                <label>
+                  <input type="checkbox" ng-model="finiquito.vacacionesManual" value="true" icheck> Ingreso manual
+                </label>
+              </div>  
+              <div class="col-sm-5" ng-if="finiquito.vacacionesManual">
+                <div class="input-group"> 
+                  <input ng-model="finiquito.diasVacaciones" class="form-control form-white" min="0.25" type="number">
+                  <span class="input-group-addon">Días</span>
+                </div>     
+              </div>              
+            </div>
+          </div>
+          
+          <div ng-if="finiquito.mesAviso || finiquito.indemnizacion || finiquito.vacaciones && trabajador.mesesAntiguedad > 2">
+            <div class="col-sm-12" style="margin-top: 30px;">
+              <div class="form-group form-group-md"> 
+                <label class="col-sm-4">
+                  <input type="checkbox" ng-model="finiquito.sueldoNormal" ng-change="cambiarSueldo('normal')" value="true" icheck> Sueldo Normal
+                </label>
+                <label class="col-sm-5">
+                  <input type="checkbox" ng-model="finiquito.sueldoVariable" ng-change="cambiarSueldo('variable')" value="true" icheck> Sueldo Variable
+                </label>              
+              </div>
+            </div>
+
+            <div class="col-sm-12" ng-if="finiquito.sueldoVariable" style="margin-top: 30px;">
+              <div class="form-group form-group-md"> 
+                <label class="col-sm-4 control-label" style="padding: 0px;">Promediar últimos: </label>
+                <div class="col-sm-4">
+                  <select class="form-control form-white" ng-model="finiquito.meses" ng-options="mes as mes.nombre for mes in meses | filter : fnAntiguedad()" > 
+                  </select>
+                </div>       
+              </div>
+            </div>
+          </div>
+
+          <!--<div class="col-sm-3 pull-right" ng-show="!isOtro" style="margin-top: 20px;">
+            <button class="btn btn-sm btn-primary" type="button" ng-click="agregarOtro()"><i class="fa fa-plus"></i> Otro</button>
+          </div>-->
+
+        </fieldset>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <!--<button class="btn btn-primary" type="button" ng-click="finiquitar(finiquito, trabajador)" ng-disabled="finiquitoForm.$invalid" ng-if="isEdit">Modificar Finiquito</button>-->
+  <!--<button class="btn btn-primary" type="button" ng-click="finiquitar(finiquito, trabajador)" ng-disabled="finiquitoForm.$invalid" ng-if="!isEdit">Finiquitar Trabajador</button>-->
+  <button class="btn btn-primary" type="button" ng-click="calcular(finiquito)" ng-disabled="finiquitoForm.$invalid" ng-if="!isEdit">Calcular</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>

@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-if="isIngresar" confirmation-click="$dismiss()" confirmation-needed="El Contrato de Trabajo no ha sido ingresado, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <button type="button" class="close" ng-if="!isIngresar" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Contrato de Trabajo</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">Contrato de Trabajo</div>
+    <div class="panel-body">   
+
+      <div class="col-sm-12" style="margin-bottom: 150px;">
+        <textarea ui-tinymce="tinymceOptions" ng-model="contrato.cuerpo"></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-1" style="border-bottom: 1px solid black;"></div>
+        <div class="col-sm-4 col-sm-offset-2" style="border-bottom: 1px solid black;"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-1 text-center">{{ trabajador.nombreCompleto }}</div>
+        <div class="col-sm-4 col-sm-offset-2 text-center">{{ empresa.empresa | uppercase }}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-1 text-center">{{ trabajador.rutFormato }}</div>
+        <div class="col-sm-4 col-sm-offset-2 text-center">{{ empresa.rutFormato }}</div>
+      </div>
+
+      <div class="row" style="margin-top: 80px;">
+        <div class="row">
+          <div class="col-sm-4 pull-right" style="font-size: 10px"><i>Contrato de Trabajo - {{ empresa.empresa }}</i></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 pull-right" style="font-size: 10px"><i>Rut: {{ empresa.rutFormato }}</i></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 pull-right" style="font-size: 10px"><i>{{ empresa.direccion }} - {{ empresa.comuna.nombre }}</i></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer" style="margin-top: 20px;">
+  <button class="btn btn-primary" type="button" confirmation-click="ingresar()" confirmation-needed="El Contrato de Trabajo será ingresado al trabajador <b>{{ trabajador.nombreCompleto }}</b>. ¿Desea continuar?" ng-if="!isDetail">Ingresar</button>
+  <button class="btn btn-warning" type="button" confirmation-click="$dismiss()" confirmation-needed="El Contrato de Trabajo no ha sido ingresado, los datos se perderán al cerrar esta ventana. ¿Desea continuar?" ng-if="!isDetail">Cerrar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()" ng-if="isDetail">Cerrar</button>
+</div>

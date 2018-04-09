@@ -1,0 +1,87 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Libro de Remuneraciones</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="clausulasForm" name="clausulasForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">Exportación</div>
+
+      <div class="panel-body">   
+
+        <div class="text-center" ng-if="datos.length<=0" style="margin: 50px;">
+          <i>No se hay liquidaciones de Trabajadores</i>
+        </div>
+
+        <fieldset>
+          <legend>Trabajadores</legend>
+          <div class="col-sm-10 col-sm-offset-1">
+            <table class="table table-striped table-hover" ng-if="datos.length>0">
+              <thead>
+                <tr>
+                  <th class="col-sm-1"><input type="checkbox" ng-model="objeto.todosTrabajadores" ng-change="selectAll(datos, objeto.todosTrabajadores)" icheck></th>
+                  <th class="col-sm-3">RUT</th>
+                  <th class="col-sm-8">Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="dato in datos">
+                  <td><input type="checkbox" ng-model="dato.check" ng-change="selectTrabajadores(dato.check)" icheck></td>
+                  <td>{{ dato.rutFormatoTrabajador }}</td>
+                  <td>{{ dato.nombreTrabajador }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+        </div>
+
+        <fieldset>
+          <legend>Conceptos</legend>
+          <div class="col-sm-6">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th class="col-sm-1"><input type="checkbox" ng-model="objeto.todosConceptos" ng-change="selectAll(conceptos, objeto.todosConceptos)" icheck></th>
+                  <th class="col-sm-11">Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="concepto in conceptos" ng-if="$index<=9">
+                  <td><input type="checkbox" ng-model="concepto.check" ng-change="selectConceptos(concepto.check)" icheck></td>
+                  <td>{{ concepto.nombre }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-sm-6">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th class="col-sm-1"></th>
+                  <th class="col-sm-11">Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="concepto in conceptos" ng-if="$index>9">
+                  <td><input type="checkbox" ng-model="concepto.check" ng-change="selectConceptos(concepto.check)" icheck></td>
+                  <td>{{ concepto.nombre }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" 
+  type="button" ng-click="generarExcel(true)" ng-disabled="!isSelected()">Exportar Excel</button>
+  <button class="btn btn-primary" 
+  type="button" ng-click="generarExcel(false)" ng-if="tipo==1" ng-disabled="!isSelected()">Exportar PDF</button>
+  <button class="btn btn-primary" ng-if="false" type="button" ng-click="generarExcel(true)" ng-disabled="!isSelected()">Exportar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>

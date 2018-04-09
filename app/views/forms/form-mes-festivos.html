@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">Calendario Festivos</div>
+    <div class="panel-body">          
+
+      <div class="col-sm-12" style="margin-top: 40px;">
+
+        <div class="col-sm-8">  
+          <div uib-datepicker ng-model='activeDate' multi-select='selectedDates' select-range='{{type=="range"}}' datepicker-options='options'></div>
+        </div>
+
+        <div class="col-sm-4">
+          
+          <b>Festivos:</b>
+
+          <div ng-repeat='d in selectedDates | orderBy' class="col-sm-12 pull-right" style="margin-top: 10px;">
+            - {{ d | date : "EEEE" | capitalize }} {{ d | date : "dd"}}
+            <a href="" ng-click='removeFromSelected(d)'>
+              <i class="fa fa-times" style="color: #ff3300;"></i>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" ng-click="guardar()">Guardar</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+    </div>
+  </div>
+</div>

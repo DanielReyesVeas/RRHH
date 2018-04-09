@@ -1,0 +1,91 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="licenciasForm" name="licenciasForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ encabezado }}</div>
+
+      <div class="panel-body">
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-if="!licencia.sid">
+          <div class="form-group required">          
+            <label class="col-sm-3 control-label">Nombre:</label>
+            <div class="col-sm-7">
+              <ul class="dropdown-menu">
+                <li ng-repeat="match in matches track by $index" id="{{::match.id}}">
+                </li>
+              </ul>
+              <input type="text" ng-model="licencia.trabajador" placeholder="Buscar trabajador" typeahead-editable="false" uib-typeahead="trab as trab.nombreCompleto for trab in trabajadores | filter:{nombreCompleto:$viewValue}" class="form-control" typeahead-show-hint="true" typeahead-min-length="0" required />
+            </div>           
+          </div>
+        </div> 
+
+        <div class="col-sm-12" style="margin: 0; padding: 0" ng-if="licencia.trabajador || licencia.sid">
+
+          <div class="col-sm-8">  
+            <div uib-datepicker ng-model='activeDate' multi-select='selectedDates' select-range='true' datepicker-options='options' ng-click="select()"></div>
+          </div>
+
+          <div class="col-sm-4">
+            
+            <b>Vacaciones:</b>
+
+            <div class='well well-sm col-sm-12 pull-right' ng-if='selectedDates.length > 0' style="margin-top: 10px;">
+              <b>{{(selectedDates | orderBy)[0] | date:"fullDate" | capitalize }}</b>
+              <a href="" ng-click="removeFromSelected((selectedDates | orderBy)[0])">
+                <i class="fa fa-times" style="color: #ff3300;"></i>
+              </a>
+              <span ng-if='selectedDates.length > 1'>
+              <br /> al 
+              <br /><b>{{(selectedDates | orderBy : '-')[0] | date:"fullDate" | capitalize }}</b>
+              <a href="" ng-click="removeFromSelected((selectedDates | orderBy : '-')[0])">
+                <i class="fa fa-times" style="color: #ff3300;"></i>
+              </a>
+              </span>
+              <br />
+              <br />
+              <span>
+              {{ totalDias }} 
+              <span ng-if="totalDias>1"> días</span>
+              <span ng-if="totalDias==1"> día</span>
+            </div>
+
+          </div>
+
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md ">          
+              <label class="col-sm-4 control-label required">Código Licencia:</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control form-white" ng-model="licencia.codigo" required />  
+              </div>
+            </div>
+            <div class="col-sm-2 pull-right" ng-show="licencia.dias">
+              {{ licencia.dias | number:0 }} <span ng-show="licencia.dias>1">días</span><span ng-show="licencia.dias===1">día</span>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md ">          
+              <label class="col-sm-4 control-label">Observación:</label>
+                <div class="col-sm-8">
+                  <textarea ng-model="licencia.observacion" class="form-control form-white" placeholder="ingrese una observación" rows="6" cols="6"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+     
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="guardar(licencia, trabajador)" ng-disabled="licenciasForm.$invalid" ng-show="!isEdit">Ingresar Licencia Médica</button>
+  <button class="btn btn-primary" type="button" ng-click="guardar(licencia, trabajador)" ng-disabled="licenciasForm.$invalid" ng-show="isEdit">Modificar Licencia Médica</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>

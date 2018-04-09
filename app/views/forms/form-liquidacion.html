@@ -1,0 +1,192 @@
+<div class="header">
+  <button type="button" class="close" ng-if="isIngresar" confirmation-click="$dismiss()" confirmation-needed="La Liquidación de Sueldo no ha sido ingresada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <button type="button" class="close" ng-if="!isIngresar" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <div class="container" id="htmlLiquidacion">
+    <div class="row" style="margin-top: 50px;">
+      <div class="col-sm-6">
+        <img src="images/dashboard/EMPRESAS.png" width="50px" />
+      </div>
+    </div>
+    <div style="margin-top: 50px;">
+
+      <div class="row" style="margin-bottom: 20px;">
+        <p class="text-center">{{ 'Liquidación de remuneraciones' | uppercase }}</p>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">Razón Social: </div>
+        <div class="col-sm-5">{{ empresa.empresa | uppercase }}</div>
+        <div class="col-sm-3 pull-right">{{ mesActual }} de {{ anioActual }}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">RUT:</div>
+        <div class="col-sm-5">{{ empresa.rutFormato }}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">Dirección:</div>
+        <div class="col-sm-5">{{ empresa.direccion | uppercase }}</div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <div class="col-sm-2">RUT:</div>
+        <div class="col-sm-4">{{ trabajador.rutFormato }}</div>
+        <div class="col-sm-2">Cargo:</div>
+        <div class="col-sm-4">{{ trabajador.cargo.nombre }}</div>
+      </div>
+      <div class="row">        
+        <div class="col-sm-2">Nombre:</div>
+        <div class="col-sm-4">{{ trabajador.nombreCompleto }}</div>        
+        <div class="col-sm-2">Sección:</div>
+        <div class="col-sm-4">{{ trabajador.seccion.nombre }}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">Fecha de Ingreso:</div>
+        <div class="col-sm-4">{{ trabajador.fechaIngreso | date : "dd-MM-y" }}</div>
+        <div class="col-sm-2">Días trabajados:</div>
+        <div class="col-sm-4">{{ trabajador.diasTrabajados }}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2">Tipo de Contrato:</div>
+        <div class="col-sm-4">{{ trabajador.tipoContrato.nombre }}</div>
+        <div class="col-sm-2">Sueldo Base:</div>
+        <div class="col-sm-4">${{ trabajador.sueldoBase | currency:'':0 }}</div>
+      </div>
+
+      <hr />
+      
+    </div>
+
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-sm-4">{{ 'Haberes imponibles' | uppercase }}</div>
+      <div class="col-sm-3 pull-right">Imponibles: ${{ trabajador.imponibles | currency:'':0 }}</div> 
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div class="col-sm-4">Sueldo de {{ trabajador.diasTrabajados }} días a ${{ trabajador.sueldoDiario | currency:'' }} Diarios:</div>
+      <div class="col-sm-2">${{ trabajador.sueldo | currency:'':0 }}</div>        
+      <div class="col-sm-4">Gratificación Legal:</div>
+      <div class="col-sm-2">${{ trabajador.gratificacion | currency:'':0 }}</div> 
+    </div>
+    <div class="row" style="margin: 10px;" ng-if="trabajador.horasExtra.cantidad>0">
+      <div class="col-sm-4">Horas Extra ({{ trabajador.horasExtra.cantidad }}):</div>
+      <div class="col-sm-2">${{ trabajador.horasExtra.total | currency:'':0 }}</div>        
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div ng-repeat="imponible in trabajador.haberes | filter: { tipo: { imponible:true } }">
+        <div class="col-sm-4">{{ imponible.tipo.nombre }}:</div>
+        <div class="col-sm-2">${{ imponible.montoPesos | currency:'':0 }}</div> 
+      </div>      
+    </div>      
+
+    <div class="row" style="margin-bottom: 20px;" ng-if="trabajador.noImponibles>0">
+      <div class="col-sm-4">{{ 'Haberes no Imponibles' | uppercase }}</div>
+      <div class="col-sm-4 pull-right">Total no Imponibles: ${{ trabajador.noImponibles | currency:'':0 }}</div> 
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div class="col-sm-4" ng-if="trabajador.movilizacion.montoPesos>0">Movilización:</div>
+      <div class="col-sm-2" ng-if="trabajador.movilizacion.montoPesos>0">${{ trabajador.movilizacion.montoPesos | currency:'':0 }}</div>        
+      <div class="col-sm-4" ng-if="trabajador.colacion.montoPesos>0">Colación:</div>
+      <div class="col-sm-2" ng-if="trabajador.colacion.montoPesos>0">${{ trabajador.colacion.montoPesos | currency:'':0 }}</div> 
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div class="col-sm-4" ng-if="trabajador.viatico.montoPesos>0">Viático:</div>
+      <div class="col-sm-2" ng-if="trabajador.viatico.montoPesos>0">${{ trabajador.viatico.montoPesos | currency:'':0 }}</div> 
+      <div class="col-sm-4" ng-if="trabajador.cargasFamiliares.isCargas">Cargas Familiares <span style="font-size: 12px">({{ trabajador.cargasFamiliares.cantidad }})</span>:</div>
+      <div class="col-sm-2" ng-if="trabajador.cargasFamiliares.isCargas">${{ trabajador.cargasFamiliares.monto | currency:'':0 }}</div>        
+    </div>
+    <div class="row" ng-repeat="noImponible in trabajador.haberes | filter: { tipo: { imponible:false } }" style="margin: 10px;">
+      <div class="col-sm-4">{{ noImponible.tipo.nombre }}:</div>
+      <div class="col-sm-2">${{ noImponible.montoPesos | currency:'':0 }}</div> 
+    </div>     
+    <div class="row" style="margin: 10px;">
+      <div class="col-sm-4">Renta Imponible:</div>
+      <div class="col-sm-2">${{ trabajador.rentaImponible | currency:'':0 }}</div> 
+    </div>
+
+    <hr /> 
+
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-sm-4">{{ 'Descuentos Previsionales' | uppercase }}</div>
+      <div class="col-sm-5 pull-right">Total Descuentos Previsionales: ${{ trabajador.totalDescuentosPrevisionales | currency:'':0 }}</div> 
+    </div>
+    <div class="row" style="margin: 10px;">
+      <div class="col-sm-4">AFP {{ trabajador.afp.nombre }} ({{ trabajador.tasaAfp }}%):</div>
+      <div class="col-sm-2">${{ trabajador.totalAfp | currency:'':0 }}</div> 
+      <div class="col-sm-4" ng-if="trabajador.seguroDesempleo">Seguro de Cesantía ({{ trabajador.totalSeguroCesantia.afc }}%):</div>
+      <div class="col-sm-2" ng-if="trabajador.seguroDesempleo">${{ trabajador.totalSeguroCesantia.total | currency:'':0 }}</div> 
+    </div>  
+    <div class="row" style="margin: 10px;">
+      <div class="col-sm-4" ng-if="trabajador.isapre.id!==246">Isapre {{ trabajador.isapre.nombre }} (7%):</div>
+      <div class="col-sm-4" ng-if="trabajador.isapre.id===246">{{ trabajador.isapre.nombre }} (7%):</div>
+      <div class="col-sm-2">${{ trabajador.totalSalud.obligatorio | currency:'':0 }}</div> 
+      <div class="col-sm-4" ng-if="trabajador.isapre.id!==246 && trabajador.totalSalud.adicional>0">Adicional Salud:</div>
+      <div class="col-sm-2" ng-if="trabajador.isapre.id!==246 && trabajador.totalSalud.adicional>0">${{ trabajador.totalSalud.adicional | currency:'':0 }}</div> 
+    </div>      
+
+    <div ng-if="trabajador.tramoImpuesto>0">
+      <div class="row" style="margin-bottom: 20px;">
+        <div class="col-sm-4">{{ 'Descuentos Tributarios' | uppercase }}</div>
+      </div>
+      <div class="row" style="margin: 10px;">
+        <div class="col-sm-4">Base Impuesto Único:</div>
+        <div class="col-sm-2">${{ trabajador.baseImpuestoUnico | currency:'':0 }}</div> 
+        <div class="col-sm-4">Tramo Impuesto:</div>
+        <div class="col-sm-2">{{ trabajador.tramoImpuesto }}%</div> 
+      </div>  
+      <div class="row" style="margin: 10px;">
+        <div class="col-sm-4">Impuesto Determinado:</div>
+        <div class="col-sm-2">${{ trabajador.impuestoDeterminado | currency:'':0 }}</div> 
+      </div>
+    </div>
+
+    <div ng-if="trabajador.totalOtrosDescuentos!==0">
+      <div class="row" style="margin-bottom: 20px;">
+        <div class="col-sm-4">{{ 'Otros Descuentos' | uppercase }}</div>
+        <div class="col-sm-4 pull-right">Total Otros Descuentos: ${{ trabajador.totalOtrosDescuentos | currency:'':0 }}</div> 
+      </div>
+      <div class="row" style="margin: 10px;" ng-repeat="descuento in trabajador.descuentos">
+        <div class="col-sm-4">{{ descuento.tipo.nombre }}:</div>
+        <div class="col-sm-2">${{ descuento.montoPesos | currency:'':0 }}</div>
+      </div>    
+      <div class="row" style="margin: 10px;" ng-repeat="prestamo in trabajador.prestamos">
+        <div class="col-sm-4">Préstamo {{ prestamo.nombreLiquidacion }} Cuota N° {{ prestamo.cuotaPagar.numero }}/{{ prestamo.cuotas }}:</div>
+        <div class="col-sm-2">${{ prestamo.cuotaPagar.monto | currency:'':0 }}</div>
+      </div>   
+      <div class="row" ng-repeat="apv in trabajador.apvs" style="margin: 10px;">
+        <div class="col-sm-4">APV ({{ apv.afp.nombre }}):</div>
+        <div class="col-sm-2">${{ apv.montoPesos | currency:'':0 }}</div>
+      </div>   
+    </div>
+
+    <hr />
+
+    <div class="row" style="margin-top: 60px;">
+      <div class="col-sm-3 col-sm-offset-1">Total a Pagar:</div>
+      <div class="col-sm-6 col-sm-offset-2">${{ trabajador.sueldoLiquido | currency:'':0 }}</div>
+    </div>
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-sm-3 col-sm-offset-1">Líquido a Pago:</div>
+      <div class="col-sm-6 col-sm-offset-2">{{ convertirPalabras(trabajador.sueldoLiquido) | uppercase }}.-</div>
+    </div>
+
+    <div class="row" style="margin-top: 100px;">
+      <div class="col-sm-3 col-sm-offset-1" style="border-bottom: 1px solid black;"></div>
+      <div class="col-sm-3 col-sm-offset-3" style="border-bottom: 1px solid black;"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-1">{{ trabajador.nombreCompleto | uppercase }}</div>
+      <div class="col-sm-3 col-sm-offset-2">Firma Empleador</div>   
+    </div>    
+
+  </div>
+  <div class="modal-footer" style="margin-top: 20px;">
+    <button class="btn btn-primary" type="button" confirmation-click="ingresar()" confirmation-needed="La Liquidación de Sueldo seleccionada será ingresada al sistema. ¿Desea continuar?" ng-if="isIngresar">Ingresar</button>
+    <!--<button class="btn btn-primary" type="button" ng-click="getHTML()">HTML</button>-->
+    <button class="btn btn-warning" type="button" confirmation-click="$dismiss()" confirmation-needed="La Liquidación de Sueldo no ha sido ingresada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?" ng-if="isIngresar">Cerrar</button>
+    <button class="btn btn-warning" type="button" ng-click="$dismiss()" ng-if="!isIngresar">Cerrar</button>
+  </div>
+</div>

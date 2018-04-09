@@ -1,0 +1,245 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">{{trabajador.nombreCompleto}}</div>
+
+    <div class="panel-body">  
+
+      <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+        <li ng-class="{ 'active' : tabGeneral }"><a data-toggle="tab" ng-click="openTab('general')" ng-hide="tab==='detalle'"><label>General</label></a></li>
+        <li ng-class="{ 'active' : tabDetalle }"><a data-toggle="tab" ng-click="openTab('detalle')" ng-hide="tab==='general'"><label>Detalle</label></a></li>   
+      </ul> 
+
+      <fieldset ng-if="tabGeneral">
+
+        <form class="simple-form" id="cargaGeneralForm" name="cargaGeneralForm">
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-5 control-label">Tipo de Carga:</label>
+              <div class="col-sm-6">
+                <select class="form-control form-white" name="tipoCarga" ng-model="cargaGeneral.tipo" ng-options="tipo as tipo.nombre for tipo in tiposCargas">  
+                </select> 
+              </div>
+            </div>
+          </div>    
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-5 control-label">Fecha de Autorización:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="cargaGeneral.fechaAutorizacion" is-open="popupFechaAutorizacionCarga.opened" datepicker-options="dateOptions" close-text="Close" required />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaAutorizacionCarga()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+              <label class="col-sm-5 control-label">Fecha de Pago desde:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="cargaGeneral.fechaPagoDesde" is-open="popupFechaPagoDesde.opened" datepicker-options="dateOptions" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaPagoDesde()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+              <label class="col-sm-5 control-label">Fecha de Pago hasta:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="cargaGeneral.fechaPagoHasta" is-open="popupFechaPagoHasta.opened" datepicker-options="dateOptions" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaPagoHasta()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="pull-right" style="margin-top: 80px;">
+            <button class="btn btn-primary" type="button" ng-click="guardar(cargaGeneral, trabajador)" ng-disabled="cargaGeneralForm.$invalid" ng-show="!isEdit">Agregar Carga Familiar</button>
+            <button class="btn btn-primary" type="button" ng-click="guardar(cargaGeneral, trabajador)" ng-disabled="cargaGeneralForm.$invalid" ng-show="isEdit">Modificar Carga Familiar</button>
+            <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+          </div>
+        
+        </form>
+      </fieldset> 
+
+      <fieldset ng-if="tabDetalle">
+
+        <form class="simple-form" id="cargaDetalleForm" name="cargaDetalleForm">
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-4 control-label">Tipo de Carga:</label>
+              <div class="col-sm-6">
+                <select class="form-control form-white" name="tipoCarga" ng-model="carga.tipo" ng-options="tipo as tipo.nombre for tipo in tiposCargas" required>  
+                </select> 
+              </div>
+            </div>
+          </div>  
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-4 control-label">Parentesco:</label>
+              <div class="col-sm-5">
+                <select class="form-control form-white" ng-model="carga.parentesco" ng-options="parentesco for parentesco in parentescos" required>  
+                </select> 
+              </div>
+              <label class="col-sm-3">
+                <input type="checkbox" ng-model="carga.esCarga" value="true" icheck>Carga
+              </label>
+            </div>
+          </div>  
+
+          <div class="col-sm-12" style="margin-top: 20px;" ng-if="carga.esCarga">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-4 control-label">Fecha de Autorización:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="carga.fechaAutorizacion" is-open="popupFechaAutorizacionCarga.opened" datepicker-options="dateOptions" close-text="Close" required />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaAutorizacionCarga()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;" ng-if="carga.esCarga">
+            <div class="form-group form-group-md">
+              <label class="col-sm-4 control-label">Fecha de Pago desde:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="carga.fechaPagoDesde" is-open="popupFechaPagoDesde.opened" datepicker-options="dateOptions" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaPagoDesde()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;" ng-if="carga.esCarga">
+            <div class="form-group form-group-md">
+              <label class="col-sm-4 control-label">Fecha de Pago hasta:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="carga.fechaPagoHasta" is-open="popupFechaPagoHasta.opened" datepicker-options="dateOptions" close-text="Close" />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaPagoHasta()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md" ng-class="{ 'has-error': errores('rut') || erroresDatos.rut }">
+              <label class="col-sm-4 control-label required">RUT:</label>
+              <div class="col-sm-5">
+                <input class="form-control form-white" type="text" rut="carga.rut" ng-model="carga.rut" maxlength="15" placeholder="11.111.111-1" required />
+                <span class="help-block" ng-show="errores('rut')">
+                  Obligatorio!
+                </span>
+              </div>
+              <span class="text-danger" ng-if="erroresDatos.rut"><b>{{ erroresDatos.rut[0] }}</b></span>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md required">
+              <label class="col-sm-4 control-label">Nombre Completo:</label>
+              <div class="col-sm-8" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <input ng-model="carga.nombreCompleto" class="form-control form-white" type="text" placeholder="ingrese el nombre completo" required />
+                </div>              
+              </div>
+            </div>            
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+              <label class="col-sm-4 control-label">Fecha de Nacimiento:</label>            
+              <div class="col-sm-6" style="padding: 0px;">
+                <div class="col-sm-10">
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="carga.fechaNacimiento" is-open="popupFechaNacimientoCarga.opened" datepicker-options="dateOptions" close-text="Close"  />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaNacimientoCarga()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>                          
+              </div>
+            </div>    
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <label class="col-sm-4 control-label">Sexo:</label>
+            <div class="col-sm-3" style="padding: 0px;">
+              <label class="checkbox-inline">
+                <input type="radio" ng-model="carga.sexo" value="f" icheck> Femenino
+              </label>
+            </div>            
+            <div class="col-sm-4">
+              <label class="checkbox-inline">
+                <input type="radio" ng-model="carga.sexo" value="m" icheck> Masculino
+              </label>
+            </div>                            
+          </div>
+
+          <div class="pull-right" style="margin-top: 80px;">
+            <button class="btn btn-primary" type="button" ng-click="guardar(carga, trabajador)" ng-disabled="cargaDetalleForm.$invalid" ng-show="!isEdit">Agregar Carga Familiar</button>
+            <button class="btn btn-primary" type="button" ng-click="guardar(carga, trabajador)" ng-disabled="cargaDetalleForm.$invalid" ng-show="isEdit">Modificar Carga Familiar</button>
+            <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+          </div>
+
+        </form>
+
+      </fieldset> 
+
+    </div>
+  </div>
+
+</div>

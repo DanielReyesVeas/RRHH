@@ -1,0 +1,56 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Semana Corrida</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default">
+    <div class="panel-heading">Calendario Festivos</div>
+    <div class="panel-body">          
+
+      <div class="col-sm-12" style="margin-top: 40px; padding: 0;">
+
+        <label class="col-sm-1 control-label">Año:</label>
+        <div class="col-sm-3">
+          <select class="form-control form-white" ng-model="calendario.anio" ng-options="anio as anio.nombre for anio in anios" ng-change="selectAnio()"> 
+          </select>                
+        </div>
+
+        <div class="col-sm-12 text-center" style="margin-top: 40px; padding: 0;">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[0])">Enero</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[1])">Febrero</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[2])">Marzo</button>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[3])">Abril</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[4])">Mayo</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[5])">Junio</button>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[6])">Julio</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[7])">Agosto</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[8])">Septiembre</button>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[9])">Octubre</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[10])">Noviembre</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="detalle(meses[11])">Diciembre</button>
+          </div>
+        </div>
+
+      </div> 
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button ng-if="accesos.crear || accesos.editar && accesos.abierto" class="btn btn-primary" type="button" ng-disabled="edit" ng-click="guardar()">Guardar</button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button>
+    </div>
+  </div>
+</div>

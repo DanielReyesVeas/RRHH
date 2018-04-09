@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <button type="button" class="close" confirmation-click="$dismiss()" confirmation-needed="La Plantilla de Contrato de Trabajo no ha sido guardada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{ encabezado }}</div>
+    <div class="panel-body">          
+
+      <div class="col-sm-12" style="margin: 20px;">
+        <div class="form-group form-group-md required">
+          <label class="col-sm-2 col-sm-offset-1 control-label">Nombre:</label>
+          <div class="col-sm-7">
+            <input ng-model="plantillaContrato.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre de la Plantilla de Contrato" required >
+          </div>
+          <div class="col-sm-1 pull-right">
+            <a href="" ng-class="{ 'hidden' : isAyuda }" ng-click="ayuda()"><i class="fa fa-question-circle-o fa-2x"></i></a>
+            <a href="" ng-class="{ 'hidden' : !isAyuda }" ng-click="ayuda()"><i class="fa fa-times-circle-o fa-2x"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12" ng-class="{ 'hidden' : !isAyuda }" style="margin-top: 20px;">
+        <div class="alert alert-info rounded" style="border-radius: 6px;">
+
+          <div class="text-center" style="margin-top: 10px;"><b><u>FECHAS</u></b></div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${fechaActual}:</b> {{ empresa.mesDeTrabajo.fecha }}</span>
+            <span style="margin-left: 20px;"><b>${fechaPalabras}:</b> {{ empresa.mesDeTrabajo.fechaPalabras }}</span>
+          </div>
+
+          <div class="text-center" style="margin-top: 10px;"><b><u>EMPRESA</u></b></div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${rutEmpresa}:</b> {{ empresa.rut }}</span>
+            <span style="margin-left: 20px;"><b>${nombreEmpresa}:</b> {{ empresa.empresa }}</span>
+            <span style="margin-left: 20px;"><b>${comunaEmpresa}:</b> {{ empresa.comuna.nombre }}</span>
+          </div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${comunaEmpresa}:</b> {{ empresa.comuna.nombre }}</span>
+            <span style="margin-left: 20px;"><b>${ciudadEmpresa}:</b> {{ empresa.comuna.provincia }}</span>
+            <span style="margin-left: 20px;"><b>${ciudadEmpresa}:</b> {{ empresa.comuna.provincia }}</span>
+          </div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${domicilioEmpresa}:</b> {{ empresa.comuna.domicilio }}</span>
+          </div>
+
+          <div class="text-center" style="margin-top: 10px;"><b><u>REPRESENTANTE LEGAL</u></b></div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${rutRepresentante}:</b> {{ empresa.representante.rut }}</span>
+            <span style="margin-left: 20px;"><b>${nombreRepresentante}:</b> {{ empresa.representante.nombre }}</span>
+          </div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${comunaEmpresa}:</b> {{ empresa.comuna.nombre }}</span>
+            <span style="margin-left: 20px;"><b>${ciudadEmpresa}:</b> {{ empresa.comuna.provincia }}</span>
+            <span style="margin-left: 20px;"><b>${ciudadEmpresa}:</b> {{ empresa.comuna.provincia }}</span>
+          </div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${domicilioEmpresa}:</b> {{ empresa.comuna.domicilio }}</span>
+          </div>
+
+          <div class="text-center" style="margin-top: 10px;"><b><u>TRABAJADORES</u></b></div>
+          <div style="margin-left: 20px; margin-top: 10px;">
+            <span><b>${rutTrabajador}:</b> ej: 15.153.458-5</span>
+            <span style="margin-left: 20px;"><b>${nombreTrabajador}:</b> ej: Martín José Aguilera Ortiz</span>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="container col-sm-12 text-center">
+        <textarea ui-tinymce="tinymceOptions" ng-model="plantillaContrato.cuerpo"></textarea>
+      </div>        
+
+      <div class="col-sm-12" ng-class="{ 'hidden' : isAyuda }" style="margin-top: 150px;">
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-1" style="border-bottom: 1px solid black;"></div>
+          <div class="col-sm-4 col-sm-offset-2" style="border-bottom: 1px solid black;"></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-1 text-center">NOMBRE TRABAJADOR</div>
+          <div class="col-sm-4 col-sm-offset-2 text-center">{{ empresa.empresa | uppercase }}</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-1 text-center">RUT TRABAJADOR</div>
+          <div class="col-sm-4 col-sm-offset-2 text-center">{{ empresa.rutFormato }}</div>
+        </div>
+
+        <div class="row" style="margin-top: 80px;">
+          <div class="row">
+            <div class="col-sm-4 pull-right" style="font-size: 10px"><i>Contrato de trabajo-{{ empresa.empresa }} Rut: {{ empresa.rutFormato }}</i></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4 pull-right" style="font-size: 10px"><i>{{ empresa.direccion }} - {{ empresa.comuna.nombre }}</i></div>
+          </div>
+        </div>
+      </div>      
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" confirmation-click="guardar(plantillaContrato)" confirmation-needed="La Plantilla de Contrato de Trabajo ha sido modificada. ¿Desea conservar los cambios?">Guardar Cambios</button>
+      <button class="btn btn-warning" type="button" confirmation-click="$dismiss()" confirmation-needed="La Plantilla de Contrato de Trabajo no ha sido guardada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">Cerrar</button>
+    </div>
+  </div>
+</div>

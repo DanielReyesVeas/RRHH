@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="causalNotificacionForm" name="causalNotificacionForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ encabezado }}</div>
+
+      <div class="panel-body" style="margin-bottom: 40px;">
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">
+            <label class="col-sm-4 control-label">Código:</label>
+            <div class="col-sm-8">
+              <input ng-model="causalNotificacion.codigo" class="form-control form-white" type="text" placeholder="ingrese el código de la causal de notificación" required >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">
+            <label class="col-sm-4 control-label">Artículo:</label>
+            <div class="col-sm-8">
+              <input ng-model="causalNotificacion.articulo" class="form-control form-white" type="text" placeholder="ingrese el artículo de la causal de notificación" required >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">
+            <label class="col-sm-4 control-label">Nombre Causal:</label>
+            <div class="col-sm-8">
+              <input ng-model="causalNotificacion.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre de la causal de notificación" required >
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="guardar(causal)" ng-disabled="causalNotificacionForm.$invalid">Guardar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+</div>

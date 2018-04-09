@@ -1,0 +1,488 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Administración de Empresa</h3>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" name="form" novalidate autocomplete="Off" >
+    <div class="panel panel-default">
+      <div class="panel-heading">Datos de la Empresa</div>
+      <div class="panel-body">
+          
+        <fieldset>
+          <legend>General</legend>
+          <div style="text-align:center !important; position:absolute; left:98%; margin-left:-190px; width:160px; height:200px" flow-init flow-name="imagen.flow" flow-file-added="obtenerImagenB64()">
+            <div style="text-align:center !important;  border:2px solid #ddd; border-radius:10px;  width:160px; height:165px; padding-top:5px;">
+              <img ng-if="!$flow.files[0]" ng-src="{{ logo }}" style="max-width:150px; max-height:150px;" />
+              <img ng-show="!creandoImagen" flow-img="$flow.files[0]" style="max-width:150px; max-height:150px;" /><br/>
+            </div>
+            
+            <p style="text-align:center; margin-top:20px;">
+              <progressbar ng-show="creandoImagen" class="progress-striped active" value="valorPB" type="success"></progressbar>
+              <button ng-show="!creandoImagen" class="btn btn-xs btn-success" style="margin:0px;" flow-btn flow-attrs="{accept:'image/*'}">
+                Cambiar Imagen
+              </button>
+            </p>            
+          </div>
+
+          <div class="form-group form-group-md required" ng-if="!objeto.id" ng-class="{ 'has-error': errores('rut') || erroresDatos.rut  }" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">RUT:</label>
+            <div class="col-sm-2">
+              <input class="form-control form-white" type="text" name="rut" rut="objeto.rut" ng-model="objeto.rut" ng-maxlength="15" placeholder="11.111.111-1" required />
+              <span class="help-block" ng-show="errores('rut')">
+                Obligatorio!
+              </span>
+            </div>
+            <span class="text-danger" ng-if="erroresDatos.rut"><b>{{ erroresDatos.rut[0] }}</b></span>
+          </div>
+
+          <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('razonSocial') || erroresDatos.razon_social  }">
+            <label class="col-sm-3 control-label">Razón Social:</label>
+            <div class="col-sm-5">
+              <input class="form-control form-white" type="text" name="razonSocial" ng-model="objeto.razonSocial" placeholder="Razón Social" required >
+              <span class="help-block" ng-show="errores('razonSocial')">
+                Obligatorio!
+              </span>
+              <span class="text-danger" ng-if="erroresDatos.razon_social"><b>{{ erroresDatos.razon_social[0] }}</b></span>
+            </div>
+          </div>
+
+          <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('nombreFantasia') }">
+            <label class="col-sm-3 control-label">Nombre de Fantasía:</label>
+            <div class="col-sm-5">
+              <input class="form-control form-white" type="text" name="nombreFantasia" ng-model="objeto.nombreFantasia" placeholder="Nombre de Fantasía" required >
+              <span class="help-block" ng-show="errores('nombreFantasia')">
+                Obligatorio!
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('direccion') }">
+            <label class="col-sm-3 control-label">Dirección:</label>
+            <div class="col-sm-6">
+              <input class="form-control form-white" type="text" name="direccion" ng-model="objeto.direccion" placeholder="Dirección" required >
+              <span class="help-block" ng-show="errores('direccion')">
+                Obligatorio!
+              </span>
+            </div>
+          </div>
+          <div class="form-group form-group-md required">
+            <label class="col-sm-3 control-label">Comuna:</label>
+            <div class="col-sm-6">
+              <input type="text" ng-model="objeto.comuna" placeholder="Buscar Comuna" uib-typeahead="comuna as comuna.nombre for comuna in getComunas($viewValue)" typeahead-loading="loadingComuna" class="form-control form-white" typeahead-editable="false" typeahead-template-url="customTemplate.html" required  />
+            </div>
+            <div class="col-sm-1">
+              <i ng-show="loadingComuna" class="fa fa-refresh"></i>
+              <i ng-show="objeto.comuna.id" class="fa fa-check" style="color: #0a0;"></i>
+            </div>
+          </div>
+         
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Teléfonos:</label>
+            <div class="col-sm-5">
+              <input class="form-control form-white" type="text" ng-model="objeto.telefono" placeholder="Teléfonos">
+            </div>
+          </div>
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Fax:</label>
+            <div class="col-sm-5">
+              <input class="form-control form-white" type="text" ng-model="objeto.fax" placeholder="Fax">
+            </div>
+          </div>
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Actividad Económica:</label>
+            <div class="col-sm-7">
+              <input class="form-control form-white" type="text" ng-model="objeto.actividadEconomica" placeholder="Actividad Económica">
+            </div>  
+          </div>
+
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label">Gerente General:</label>
+            <div class="col-sm-6">
+              <input class="form-control form-white" type="text" ng-model="objeto.gerenteGeneral" placeholder="Nombre del Gerente General">
+            </div>
+          </div>
+
+        </fieldset>
+
+        <fieldset>
+          <legend>Mutualidad - CCFA</legend>
+
+          <div class="form-group form-group-md" ng-if="objeto.id">
+            <label class="col-sm-1 col-sm-offset-4 control-label">Año:</label>
+            <div class="col-sm-2">
+              <select class="form-control form-white" ng-model="objeto.anio" ng-options="anio as anio.nombre for anio in anios" ng-change="cambiarAnio()"> 
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group form-group-md required" style="margin-top: 40px;">
+            <label class="col-sm-3 control-label">Mutual:</label>
+            <div class="col-sm-7">
+              <select ng-model="objeto.mutual" ng-options="mutual as mutual.nombre for mutual in mutuales" class="form-control form-white" ng-change="cambiarMutual()" required>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group form-group-md" ng-class="{ 'hidden' : !objeto.mutual || objeto.mutual.id===263 }">
+            <label class="col-sm-3 control-label">Código Asociado:</label>
+            <div class="col-sm-4">
+              <input class="form-control form-white" type="text" ng-model="objeto.mutual.codigo" placeholder="Código Asociado Mutual">
+            </div>
+          </div>
+
+          <div class="form-group form-group-md required" ng-class="{ 'hidden' : !objeto.mutual }">
+            <label class="col-sm-3 control-label">Tasa Fija:</label>
+            <div class="col-sm-2">
+              <input class="form-control form-white" type="text" step="0.001" ng-model="objeto.mutual.tasaFija" required>
+            </div>          
+          </div>
+
+          <div class="form-group form-group-md required" ng-class="{ 'hidden' : !objeto.mutual }">
+            <label class="col-sm-3 control-label">Tasa Adicional:</label>
+            <div class="col-sm-2">
+              <input class="form-control form-white" type="text" step="0.001" ng-model="objeto.mutual.tasaAdicional" required>
+            </div>         
+          </div>
+
+          <div class="form-group form-group-md required" ng-class="{ 'hidden' : !isSanna }">
+            <label class="col-sm-3 control-label">Tasa Extraordinaria:</label>
+            <div class="col-sm-2">
+              <input class="form-control form-white" type="text" step="0.001" ng-model="objeto.mutual.extraordinaria" required> 
+            </div>         
+            <span style="color: #A9A9A9;">* Sólo a partir del 2018</span>
+          </div>
+
+          <div class="form-group form-group-md required" ng-class="{ 'hidden' : !isSanna }">
+            <label class="col-sm-3 control-label">Tasa Ley SANNA:</label>
+            <div class="col-sm-2">
+              <input class="form-control form-white" type="text" step="0.001" ng-model="objeto.mutual.sanna" required> 
+            </div>         
+            <span style="color: #A9A9A9;">* Sólo a partir del 2018</span>
+          </div>
+
+          <div class="form-group form-group-md required" style="margin-top: 40px;">
+            <label class="col-sm-3 control-label">Caja de Compensación:</label>
+            <div class="col-sm-5">
+              <select ng-model="objeto.caja" ng-change="cambiarCaja()" ng-options="caja as caja.nombre for caja in cajas" class="form-control form-white" required>                
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group form-group-md" ng-class="{ 'hidden' : !objeto.caja || objeto.caja.id===257 }">
+            <label class="col-sm-3 control-label">Código Asociado:</label>
+            <div class="col-sm-4">
+              <input class="form-control form-white" type="text" ng-model="objeto.caja.codigo" placeholder="Código Asociado Caja">
+            </div>
+          </div>
+        </fieldset>
+        
+        <fieldset>
+          <legend>Remuneraciones</legend>
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">SIS:</label>
+            <div class="col-sm-5">
+              <div class="row">
+                <label class="col-sm-6">
+                  <input type="checkbox" name="sis" ng-model="objeto.sis" value="true" icheck> Empresa paga SIS
+                </label>        
+              </div>                    
+            </div>
+          </div> 
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">Gratificación por:</label>
+            <div class="col-sm-5" style="padding: 0px;">
+              <div class="row">
+                <div class="radio col-sm-6" style="margin-left: 0px; padding: 0;">
+                  <label><input type="radio" ng-model="objeto.gratificacion" name="gratificacionEmpresa" value="e" icheck required>Empresa</label>
+                </div>
+                <div class="radio col-sm-6" style="margin-left: 0px; padding: 0;">
+                  <label><input type="radio" ng-model="objeto.gratificacion" name="gratificacionTrabajador" value="t" icheck required>Trabajador</label>
+                </div>    
+              </div>
+            </div>               
+          </div> 
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;" ng-if="objeto.gratificacion=='e'" >
+            <label class="col-sm-3 control-label">Tipo de Gratificación:</label>
+            <div class="col-sm-5" style="padding: 0px;">
+              <div class="row">
+                <div class="radio col-sm-6" style="margin-left: 0px; padding: 0;">
+                  <label><input type="radio" ng-model="objeto.tipoGratificacion" ng-change="cambiarGratificacion('mensual')" name="gratificacionMensual" value="m" icheck required>Mensual</label>
+                </div>
+                <div class="radio col-sm-6" style="margin-left: 0px; padding: 0;">
+                  <label><input type="radio" ng-model="objeto.tipoGratificacion" ng-change="cambiarGratificacion('anual')" name="gratificacionAnual" value="a" icheck required>Anual</label>
+                </div>  
+              </div>
+            </div>
+
+            <div class="col-sm-4" style="padding: 0px;">
+              <div class="row">
+                <div class="col-sm-6" style="padding: 0px;" ng-class="{ 'hidden' : objeto.tipoGratificacion=='a' }" >
+                  <label class="col-sm-12">
+                    <input type="checkbox" ng-model="objeto.proporcionalInasistencias" value="true" icheck> Proporcional Inasistencias
+                  </label>   
+                </div>
+                <div class="col-sm-6" style="padding: 0px;" ng-class="{ 'hidden' : objeto.tipoGratificacion=='a' }" >
+                  <label class="col-sm-12">
+                    <input type="checkbox" ng-model="objeto.proporcionalLicencias" value="true" icheck> Proporcional Licencias
+                  </label>   
+                </div>
+              </div>
+            </div>                 
+          </div>                  
+
+          <div class="form-group form-group-md required" ng-if="objeto.tipoGratificacion=='m' || objeto.gratificacion=='t'" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">Tope Gratificación:</label>
+            <div class="col-sm-3">
+              <div class="input-group">
+                <input class="form-control form-white" type="text" step="0.01" ng-model="objeto.topeGratificacion" required>
+                <span class="input-group-addon">IMM</span>
+              </div>
+            </div>        
+          </div>
+
+          <div class="form-group form-group-md" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">Conexión a CME:</label>
+            <div class="col-sm-2">
+              <label class="switch switch-green">
+                <input class="switch-input" name="cme" ng-model="objeto.cme" type="checkbox" />
+                <span class="switch-label" data-on="SI" data-off="NO"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>        
+          </div>
+
+          <div class="form-group form-group-md" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">Utiliza Centros de Costos:</label>
+            <div class="col-sm-2">
+              <label class="switch switch-green">
+                <input class="switch-input" name="centroCosto" ng-model="objeto.centroCosto" type="checkbox" ng-change="cambiarCentroCosto()"/>
+                <span class="switch-label" data-on="SI" data-off="NO"></span>
+                <span class="switch-handle"></span>
+              </label>
+            </div>        
+            <div class="col-sm-5" style="padding: 0px;" ng-class="{ 'hidden' : !objeto.centroCosto }">
+              <label class="col-sm-7 control-label">Niveles Centros de Costos:</label>
+              <div class="col-sm-3">
+                <select ng-model="objeto.nivelesCentroCosto" ng-options="nivel for nivel in niveles" class="form-control form-white" ng-change="cambiarNiveles()" required></select>
+              </div>
+            </div> 
+          </div>
+
+          <div class="form-group form-group-md" style="margin-top: 20px;" ng-class="{ 'hidden' : !objeto.centroCosto }">
+            <label class="col-sm-3 control-label">Títulos Centros de Costo:</label>
+            <div class="col-sm-6">
+              <div class="col-sm-12" ng-repeat="centro in objeto.centrosCosto">
+                <div class="form-group form-group-md">
+                  <label ng-if="!centro.edit" class="col-sm-5 control-label">{{ centro.nombre }}:</label>       
+                  <input class="col-sm-5" ng-if="centro.edit" class="form-control form-white" type="text" ng-model="centro.nombre" placeholder="nombre">      
+                  <div class="col-sm-2">
+                    <a href="" ng-if="!centro.edit && !isCentro" ng-click="editarCentro(centro)"><i class="fa fa-pencil"></i></a>
+                    <a href="" ng-if="centro.edit" ng-click="updateCentro(centro)"><i class="fa fa-check"></i></a>
+                  </div>
+                </div>  
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-md required" style="margin-top: 20px;">
+            <label class="col-sm-3 control-label">Impuesto Único por:</label>
+            <div class="col-sm-5" style="padding: 0px;">
+              <div class="row">
+                <div class="radio col-sm-6" style="margin-left: 0px; padding: 0;">
+                  <label><input type="radio" ng-model="objeto.impuestoUnico" name="impuestoUnicoEmpresa" value="e" icheck required>Empresa</label>
+                </div>
+                <div class="radio col-sm-6" style="margin-left: 0px; padding: 0;">
+                  <label><input type="radio" ng-model="objeto.impuestoUnico" name="impuestoUnicoTrabajador" value="t" icheck required>Trabajador</label>
+                </div>    
+              </div>
+            </div>               
+          </div> 
+
+          <div class="form-group form-group-md" style="margin-top: 20px;" ng-if="objeto.impuestoUnico=='e'">
+            <label class="col-sm-3 control-label">Zona Impuesto Único:</label>
+            <div class="col-sm-2">
+              <div class="input-group">
+                <input class="form-control form-white" type="text" ng-model="objeto.zona" placeholder="Zona Impuesto Único">
+                <span class="input-group-addon">%</span>
+              </div>
+            </div>
+          </div>   
+
+          <div class="form-group form-group-md" style="margin-top: 20px;" ng-if="objeto.impuestoUnico=='t'">
+            <label class="col-sm-3 control-label">Zonas Impuesto Único:</label>
+            <div class="col-sm-6">
+              <div class="text-center" ng-if="objeto.zonasImpuestoUnico.length==0 && !isZona">
+                <i>No se han ingresado Zonas</i>
+              </div>
+              <div class="col-sm-12" ng-repeat="zona in objeto.zonasImpuestoUnico" ng-show="!isZona && !isEdit">
+                <div class="form-group form-group-md">
+                  <label class="col-sm-5 control-label">{{ zona.nombre }}:</label>
+                  <div class="col-sm-5">                        
+                    <label class="form-white">{{ zona.porcentaje }}%</label>                 
+                  </div>
+                  <div class="col-sm-2" ng-class="{ 'hidden' : isZona }">
+                    <a href="" ng-click="editarZona(zona)"><i class="fa fa-pencil"></i></a>
+                    <a href="" confirmation-click="eliminarZona(zona)" confirmation-needed="La Zona seleccionada será eliminada. ¿Desea continuar?"><i class="fa fa-trash"></i></a>
+                  </div>
+                </div>  
+              </div>
+            </div>
+            <div class="col-sm-3" ng-show="!isZona" style="margin-top: 20px;">
+              <button class="btn btn-sm btn-primary" type="button" ng-click="agregarZona()" ><i class="fa fa-plus"></i> Agregar</button>
+            </div>
+
+            <fieldset ng-show="isZona" class="col-sm-6">
+              <button type="button" class="close" ng-click="agregarZona()">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+              </button>
+              <legend>{{ tituloZona }}</legend>
+              <div class="form-group form-group-md">
+                <label class="col-sm-3 control-label">Nombre:</label>
+                <div class="col-sm-6" style="padding: 0;">
+                  <input class="form-control form-white" type="text" ng-model="zona.nombre" placeholder="nombre">
+                </div>            
+              </div>
+
+              <div class="form-group form-group-md">
+                <label class="col-sm-3 control-label">Porcentaje:</label>
+                <div class="col-sm-9" style="padding: 0;">
+                  <div class="col-sm-9 input-group">
+                    <input class="form-control form-white" type="text" ng-model="zona.porcentaje" placeholder="0.00">
+                    <span class="input-group-addon">%</span>
+                    <div class="col-sm-3 col-offset-sm-1" ng-show="zona.nombre && zona.porcentaje">
+                      <button type="button" ng-click="guardarZona()" class="btn btn-primary btn-sm" ng-class="{ 'hidden' : isEdit }"><i class="fa fa-plus"></i> Agregar</button>
+                      <button type="button" ng-click="updateZona(zona)" class="btn btn-primary btn-sm" ng-class="{ 'hidden' : !isEdit }"><i class="fa fa-pencil"></i> Modificar</button>
+                    </div>
+                  </div> 
+                  
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <button type="button" ng-class="{ 'hidden' : !isCollapsed }" class="btn btn-default btn-sm" ng-click="isCollapsed = !isCollapsed" style="margin-top: 20px;">Cálculos Especiales</button>
+
+          <div uib-collapse="isCollapsed" >
+            <fieldset class="col-sm-12">
+              <button type="button" class="close" ng-click="isCollapsed = !isCollapsed">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+              </button>
+              <legend>Cálculos Especiales</legend>
+
+              <div class="form-group form-group-md">
+                <label class="col-sm-3 control-label">Salud:</label>
+                <div class="col-sm-9" style="padding: 0px;">
+                  <div class="row">
+                    <div class="col-sm-6" style="padding: 0px;">
+                      <label class="col-sm-12">
+                        <input type="checkbox" ng-model="objeto.saludCompleta" value="true" icheck> Pagar siempre plan completo Isapre
+                      </label>   
+                    </div>                
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-md" style="margin-top: 20px;">
+                <label class="col-sm-3 control-label">Cálculo a 30 días:</label>
+                <div class="col-sm-9" style="padding: 0px;">
+                  <div class="row">
+                    <div class="col-sm-3" style="padding: 0px;">
+                      <label class="col-sm-12">
+                        <input type="checkbox" ng-model="objeto.licencias30" value="true" icheck> Licencias
+                      </label>   
+                    </div>
+                    <div class="col-sm-3" style="padding: 0px;">
+                      <label class="col-sm-12">
+                        <input type="checkbox" ng-model="objeto.ingresos30" value="true" icheck> Ingresos
+                      </label>   
+                    </div>
+                    <div class="col-sm-4" style="padding: 0px;">
+                      <label class="col-sm-12">
+                        <input type="checkbox" ng-model="objeto.finiquitos30" value="true" icheck> Finiquitos
+                      </label>   
+                    </div>
+                  </div>
+                </div>                 
+              </div> 
+
+            </fieldset>
+          </div>
+
+        </fieldset>        
+
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">Representante Legal</div>
+      <div class="panel-body">
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label" >Rut:</label>
+          <div class="col-sm-3">
+            <input class="form-control form-white" type="text" rut="objeto.representanteRut" ng-model="objeto.representanteRut" maxlength="15" placeholder="11.111.111-1" />
+          </div>
+        </div>
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label" >Nombre:</label>
+          <div class="col-sm-6">
+            <input class="form-control form-white" type="text" ng-model="objeto.representanteNombre" placeholder="Nombre del Representante Legal" >
+          </div>
+        </div>
+        <div class="form-group form-group-md required" ng-class="{ 'has-error': errores('direccion') }">
+          <label class="col-sm-3 control-label">Dirección:</label>
+          <div class="col-sm-6">
+            <input class="form-control form-white" type="text" name="direccion" ng-model="objeto.representanteDireccion" placeholder="Dirección" required >
+            <span class="help-block" ng-show="errores('direccion')">
+              Obligatorio!
+            </span>
+          </div>
+        </div>
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Comuna</label>
+          <div class="col-sm-6">
+            <input type="text" ng-model="objeto.representanteComuna" placeholder="Buscar Comuna" uib-typeahead="comuna as comuna.nombre for comuna in getComunas($viewValue)" typeahead-loading="loadingComunaRepresentante" class="form-control form-white" typeahead-editable="false" typeahead-template-url="customTemplate.html" required  />
+          </div>
+          <div class="col-sm-1">
+            <i ng-show="loadingComunaRepresentante" class="fa fa-refresh"></i>
+            <i ng-show="objeto.representanteComuna.id" class="fa fa-check" style="color: #0a0;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default" ng-if="!objeto.id">
+      <div class="panel-heading">Base de Datos</div>
+      <div class="panel-body">
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Año Inicial:</label>
+          <div class="col-sm-3">
+            <select class="form-control form-white" ng-change="cambiarAnioInicial()" ng-model="objeto.anioInicial" ng-options="anio as anio for anio in anios"></select>
+          </div>
+        </div>
+
+        <div class="form-group form-group-md required">
+          <label class="col-sm-3 control-label">Mes Inicial:</label>
+          <div class="col-sm-3">
+            <select class="form-control form-white" ng-model="objeto.mesInicial" ng-options="mes as mes.mes for mes in meses"></select>
+          </div>
+        </div>
+
+        <div class="form-group form-group-md" ng-if="false">
+          <label class="col-sm-3 control-label">Generar a partir de:</label>
+          <div class="col-sm-6">
+            <select ng-model="objeto.baseDatos" ng-options="emp as emp.empresa for emp in empresas" ng-init="objeto.baseDatos=empresas[0]" class="form-control form-white"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="cancel()">Cancelar</button>
+  <button class="btn btn-primary" ng-disabled="form.$invalid || isZona || isCentro" ng-click="guardar()">Guardar</button>
+</div>

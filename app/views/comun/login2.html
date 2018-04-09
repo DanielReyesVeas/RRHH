@@ -1,0 +1,130 @@
+
+<style type="text/css">
+  @CHARSET "UTF-8";
+  
+  .titulo{
+      font-size:18px;
+      font-weight: bold;
+      font-family: Arial;
+      color:#555;
+      text-align: center;
+  }
+  
+  .progress-bar {
+      color: #333;
+  } 
+  
+  
+  *{
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      outline: none;
+  }
+  
+  .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+      @include box-sizing(border-box);        
+      &:focus {
+        z-index: 2;
+      }
+  }
+  
+  body {
+    background-image: url("images/login_rrhh.jpg");
+    background-size:cover
+
+  }
+  
+  .login-form {
+      max-width: 300px;
+  }
+  
+  form[role=loginForm] {
+      color: #5d5d5d;
+
+      padding: 26px;
+      border-radius: 10px;
+      -moz-border-radius: 10px;
+      -webkit-border-radius: 10px;
+  }
+  form[role=loginForm] img {
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 5px;
+  }
+  form[role=loginForm] input,
+  form[role=loginForm] button {
+      font-size: 14px;
+      margin: 10px 0;
+  }
+  form[role=loginForm] > div {
+      text-align: center;
+  }
+      
+  .form-links {
+      text-align: center;
+      margin-top: 1em;
+      margin-bottom: 50px;
+  }
+  .form-links a {
+      color: #fff;
+  }
+  .capacentrar{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+  
+      text-align: center;
+
+  }
+  button:enabled{
+      background: #d16302 !important;
+  }
+
+</style>
+
+<div class="capacentrar" id="capaLoggin" style="display:none;">
+<!--  <center>
+
+    <div ng-show="datosEmpresa.empresa && !ocultarLoggin" class="text-center">
+        <div ng-if="datosEmpresa.logo" class="text-center">
+            <img ng-src="{{ constantes.URL + 'stories/' + datosEmpresa.logo }}" style="max-height:100px;" />
+        </div>
+        <h1  ng-if="!datosEmpresa.logo">{{ datosEmpresa.empresa }}</h1>
+        <h2><b>PORTAL DE TRABAJADORES</b></h2>
+    </div>
+
+    <section class="login-form" ng-show="!ocultarLoggin">   
+
+        
+      <form name="form" role="loginForm">
+        <img src="images/esystems-rrhh.png" style="max-height:150px; max-width:250px;" ng-show="!datosEmpresa.empresa" />
+        
+        <p class="titulo" style="line-height:5px;">
+          <small style="font-size:10px;color:#444;font-weight:bold">Versión: {{ constantes.version }} {{ constantes.versionFecha }}</small>
+        </p>
+        <input name="username" ng-model="username" placeholder="Nombre de Usuario" required="" class="form-control form-white input-lg" type="text">
+        <input name="password" ng-model="password" class="form-control form-white input-lg" id="password" placeholder="Contraseña" required="" type="password">
+        <button ng-click="loginBtn();" ng-disabled="form.$invalid || cargando" name="go" class="btn btn-lg btn-warning btn-block">Ingresar</button>
+              
+              <img src="images/esystems-rrhh.png" style="max-height:50px;" ng-show="datosEmpresa.empresa" />
+      </form> 
+    </section>  
+  </center>
+  <a href="http://www.easysystems.cl" target="_black" style="width: 100%;">
+    <div style="width: 100% !important;">&nbsp;</div>
+  </a>-->
+</div>
+
+<script type="text/javascript">
+    function cargarLoggin(){
+        $('.capacentrar').css('display', 'inline');
+    }
+    setTimeout('cargarLoggin();', 500);
+</script>
+            
+        

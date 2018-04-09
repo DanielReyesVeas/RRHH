@@ -1,0 +1,303 @@
+<div class="header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <div class="container">
+    <h3>Detalles Trabajador</h3>
+    <fieldset>
+      <legend>Datos Personales</legend>
+
+      <div class="row">
+        <div class="form-group form-group-sm col-sm-5">
+          <div class="row" style="padding: 20px;">
+            <label class="col-sm-4 control-label">RUT:</label>
+            <div class="col-sm-8">{{ trabajador.rutFormato }}</div> 
+          </div>  
+          <div class="row" style="padding: 20px;">
+            <label class="col-sm-4 control-label">Nombres:</label>
+            <div class="col-sm-8">{{ trabajador.nombres }}</div>
+          </div>    
+          <div class="row" style="padding: 20px;">
+            <label class="col-sm-4 control-label">Apellidos:</label>
+            <div class="col-sm-8">{{ trabajador.apellidos }}</div>
+          </div> 
+          <div class="row" style="padding: 20px;">
+            <label class="col-sm-5 control-label">Nacionalidad:</label>
+            <div class="col-sm-7">{{ trabajador.nacionalidad.nombre }}</div>
+          </div>                     
+        </div>
+        <div class="form-group form-group-md col-sm-7">
+          <div class="col-sm-9">
+            <img src="images/avatar.png" width="250px" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label" ng-show="!trabajador.sindicato">Sindicato:</label>
+          <label class="col-sm-2 control-label" ng-show="trabajador.sindicato">Cuota Sindical:</label>
+          <div class="col-sm-4" ng-show="!trabajador.sindicato">No</div>                  
+          <div class="col-sm-4" ng-show="trabajador.sindicato && trabajador.monedaSindicato==='$'">${{ trabajador.montoSindicato | currency:'':0 }}</div>                 
+          <div class="col-sm-4" ng-show="trabajador.sindicato && trabajador.monedaSindicato!=='$'">{{ trabajador.montoSindicato }} {{ trabajador.monedaSindicato }}</div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Domicilio</legend>
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Dirección:</label>
+          <div class="col-sm-4">{{ trabajador.direccion }}</div>
+          <label class="col-sm-2 control-label">Comuna:</label>
+          <div class="col-sm-4">{{ trabajador.comuna.nombre }}</div>                  
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Teléfono Fijo:</label>
+          <div class="col-sm-4" ng-if="trabajador.telefono">{{ trabajador.telefono }}</div>
+          <div class="col-sm-4" ng-if="!trabajador.telefono">-</div>
+          <label class="col-sm-2 control-label">Celular:</label>
+          <div class="col-sm-4">{{ trabajador.celular }}</div>                  
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label" ng-if="trabajador.celularEmpresa">Celular Empresa:</label>
+          <div class="col-sm-4" ng-if="trabajador.celularEmpresa">{{ trabajador.celularEmpresa }}</div>
+          <label class="col-sm-2 control-label">Email Personal:</label>
+          <div class="col-sm-4">{{ trabajador.email }}</div>                  
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label" ng-if="trabajador.emailEmpresa">Email Empresa:</label>
+          <div class="col-sm-4" ng-if="trabajador.emailEmpresa">{{ trabajador.emailEmpresa }}</div>
+          <label class="col-sm-2 control-label">Sexo:</label>
+          <div class="col-sm-4" ng-show="trabajador.sexo === 'm'">Masculino</div>                  
+          <div class="col-sm-4" ng-show="trabajador.sexo === 'f'">Femenino</div>                  
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Estado Civíl:</label>
+          <div class="col-sm-4">{{ trabajador.estadoCivil.nombre }}</div>
+          <label class="col-sm-2 control-label">Fecha de Nacimiento:</label>
+          <div class="col-sm-4">{{ trabajador.fechaNacimiento | date : "dd-MM-y" }}</div>                  
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Destinación</legend>
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Cargo:</label>
+          <div class="col-sm-4">{{ trabajador.cargo.nombre }}</div>
+          <label class="col-sm-2 control-label" ng-if="trabajador.titulo">Título:</label>
+          <div class="col-sm-4" ng-if="trabajador.titulo">{{ trabajador.titulo.nombre }}</div>    
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Sección:</label>
+          <div class="col-sm-4">{{ trabajador.seccion.nombre }}</div>
+          <label class="col-sm-2 control-label">Tienda:</label>
+          <div class="col-sm-4">{{ trabajador.tienda.nombre }}</div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Cuenta de Pago</legend>
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Tipo de Cuenta:</label>
+          <div class="col-sm-4">{{ trabajador.tipoCuenta.nombre }}</div>
+          <div class="col-sm-4" ng-if="trabajador.tipoCuenta.nombre==''">-</div>
+          <label class="col-sm-2 control-label">Banco:</label>
+          <div class="col-sm-4">{{ trabajador.banco.nombre }}</div>                  
+          <div class="col-sm-4" ng-if="trabajador.banco.nombre==''">-</div>                  
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Número de Cuenta:</label>
+          <div class="col-sm-4">{{ trabajador.numeroCuenta }}</div>                  
+          <div class="col-sm-4" ng-if="trabajador.numeroCuenta==''">-</div>                  
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Antecedentes Contracturales</legend>
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Fecha de Ingreso:</label>
+          <div class="col-sm-4">{{ trabajador.fechaIngreso | date : "dd-MM-y" }}</div>
+          <label class="col-sm-2 control-label">Fecha de Reconocimiento:</label>
+          <div class="col-sm-4">{{ trabajador.fechaReconocimiento | date : "dd-MM-y" }}</div>                  
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Tipo de Contrato:</label>
+          <div class="col-sm-4">{{ trabajador.tipoContrato.nombre }}</div>
+          <label class="col-sm-2 control-label">Tipo de Jornada:</label>
+          <div class="col-sm-4">{{ trabajador.tipoJornada.nombre }}</div>                          
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">          
+          <label class="col-sm-2 control-label">Semana Corrida:</label>
+          <div class="col-sm-4" ng-show="trabajador.semanaCorrida">Sí</div>                  
+          <div class="col-sm-4" ng-show="!trabajador.semanaCorrida">No</div>                  
+          <label class="col-sm-2 control-label" ng-if="trabajador.fechaVencimiento">Fecha de Vencimiento:</label>
+          <div class="col-sm-4" ng-if="trabajador.fechaVencimiento">{{ trabajador.fechaVencimiento | date : "dd-MM-y" }}</div> 
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Remuneración</legend>
+      <h3>Imponibles</h3>
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">Sueldo Base:</label>
+          <div class="col-sm-4" ng-show="trabajador.monedaSueldo==='$'">${{ trabajador.sueldoBase | currency:'':0  }}</div>
+          <div class="col-sm-4" ng-show="trabajador.monedaSueldo!=='$'">{{ trabajador.sueldoBase }} {{ trabajador.monedaSueldo }}</div>                 
+          <label class="col-sm-2 control-label">Tipo de Trabajador:</label>
+          <div class="col-sm-4">{{ trabajador.tipoTrabajador }}</div>                  
+        </div>
+      </div>
+
+      <div class="row" ng-show="trabajador.imponibles.length>0">
+        <div class="form-group form-group-sm" style="padding: 20px;" ng-repeat="imp in trabajador.imponibles">
+          <label class="col-sm-2 control-label">{{ imp.tipo }}:</label>
+          <div class="col-sm-4" ng-show="imp.moneda==='$'">${{ imp.monto | currency:'':0  }}</div>
+          <div class="col-sm-4" ng-show="imp.moneda!=='$'">{{ imp.monto }} {{ imp.moneda }}</div>                 
+        </div>
+      </div>
+
+      <h3 style="margin-top: 20px;">No Imponibles</h3>
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label" ng-if="trabajador.montoColacion>0">Colación:</label>
+          <div class="col-sm-4" ng-show="trabajador.monedaColacion==='$' && trabajador.montoColacion>0">${{ trabajador.montoColacion | currency:'':0  }}</div>
+          <div class="col-sm-4" ng-show="trabajador.monedaColacion!=='$'">{{ trabajador.montoColacion }} {{ trabajador.monedaColacion }}</div>                 
+          <label class="col-sm-2 control-label" ng-if="trabajador.montoMovilizacion>0">Movilización:</label>
+          <div class="col-sm-4" ng-show="trabajador.monedaMovilizacion==='$' && trabajador.montoColacion>0">${{ trabajador.montoMovilizacion | currency:'':0  }}</div>
+          <div class="col-sm-4" ng-show="trabajador.monedaMovilizacion!=='$'">{{ trabajador.montoMovilizacion }} {{ trabajador.monedaMovilizacion }}</div>                 
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;" ng-if="trabajador.montoViatico>0">
+          <label class="col-sm-2 control-label">Víatico:</label>
+          <div class="col-sm-4" ng-show="trabajador.monedaViatico==='$'">${{ trabajador.montoViatico | currency:'':0  }}</div>
+          <div class="col-sm-4" ng-show="trabajador.monedaViatico!=='$'">{{ trabajador.montoViatico }} {{ trabajador.monedaViatico }}</div>                 
+        </div>
+      </div>
+
+      <div class="row" ng-show="trabajador.noImponibles.length>0">
+        <div class="form-group form-group-sm" style="padding: 20px;" ng-repeat="noImp in trabajador.noImponibles">
+          <label class="col-sm-2 control-label">{{ noImp.tipo }}:</label>
+          <div class="col-sm-4" ng-show="noImp.moneda==='$'">${{ noImp.monto | currency:'':0  }}</div>
+          <div class="col-sm-4" ng-show="noImp.moneda!=='$'">{{ noImp.monto }} {{ noImp.moneda }}</div>  
+        </div>
+      </div>
+      
+    </fieldset>
+
+    <fieldset>
+      <legend>AFP</legend>
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">
+          <label class="col-sm-2 control-label">AFP:</label>
+          <div class="col-sm-4">{{ trabajador.afp.nombre }}</div>
+          <label class="col-sm-2 control-label">Seguro de Desempleo:</label>
+          <div class="col-sm-4" ng-show="trabajador.seguroDesempleo">AFP {{ trabajador.afpSeguro.nombre }}</div>                  
+          <div class="col-sm-4" ng-show="!trabajador.seguroDesempleo">No</div>                  
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group form-group-sm" style="padding: 20px;">         
+          <label class="col-sm-2 control-label">Salud:</label>
+          <div class="col-sm-4">{{ trabajador.isapre.nombre }}</div>   
+
+          <label class="col-sm-2 control-label" ng-show="trabajador.cotizacionIsapre === 'UF'">{{ trabajador.cotizacionIsapre }}:</label>
+          <label class="col-sm-2 control-label" ng-show="trabajador.cotizacionIsapre === '%'">Porcentaje plan de Salud:</label>
+          <div class="col-sm-4" ng-show="trabajador.cotizacionIsapre === 'UF'">{{ trabajador.montoIsapre }} UF</div>
+          <div class="col-sm-4" ng-show="trabajador.cotizacionIsapre === '%'">{{ trabajador.montoIsapre }}%</div>                 
+        </div>
+      </div>
+
+      <div class="row" ng-show="trabajador.apvs.length>0">
+        <fieldset>
+          <legend>APV</legend>
+          <div class="form-group form-group-sm" style="padding: 20px;" ng-repeat="apv in trabajador.apvs">
+            <label class="col-sm-2 control-label">AFP:</label>
+            <div class="col-sm-4">{{ apv.afp.nombre }}</div>
+            <label class="col-sm-2 control-label">Monto:</label>
+            <div class="col-sm-4" ng-show="apv.moneda==='$'">${{ apv.monto | currency:'':0  }}</div>
+            <div class="col-sm-4" ng-show="apv.moneda!=='$'">{{ apv.monto }} {{ apv.moneda }}</div>                
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="row" ng-show="trabajador.descuentos.length>0">
+        <fieldset>
+          <legend>Otros Descuentos</legend>
+          <div class="form-group form-group-sm" style="padding: 20px;" ng-repeat="desc in trabajador.descuentos">
+            <label class="col-sm-2 control-label">Tipo:</label>
+            <div class="col-sm-4">{{ desc.tipo.nombre }}</div>
+            <label class="col-sm-2 control-label">Monto:</label>
+            <div class="col-sm-4" ng-show="desc.moneda==='$'">{{ desc.monto | currency:'':0  }}</div>
+            <div class="col-sm-4" ng-show="desc.moneda!=='$'">{{ desc.monto }} {{ desc.moneda }}</div>           
+          </div>
+        </fieldset>
+      </div>
+
+    </fieldset>
+
+    <fieldset>
+      <legend>Grupo Familiar</legend>
+      <div class="row" ng-show="trabajador.cargas.length>0">
+        <div class="form-group form-group-sm" style="padding: 20px;" ng-repeat="carga in trabajador.cargas | filter:{ esCarga:false }">
+          <label class="col-sm-2 control-label">{{ carga.parentesco }}:</label>
+          <div class="col-sm-4">{{ carga.nombreCompleto }}</div>         
+        </div>
+      </div>
+      <div class="row text-center" ng-show="trabajador.cargas.length<=0">
+        Aun no hay cargas
+      </div>
+
+      <div class="row" ng-show="isCargas">
+        <fieldset>
+          <legend>Cargas</legend>
+          <div class="form-group form-group-sm" style="padding: 20px;" ng-repeat="carga in trabajador.cargas | filter:{ esCarga:true }">
+            <label class="col-sm-2 control-label">{{ carga.parentesco }}:</label>
+            <div class="col-sm-4">{{ carga.nombreCompleto }}</div>              
+          </div>
+        </fieldset>
+      </div>
+
+    </fieldset>
+
+  </div>
+
+  <div class="modal-footer" style="margin-top: 20px;">
+    <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button>
+  </div>
+</div>

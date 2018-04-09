@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Fichas Trabajador</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{trabajador.nombreCompleto}}</div>
+
+    <div class="panel-body">
+      <div class="col-sm-12">
+        <a ng-click="unificar()" ng-disabled="!isTwoSelect" ng-if="accesos.crear && accesos.editar && accesos.abierto && trabajador.isUnificar" href="" class="btn btn-primary btn-xs pull-right"><i class="fa fa-compress"></i> Unificar Fichas</a>
+      </div>
+
+      <div class="col-sm-12">
+
+        <div class="text-center" ng-if="trabajador.fichas.length<=0">
+          <i>Aun no hay registros</i>
+        </div>
+
+        <table class="table table-striped" ng-if="trabajador.fichas.length>0">
+          <thead>
+            <tr>
+              <th class="col-sm-1">
+                <input type="checkbox" ng-model="trabajador.todos" ng-if="accesos.crear && accesos.abierto && trabajador.isUnificar" ng-change="selectAll()" icheck>
+              </th>
+              <th class="col-sm-1">#</th>
+              <th class="col-sm-3">Fecha Creación</th>
+              <th class="col-sm-2">Desde</th>
+              <th class="col-sm-2">Hasta</th>
+              <th class="col-sm-2">Estado</th>
+              <th class="col-sm-1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="dato in trabajador.fichas" ng-class="{ 'success' : trabajador.idFicha===dato.id }">
+              <td>
+                <input ng-if="dato.estado=='Ingresado' && trabajador.isUnificar" type="checkbox" ng-model="dato.check" ng-change="select(dato.check)" ng-if="accesos.crear && accesos.abierto" icheck>
+              </td>
+              <td>{{ $index + 1 }}°</td>
+              <td>{{ dato.fechaCreacion | date : "dd-MM-y" }}</td>
+              <td>{{ dato.desde }}</td>
+              <td ng-if="dato.hasta">{{ dato.hasta }}</td>
+              <td>
+                <span class="text-success" ng-if="dato.estado==='Ingresado'">{{ dato.estado }}</span>
+                <span class="text-danger" ng-if="dato.estado==='Finiquitado'">{{ dato.estado }}</span>
+                <span class="text-primary" ng-if="dato.estado==='En Creación'">{{ dato.estado }}</span>
+              </td>
+              <td>
+                <a href="javascript:void(0);" ng-if="accesos.editar && accesos.abierto && dato.estado=='Finiquitado'" ng-click="detalle(dato, false)"><i class="fa fa-search"></i></a>
+                <a href="javascript:void(0);" ng-if="accesos.editar && accesos.abierto && dato.estado=='Ingresado'" ng-click="detalle(dato, true)"><i class="fa fa-pencil"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button> 
+</div>

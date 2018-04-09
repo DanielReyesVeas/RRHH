@@ -1,0 +1,21 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+</div>
+<div class="modal-body">
+	<form class="simple-form" id="opcionForm" name="opcionForm">
+	  <p>Ingrese la nueva opción.</p>
+	  <div class="form-group">
+	    <label for="title">Nombre:</label>
+	    <div class="input-group">
+	      <div class="input-group-addon">
+	        <i class="fa fa-list-alt"></i>
+	      </div>
+	      <input ng-model="opcion.nombre" id="nombre" class="form-control" type="text" placeholder="ingrese el nombre" required >
+	    </div>
+	  </div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" ng-click="guardar(opcion)" ng-disabled="opcionForm.$invalid">Guardar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
+</div>

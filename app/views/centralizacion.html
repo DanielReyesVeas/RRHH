@@ -1,0 +1,108 @@
+<div class="box">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2> <i class="fa fa-refresh"> </i> Centralización</h2>
+
+      <div class="col-sm-12" ng-if="cargado">
+        <div class="col-sm-12" ng-if="isGenerar && !isCentralizado">
+          <a ng-click="openCentralizar()" ng-if="accesos.crear && accesos.abierto" href="" class="btn btn-primary pull-right">Centralizar</a>
+        </div>      
+
+        <div class="panel-body" ng-if="accesos.ver">
+          <div class="col-sm-12">
+            <div class="form-group form-group-md">
+
+              <label class="col-sm-1 control-label" style="padding: 0px;">Año:</label>
+              <div class="col-sm-3">
+                <select class="form-control form-white" ng-model="cierre.anio" ng-options="anio as anio.nombre for anio in anios" ng-change="selectAnio()"> 
+                </select>
+              </div> 
+
+              <div class="col-sm-5 pull-right" ng-if="!isGenerar">
+                <a href="#liquidaciones-de-sueldo">
+                  <div class="alert alert-danger pull-right">
+                    <i class="fa fa-exclamation-triangle fa-3x" style="margin-right: 20px;"> </i>
+                    <b>Hay Liquidaciones pendientes.</b>
+                    <p>Debe generarlas todas para poder realizar la Centralización.</p>
+                  </div>
+                </a>
+              </div>             
+
+          </div>      
+
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+
+            <div class="col-sm-6">
+
+              <table class="table table-striped table-hover table-bordered" ng-if="datos">
+                <thead>
+                  <tr>    
+                    <th class="col-sm-3">Mes</th>
+                    <th class="col-sm-12">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="mes in datos.estadoMeses" ng-if="$index<6">
+                    <td>{{ mes.nombre }}</td>
+                    <td>
+                      <div class="col-sm-12">                      
+                        <div class="col-sm-4">
+                          <p class="text-success" ng-if="mes.isCentralizado"><b>Centralizado</b></p>
+                          <p class="text-danger" ng-if="mes.iniciado && !mes.isCentralizado"><b>Pendiente</b></p>
+                          <p class="text-muted" ng-if="!mes.iniciado && !mes.isCentralizado"><b>No disponible</b></p>
+                        </div>
+                        <div class="col-sm-2" ng-if="mes.isCentralizado">
+                          <button ng-click="detalle(mes)" type="button" class="btn btn-primary btn-xs">
+                            <i class="fa fa-search"> </i>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+            <div class="col-sm-6">
+
+              <table class="table table-striped table-hover table-bordered" ng-if="datos">
+                <thead>
+                  <tr>    
+                    <th class="col-sm-3">Mes</th>
+                    <th class="col-sm-12">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="mes in datos.estadoMeses" ng-if="$index>=6">
+                    <td>{{ mes.nombre }}</td>
+                    <td>
+                      <div class="col-sm-12">                      
+                        <div class="col-sm-4">
+                          <p class="text-success" ng-if="mes.isCentralizado"><b>Centralizado</b></p>
+                          <p class="text-danger" ng-if="mes.iniciado && !mes.isCentralizado"><b>Pendiente</b></p>
+                          <p class="text-muted" ng-if="!mes.iniciado && !mes.isCentralizado"><b>No disponible</b></p>
+                        </div>
+                        <div class="col-sm-2" ng-if="mes.isCentralizado">
+                          <button ng-click="detalle(mes)" type="button" class="btn btn-primary btn-xs">
+                            <i class="fa fa-search"> </i>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+        
+    </div>
+  </div>  
+</div>

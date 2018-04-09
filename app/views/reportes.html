@@ -1,0 +1,220 @@
+<div class="box">
+  <div class="row">
+    <h2> <i class="fa fa-eye"> </i> Reporte Movimientos</h2>
+    
+    <div class="column col-sm-12" ng-if="cargado">  
+
+      <div class="col-sm-12" style="margin-bottom: 20px; margin-top: 20px;"> 
+        <div>
+          <label class="control-label col-md-1">
+            Menú:
+          </label>
+          <div class="col-md-3">
+            <select class="form-control form-white" ng-model="objeto.menu" ng-options="menu as menu.nombre for menu in menus" ng-change="selectMenu()" required> </select> 
+          </div>
+        </div>
+        <div ng-if="objeto.menu && objeto.menu.submenus.length>0">
+          <label class="control-label col-md-1">
+            Sub Menú:
+          </label>
+          <div class="col-md-3">
+            <select class="form-control form-white" ng-model="objeto.submenu" ng-options="submenu as submenu.nombre for submenu in objeto.menu.submenus" ng-change="selectSubmenu()" required> </select> 
+          </div>
+        </div>
+        <div ng-if="objeto.submenu && objeto.submenu.secciones.length>0">
+          <label class="control-label col-md-1">
+            Sección:
+          </label>
+          <div class="col-md-3">
+            <select class="form-control form-white" ng-model="objeto.seccion" ng-options="seccion for seccion in objeto.submenu.secciones" ng-change="selectSeccion()" required> </select> 
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12" style="margin-bottom: 20px; margin-top: 40px;" ng-class="{ 'hidden' : objeto.datos.length==0}"> 
+        <div class="form-group">
+          <label for="orden" class="control-label col-md-1">
+            Ordenar:
+          </label>
+          <div class="col-md-3">
+            <select ng-model="orden" id="orden" ng-init="orden='fechaIngreso'" class="form-control form-white" ng-change="reverse = false">
+              <option value="fechaIngreso">Fecha</option>
+              <option value="accion">Acción</option>
+              <option value="datoOrden">Dato</option>
+              <option value="dato2Orden">Dato 2</option>
+              <!--<option value="dato3Orden">Dato 3</option>-->
+              <option value="menuOrden">Menú</option>
+              <option value="submenuOrden">Submenú</option>
+              <!--<option value="seccionOrden">Sección</option>-->
+            </select>
+          </div>
+          <div class="col-md-1">
+            <a ng-click="reverse=!reverse" ng-init="reverse=false" href="">
+              <i ng-class="{ 'hidden' : reverse }" class="fa fa-arrow-down"></i>
+              <i ng-class="{ 'hidden' : !reverse }" class="fa fa-arrow-up"></i></a>
+          </div>
+          <!--<label for="filtro" class="col-md-1 control-label" >Filtrar:</label>
+          <div class="col-md-4">
+            <input id="filtro" type="text"  class="form-control form-white form-white" ng-model="filtro">
+          </div>-->
+        </div>
+      </div>       
+
+      <div class="col-sm-12 text-center" ng-if="objeto.datos.length<=0" style="margin-top: 60px;" >
+        <i>No se han realizado acciones</i>
+      </div>
+
+      <div class="col-sm-12" ng-if="objeto.datos.length>0">
+
+        <div class="col-sm-12" ng-if="objeto.menu.id==0" style="margin: 0; padding: 0;">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>                
+                <th>Menú</th>
+                <th>Submenú</th>  
+                <th>Sección</th>
+                <th>Dato</th>
+                <th>Dato 2</th>
+                <th>Dato 3</th>
+                <th>Acción</th>
+                <th>Usuario</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in objeto.datos | orderObjectBy: orden : reverse">
+                <td>{{ dato.menu.nombre }} /</td>
+                <td>{{ dato.submenu.nombre }} <span ng-if="objeto.submenu.secciones.length>0">/</span></td>
+                <td>{{ dato.seccion.nombre }}</td>                               
+                <td>{{ dato.dato.nombre }}</td>
+                <td>{{ dato.dato2.nombre }}</td>
+                <td>{{ dato.dato3.nombre }}</td>
+                <td>
+                  <span class="text-success" ng-if="dato.accion==='Create'"><b>{{ dato.accion }}</b></span>
+                  <span class="text-danger" ng-if="dato.accion==='Delete' || dato.accion==='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                  <span class="text-warning" ng-if="dato.accion==='Update'"><b>{{ dato.accion }}</b></span>
+                  <span class="text-primary" ng-if="dato.accion!=='Update' && dato.accion!=='Create' && dato.accion!=='Delete' && dato.accion!=='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                </td>
+                <td>{{ dato.encargado.nombre }}</td>                                     
+                <td>{{ dato.fechaIngreso | date : "dd-MM-y" }}</td>
+              </tr>
+            </tbody>
+          </table> 
+        </div>
+
+        <div class="col-sm-12" ng-if="objeto.menu.id>0" style="margin: 0; padding: 0;">
+
+          <div class="col-sm-12" ng-if="objeto.submenu.id==0" style="margin: 0; padding: 0;">
+
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>                     
+                  <th>Submenú</th>
+                  <th ng-if="objeto.submenu.secciones.length>0">Sección</th>
+                  <th>Dato</th>
+                  <th>Dato 2</th>
+                  <th ng-if="objeto.menu.id==98">Dato 3</th>
+                  <th>Acción</th>
+                  <th>Usuario</th>                  
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="dato in objeto.datos | orderObjectBy: orden : reverse">
+                  <td>{{ dato.submenu.nombre }} <span ng-if="objeto.submenu.secciones.length>0">/</span></td>
+                  <td ng-if="objeto.submenu.secciones.length>0">{{ dato.seccion.nombre }}</td>            
+                  <td>{{ dato.dato.nombre }}</td>
+                  <td>{{ dato.dato2.nombre }}</td>
+                  <td ng-if="objeto.menu.id==98">{{ dato.dato3.nombre }}</td>
+                  <td>
+                    <span class="text-success" ng-if="dato.accion==='Create'"><b>{{ dato.accion }}</b></span>
+                    <span class="text-danger" ng-if="dato.accion==='Delete' || dato.accion==='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                    <span class="text-warning" ng-if="dato.accion==='Update'"><b>{{ dato.accion }}</b></span>
+                    <span class="text-primary" ng-if="dato.accion!=='Update' && dato.accion!=='Create' && dato.accion!=='Delete' && dato.accion!=='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                  </td>
+                  <td>{{ dato.encargado.nombre }}</td>                               
+                  <td>{{ dato.fechaIngreso | date : "dd-MM-y" }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div> 
+
+          <div class="col-sm-12" ng-if="objeto.submenu.id>0" style="margin: 0; padding: 0;">
+
+            <div class="col-sm-12" ng-if="objeto.seccion=='TODOS'" style="margin: 0; padding: 0;">
+
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>    
+                    <th>Sección</th>
+                    <th>Dato</th>
+                    <th>Dato 2</th>
+                    <th ng-if="objeto.submenu.id==119 || objeto.submenu.id==120">Dato 3</th>
+                    <th>Acción</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="dato in objeto.datos | orderObjectBy: orden : reverse">
+                    <td>{{ dato.seccion.nombre }}</td>                     
+                    <td>{{ dato.dato.nombre }}</td>
+                    <td>{{ dato.dato2.nombre }}</td>
+                    <td ng-if="objeto.submenu.id==119 || objeto.submenu.id==120">{{ dato.dato3.nombre }}</td>
+                    <td>
+                      <span class="text-success" ng-if="dato.accion==='Create'"><b>{{ dato.accion }}</b></span>
+                      <span class="text-danger" ng-if="dato.accion==='Delete' || dato.accion==='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                      <span class="text-warning" ng-if="dato.accion==='Update'"><b>{{ dato.accion }}</b></span>
+                      <span class="text-primary" ng-if="dato.accion!=='Update' && dato.accion!=='Create' && dato.accion!=='Delete' && dato.accion!=='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                    </td>
+                    <td>{{ dato.encargado.nombre }}</td>                       
+                    <td>{{ dato.fechaIngreso | date : "dd-MM-y" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+            <div class="col-sm-12" ng-if="objeto.seccion!='TODOS'" style="margin: 0; padding: 0;">
+
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>    
+                    <th ng-if="objeto.seccion=='Trabajadores'">RUT</th>
+                    <th ng-if="objeto.seccion=='Trabajadores'">Nombre</th>
+                    <th ng-if="objeto.seccion!='Trabajadores'">Dato</th>
+                    <th ng-if="objeto.seccion!='Trabajadores'">Dato 2</th>
+                    <th ng-if="objeto.submenu.id==119 || objeto.submenu.id==120">Dato 3</th>
+                    <th>Acción</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="dato in objeto.datos | orderObjectBy: orden : reverse">          
+                    <td>{{ dato.dato.nombre }}</td>
+                    <td>{{ dato.dato2.nombre }}</td>
+                    <td ng-if="objeto.submenu.id==119 || objeto.submenu.id==120">{{ dato.dato3.nombre }}</td>    
+                    <td>
+                      <span class="text-success" ng-if="dato.accion==='Create'"><b>{{ dato.accion }}</b></span>
+                      <span class="text-danger" ng-if="dato.accion==='Delete' || dato.accion==='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                      <span class="text-warning" ng-if="dato.accion==='Update'"><b>{{ dato.accion }}</b></span>
+                      <span class="text-primary" ng-if="dato.accion!=='Update' && dato.accion!=='Create' && dato.accion!=='Delete' && dato.accion!=='Delete Parcial'"><b>{{ dato.accion }}</b></span>
+                    </td>              
+                    <td>{{ dato.encargado.nombre }}</td>             
+                    <td>{{ dato.fechaIngreso | date : "dd-MM-y" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+          </div>
+
+        </div> 
+
+      </div>
+    </div>
+  </div>  
+</div>

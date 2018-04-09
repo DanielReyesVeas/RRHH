@@ -1,0 +1,211 @@
+<div class="header">
+        <h2>Administración del <b>Menú del Sistema</b></h2>
+</div>
+<div class="row col-lg-12" >
+    <div class="form-horizontal">
+        <label for="orden" class="col-sm-1 control-label" >Ordenar:</label>
+        <div class="col-sm-2">
+            <select id="orden" ng-model="orden" class="form-control form-white input-sm">
+                <option value="menu">Menú</option>
+                <option value="href">Href</option>
+                <option value="onclick">Onclick</option>
+            </select>
+        </div>
+
+        <label for="filtro" class="col-sm-1 control-label" >Filtrar:</label>
+        <div class="col-sm-6">
+          <input id="filtro" type="text" class="form-control form-white input-sm" ng-model="filtro">
+        </div>
+        
+        <div class="col-sm-2 text-right">
+            <button  class="btn btn-success btn-md" ng-click="openForm({id:''});">
+                <i class="fa fa-plus"></i> Agregar
+            </button>
+        </div>
+
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th class="col-xs-1">Icon</th>
+                <th class="col-xs-6">Menú</th>
+                <th class="col-xs-2">Href</th>
+                <th class="col-xs-2">Acceso</th>
+                <th class="col-xs-1">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+     		<tr ng-repeat='dato in datos | filter:filtro ' ng-class="{ 'bg-warning' : dato.tipo == 1 }" >
+     			<td class="text-right">{{ dato.posicion }}</td>
+     			<td class="text-right"><i ng-if="dato.fontawesome" class="fa {{ dato.fontawesome }}"></i></td>
+     			<td style="padding-left: {{ dato.tipo * 35  }}px;">
+                    <span ng-show="[2,3].indexOf(dato.tipo) >= 0" class='fa fa-chevron-right' aria-hidden="true"></span>                    
+                    {{ dato.menu }}
+                </td>
+     		    <td>{{ dato.href }}</td>
+        		<td>{{ dato.acceso }}</td>
+     			<td>
+     				<div class="btn-group">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            Acciones <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-sm" role="menu">
+                            <li><a href="javascript:void(0);" ng-click="editar( dato );"><span class="fa fa-pencil" aria-hidden="true"></span> Editar</a></li>
+                            <li><a href="javascript:void(0);" confirmation-click="eliminar( dato );" confirmation-needed="La Opción del Menú será eliminada. ¿Desea continuar?"><span class="fa fa-remove" aria-hidden="true"></span> Eliminar</a></li>
+                        </ul>
+                    </div>
+     			</td>
+     		</tr>
+            <tr style="background:none !important;">
+                <td colspan="10" style="height:100px; background:none !important;">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/ng-template" id="myModalMenu.html">
+    <div >
+        <div class="modal-header">
+            <h3 class="modal-title">Mantención Opciones del Menú</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" role="form" name="formMenu" novalidate>
+              <div class="form-group " ng-class="{ 'has-error' : formMenu.nombre.$invalid && !formMenu.nombre.$pristine }">
+                <label for="nombre" class="col-xs-3 control-label">
+                    Nombre Opción
+                </label>
+                <div class="col-xs-8">
+                    <input type="text" name="nombre" ng-model="objeto.nombre" class="form-control form-white" id="nombre" placeholder="Nombre Opción" required>
+                    <div ng-show="formMenu.nombre.$invalid && !formMenu.nombre.$pristine" class="fa fa-remove form-control form-white-feedback" aria-hidden="true"></div>
+                    <span ng-show="formMenu.nombre.$invalid && !formMenu.nombre.$pristine" class="help-block">Obligatorio!.</span>
+                </div>
+              </div>
+
+              <div class="form-group " ng-class="{ 'has-error' : formMenu.titulo.$invalid && !formMenu.titulo.$pristine }">
+                <label for="title" class="col-xs-3 control-label">
+                    Title
+                </label>
+                <div class="col-xs-8">
+                    <input type="text" name="titulo" ng-model="objeto.titulo" class="form-control form-white" id="titulo" placeholder="Title" required>
+                    <div ng-show="formMenu.titulo.$invalid && !formMenu.titulo.$pristine" class="fa fa-remove form-control form-white-feedback" aria-hidden="true"></div>
+                    <span ng-show="formMenu.titulo.$invalid && !formMenu.titulo.$pristine" class="help-block">Obligatorio!.</span>
+                </div>
+              </div>
+
+    
+              <div class="form-group " ng-class="{ 'has-error' : formMenu.tipo.$invalid && !formMenu.tipo.$pristine }">
+                <label for="tipo" class="col-xs-3 control-label">
+                    Tipo
+                </label>
+                <div class="col-xs-3">
+                    <select name="tipo" ng-model="objeto.tipo" class="form-control form-white" id="tipo" ng-options="opc as opc.value for opc in opciones.tipos" required ></select>
+                    <div ng-show="formMenu.tipo.$invalid && !formMenu.tipo.$pristine" class="fa fa-remove form-control form-white-feedback" aria-hidden="true"></div>
+                    <span ng-show="formMenu.tipo.$invalid && !formMenu.tipo.$pristine" class="help-block">Obligatorio!.</span>
+                </div>
+              </div>
+              
+              <div class="form-group " ng-class="{ 'has-error' : formMenu.padre.$invalid && !formMenu.padre.$pristine }">
+                <label for="padre" class="col-xs-3 control-label">
+                    Padre
+                </label>
+                <div class="col-xs-8">
+                    <select name="padre" ng-model="objeto.padre" class="form-control form-white" id="padre" ng-options="opc as ( '&nbsp;'.repeat(opc.nivel * 10) + opc.value ) for opc in opciones.padres" required ></select>
+                    <div ng-show="formMenu.padre.$invalid && !formMenu.padre.$pristine" class="fa fa-remove form-control form-white-feedback" aria-hidden="true"></div>
+                    <span ng-show="formMenu.padre.$invalid && !formMenu.padre.$pristine" class="help-block">Obligatorio!.</span>
+                </div>
+              </div>
+
+              <div class="form-group " ng-class="{ 'has-error' : formMenu.posicion.$invalid && !formMenu.posicion.$pristine }">
+                <label for="posicion" class="col-xs-3 control-label">
+                    Posición
+                </label>
+                <div class="col-xs-2">
+                    <select name="posicion" ng-model="objeto.posicion" class="form-control form-white" id="posicion" ng-options="opc as opc.value for opc in opciones.posiciones" required ></select>
+                    <div ng-show="formMenu.posicion.$invalid && !formMenu.posicion.$pristine" class="fa fa-remove form-control form-white-feedback" aria-hidden="true"></div>
+                    <span ng-show="formMenu.posicion.$invalid && !formMenu.posicion.$pristine" class="help-block">Obligatorio!.</span>
+                </div>
+              </div>
+
+              <div class="form-group " ng-class="{ 'has-error' : formMenu.administrador.$invalid && !formMenu.administrador.$pristine }">
+                <label for="administrador" class="col-xs-3 control-label">
+                    Acceso
+                </label>
+                <div class="col-xs-4">
+                    <select name="administrador" ng-model="objeto.administrador" class="form-control form-white" id="administrador" ng-options="opc as opc.value for opc in opciones.categorias" required ></select>
+                    <div ng-show="formMenu.administrador.$invalid && !formMenu.administrador.$pristine" class="fa fa-remove form-control form-white-feedback" aria-hidden="true"></div>
+                    <span ng-show="formMenu.administrador.$invalid && !formMenu.administrador.$pristine" class="help-block">Obligatorio!.</span>
+                </div>
+              </div>
+
+              <div class="form-group " ng-class="{ 'has-error' : formMenu.administrador.$invalid && !formMenu.administrador.$pristine }">
+                <label for="administrador" class="col-xs-3 control-label">
+                    Permisos a Configurar:
+                </label>
+                <div class="col-xs-9">
+                    <div class="row">
+                        <label class="col-sm-4">
+                            <input type="checkbox" ng-model="objeto.permisos.crear" ng-value="crear" icheck />
+                            Crear
+                        </label>
+                        <label class="col-sm-4">
+                            <input type="checkbox" ng-model="objeto.permisos.modificar" ng-value="modificar" icheck />
+                            Modificar
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-4">
+                            <input type="checkbox" ng-model="objeto.permisos.ver" ng-value="ver" icheck />
+                            Ver
+                        </label>
+                        <label class="col-sm-4">
+                            <input type="checkbox" ng-model="objeto.permisos.eliminar" ng-value="eliminar" icheck />
+                            Eliminar
+                        </label>
+                    </div>
+                </div>
+              </div>
+
+              <div class="form-group ">
+                <label for="href" class="col-xs-3 control-label">
+                    Href
+                </label>
+                <div class="col-xs-8">
+                    <input type="text" name="href" ng-model="objeto.href" class="form-control form-white" id="href" placeholder="Href">
+                </div>
+              </div>
+
+              <!--<div class="form-group ">
+                <label for="onclick" class="col-xs-3 control-label">
+                    OnClick
+                </label>
+                <div class="col-xs-8">
+                    <input type="text" name="onclick" ng-model="objeto.onclick" class="form-control form-white" id="onclick" placeholder="OnClick">
+                </div>
+              </div>-->
+
+              <div class="form-group ">
+                <label for="fontawesome" class="col-xs-3 control-label">
+                    Icon Font Awesome
+                </label>
+                <div class="col-xs-5">
+                    <input type="text" name="fontawesome" ng-model="objeto.fontawesome" class="form-control form-white" id="fontawesome" placeholder="Icon Font Awesome">
+                </div>
+                <div class="col-xs-1">
+                    <i class="fa {{ objeto.fontawesome }}"></i>
+                </div>
+              </div>
+
+           
+              
+            </form>
+        </div>
+        <div class="modal-footer">
+      
+        	<button class="btn btn-primary" type="submit" ng-disabled="formMenu.$invalid"  ng-click="guardar()" >Grabar</button>&nbsp;
+    
+        	<button class="btn btn-danger" ng-click="cancel()" >Salir</button>
+      	</div>
+    </div>
+</script>

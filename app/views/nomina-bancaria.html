@@ -1,0 +1,48 @@
+<div class="box">
+  <div class="row">
+    <div class="column col-sm-12">
+      <h2> <i class="fa fa-leanpub"> </i> Nómina Bancaria</h2>
+      
+      <div class="col-sm-12" ng-if="accesos.crear && accesos.abierto && datos.length>0" ng-class="{ 'hidden' : !isSelect }">
+        <a ng-click="generarExcel()" href="" class="btn btn-primary pull-right"><i class="fa fa-download"></i> Exportar</a>
+      </div>        
+
+      <div style="margin-top: 60px;" ng-if="cargado">
+
+        <div class="container text-center" ng-if="datos.length<=0">
+          <i>No se han ingresado remuneraciones</i>
+        </div>
+
+        <table class="table table-striped table-hover" ng-if="datos.length>0">
+          <thead>
+            <tr>    
+              <th class="col-sm-1"><input type="checkbox" ng-model="objeto.todos" ng-if="accesos.crear && accesos.abierto" ng-change="selectAll(objeto.todos)" icheck></th>
+              <th class="col-sm-1">RUT</th>
+              <th class="col-sm-2">Nombre</th>              
+              <th class="col-sm-2">Cargo</th>
+              <th class="col-sm-1">Cód Banco</th>
+              <th class="col-sm-1">Banco</th>
+              <th class="col-sm-2">Tipo Cuenta</th>
+              <th class="col-sm-1">N° Cuenta</th>
+              <th class="col-sm-1">Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="dato in datos">
+              <td><input type="checkbox" ng-model="dato.check" ng-if="accesos.crear && accesos.abierto" ng-change="select(dato.check)" icheck></td>
+              <td>{{ dato.rutFormato }}</td>
+              <td>{{ dato.nombreCompleto }}</td>
+              <td>{{ dato.cargo.nombre }}</td>
+              <td>{{ dato.banco.codigo }}</td>
+              <td>{{ dato.banco.nombre }}</td>
+              <td>{{ dato.tipoCuenta.nombre }}</td>
+              <td>{{ dato.numeroCuenta }}</td>
+              <td>${{ dato.sueldoLiquido | currency:'':0 }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>          
+    </div>
+  </div>  
+</div>

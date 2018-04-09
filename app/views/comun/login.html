@@ -1,0 +1,335 @@
+<div>
+    <style type="text/css">
+            @CHARSET "UTF-8";
+            
+            .titulo{
+                font-size:18px;
+                font-weight: bold;
+                font-family: Arial;
+                color:#555;
+                text-align: center;
+            }
+            
+            /*
+            over-ride "Weak" message, show font in dark grey
+            */
+            
+            .progress-bar {
+                color: #333;
+            } 
+            
+            
+            /*
+            Reference:
+            http://www.bootstrapzen.com/item/135/simple-login-form-logo/
+            */
+            
+            *{
+                -webkit-box-sizing: border-box;
+              -moz-box-sizing: border-box;
+                box-sizing: border-box;
+              outline: none;
+            }
+            
+            .login-form .form-control {
+            position: relative;
+            font-size: 16px;
+            height: auto;
+            padding: 10px;
+              padding-left:  30px;
+              border-radius: 0 !important;
+              border:none !important;
+              border-bottom: 1px solid #aaa !important;
+            @include box-sizing(border-box);        
+            &:focus {
+              z-index: 2;
+            }
+
+
+          }
+            
+            body {
+              background-color: #fff;
+                background-image: url('images/login_rrhh.jpg?v=2323');
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+
+            .logoRRHH{
+                display: none;
+            }
+
+            .capacentrar{
+                border-radius:15px;
+
+                background-color: #ffffff;
+                position: absolute;
+                left: 72%;
+                top : 50%;
+
+                width: 330px;
+                height: 350px;            
+                text-align: center;
+                margin-left: -240px;
+                margin-top: -180px;
+                box-shadow: 20px 20px 30px #eeeeee;background:#ffffff;
+            }
+
+            .capacentrarlogo{
+                position: absolute;
+                left: 72%;
+                top : 50%;
+                width: 330px;
+                height: 450px;
+                margin-left: -240px;
+                margin-top: -225px;
+
+                border-radius:15px;
+
+                background-color: #ffffff;
+                text-align: center;
+                box-shadow: 20px 20px 30px #eeeeee;background:#ffffff;
+
+            }
+            .espacios{
+                display: block;
+            }
+
+            @media only screen and (max-width: 720px) {
+                body {
+                    background-color: #fff;
+                    background-image: none;
+                }
+                .logoRRHH{
+                    display: block;
+                }
+                .espacios{
+                    display: none;
+                }
+                .capacentrar{
+                    position: absolute;
+                    left: 50%;
+                    top : 50%;
+                    width: 330px;
+                    height: 350px;
+                    margin-left: -165px;
+                    margin-top: -175px;
+                }
+                .capacentrarlogo{
+                    position: absolute;
+                    left: 50%;
+                    top : 0px;
+                    width: 330px;
+                    height: 500px;
+                    margin-left: -165px;
+                    margin-top: 15px;
+
+                    border-radius:15px;
+
+                    background-color: #ffffff;
+                    text-align: center;
+                    box-shadow: 20px 20px 30px #eeeeee;background:#ffffff;
+
+                }
+            }
+            
+            .login-form {
+              max-width: 280px;
+            }
+            
+            form[role=loginForm] {
+              color: #5d5d5d;
+         
+              padding: 26px;
+              border-radius: 10px;
+              -moz-border-radius: 10px;
+              -webkit-border-radius: 10px;
+                padding: 5px !important;
+            }
+          form[role=loginForm] img {
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 5px;
+          }
+          form[role=loginForm] input,
+          form[role=loginForm] button {
+            font-size: 14px;
+            margin: 10px 0;
+          }
+          form[role=loginForm] > div {
+            text-align: center;
+          }
+              
+            .form-links {
+              text-align: center;
+              margin-top: 1em;
+              margin-bottom: 50px;
+            }
+          .form-links a {
+            color: #fff;
+          }
+            
+            .btn-primary:enabled{
+                background: #d16302 !important;
+            }
+
+            .inner-addon { 
+                position: relative; 
+            }
+
+            /* style icon */
+            .inner-addon .fa {
+              position: absolute;
+              padding: 10px;
+              padding-top: 22px;
+              pointer-events: none;
+              color: rgb(170, 170, 170);
+            }
+
+            /* align icon */
+            .left-addon .fa  { left:  0px;}
+            .right-addon .fa { right: 0px;}
+
+            /* add padding  */
+            .left-addon input  { padding-left:  30px; }
+            .right-addon input { padding-right: 30px; }
+
+            #choice option { color: black; }
+            .empty { color: rgb(170, 170, 170); }
+
+            
+        </style>
+        
+
+        
+
+        <div ng-class="{'capacentrar': !datosEmpresa.logo , 'capacentrarlogo': datosEmpresa.logo}">
+            <center>
+                <img class="logoRRHH" src="images/esystems-rrhh.png" style="max-width:250px;">
+            </center>
+            <center>
+                <div ng-if="datosEmpresa.empresa" style="height:100px; display: table-cell; vertical-align: middle;">
+                    <img ng-src="{{ constantes.URL + 'stories/' + datosEmpresa.logo }}" style="max-height:100px; max-width:200px;" ng-if="datosEmpresa.logo" />
+                    <h3 ng-if="!datosEmpresa.logo">{{ datosEmpresa.empresa }}</h3>
+                </div>
+                <section class="login-form">                
+                    <div  class="text-center" ng-if="datosEmpresa.empresa && !ocultarLoggin">
+                        <h3><b style="color:#ff5500;">PORTAL DE TRABAJADORES</b></h3>
+                    </div>
+                    <div ng-if="!datosEmpresa.empresa">
+                        <p>&nbsp;</p>
+                    </div>
+                    <form name="form" role="loginForm">
+                        <div class="inner-addon left-addon">
+                            <i class="fa fa-user"></i>
+                            <input name="username" ng-model="username" placeholder="Nombre de Usuario" required="" class="form-control" type="text" style="background:none !important;">
+                        </div>
+                        <div class="inner-addon left-addon">
+                            <i class="fa fa-lock"></i>
+                            <input name="password" ng-model="password" class="form-control" style="background:none !important;" id="password" placeholder="Contraseña" required="" type="password">
+                        </div>
+                          
+                        <p>&nbsp;</p>
+                        <div ng-if="!datosEmpresa.empresa">
+                            <p style="line-height:16px;">&nbsp;</p>
+                        </div>
+                        
+                        <p class="espacios">&nbsp;</p>
+                          
+                        <div ng-show="cargando" value="100" type="primary" class="progress-striped active progress">
+                            <div style="width: 100%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (percent < 100 ? percent : 100) + '%'}" aria-valuetext="100%" aria-labelledby="progressbar"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a href="javascript:void(0);" ng-click="formularioRestablecerContrasena();" style="font-weight:bold;">
+                                    Olvido su Contraseña?
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <button disabled="disabled" ng-show="!cargando" ng-click="loginBtn();" ng-disabled="form.$invalid || dataLoading" name="go" class="btn btn-md btn-primary btn-block" style="padding-left:15px;">Ingresar</button>
+                            </div>
+                        </div>
+
+                        
+                            
+                    </form>   
+
+                </section>  
+            </center>
+            <a href="http://www.easysystems.cl" target="_black" style="width: 100%;"><div style="width: 100% !important;">&nbsp;</div></a>
+        </div>
+</div>
+
+<div class="fechaVersion" style="position:absolute; top:100%; margin-top:-30px; width:100%;">
+    <div class="col-sm-12">
+        <div class="col-sm-8">
+            
+        </div>
+        <div class="col-sm-4">
+            <p class="titulo" style="line-height:5px;">
+                <small style="font-size:10px;color:#444;font-weight:bold">Versión: {{ constantes.version }} {{ constantes.versionFecha }}</small>
+            </p>
+        </div>
+    </div>    
+</div>
+
+
+
+<script type="text/ng-template" id="myFormRestablecerPassword.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Reestablecer Contraseña de Acceso</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" name="form" novalidate autocomplete="off" >
+            <div class="panel panel-default">
+                <div class="panel-heading">Datos de Acceso</div>
+                <div class="panel-body">
+
+                    <div class="form-group form-group-md">
+                        <label class="col-sm-4 control-label" for="formGroupInputLarge">Nombre de Usuario:</label>
+                        <div class="col-sm-8">
+                            <input type="text" ng-model="objeto.usuario" class="form-control form-white" ng-minLength="4" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-md">
+                        <label class="col-sm-4 control-label" for="formGroupInputLarge">Email:</label>
+                        <div class="col-sm-8">
+                            <input type="email" ng-model="objeto.email" class="form-control form-white" ng-minLength="4" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-md">
+                        <div><p>&nbsp;</p></div>
+                    </div>
+
+                    <div class="form-group form-group-md">
+                        <div class="col-sm-12" style="text-align:right;">
+                            <div vc-recaptcha key="gestion.key"></div>
+                        </div>
+                    </div>
+
+                    <div ng-show="cargandoRC" value="100" type="primary" class="progress-striped active progress">
+                        <div style="width: 100%;" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-valuetext="100%" aria-labelledby="progressbar"></div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="restablecer()">Reestablecer</button>
+        <button class="btn btn-default" ng-click="cancel()">Cancelar</button>
+    </div>
+</script>
+
+
+<script type="text/javascript">
+    function cargarLoggin(){
+        $('.capacentrar').css('display', 'inline');
+    }
+    setTimeout('cargarLoggin();', 500);
+</script>
+            
+        

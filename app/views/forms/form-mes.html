@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Indicadores Banco Central</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default">
+    <form class="simple-form" id="mesForm" name="mesForm">
+      <div class="panel-heading">Mes de Trabajo</div>
+
+      <div class="panel-body" ng-class="{ 'hidden' : nuevo }">
+        <div class="form-group form-group-md">
+          <div class="col-sm-12">
+            <select class="form-control form-white" ng-model="objeto.mes" ng-change="isMesIngresado(objeto.mes)" ng-options="mes as mes.nombre for mes in mesesDeTrabajo" required> 
+            </select>
+          </div>                            
+        </div>          
+      </div>
+    </form>
+
+
+    <form class="simple-form" id="nuevoMesForm" name="nuevoMesForm">
+      <div class="panel-body" ng-class="{ 'hidden' : !nuevo }">
+        <div class="form-group form-group-md">      
+          <label class="col-sm-12 control-label required">Mes:</label>            
+          <div class="col-sm-12" >
+            <div class="input-group"> 
+              <input type="text" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="mes.mes" is-open="popupFechaMes.opened" datepicker-options="dateOptionsMes" close-text="Close" required />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openFechaMes()">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </span>
+            </div>
+          </div>  
+        </div>
+        <div class="form-group">
+          <button type="button" class="btn btn-sm btn-primary pull-right" ng-hide="nuevoMesForm.$invalid" ng-click="agregar(mes)"><i class="fa fa-plus"> </i> Agregar mes</button>
+        </div>
+      </div>
+    </form>          
+
+  </div>
+  <div class="form-group" style="margin-top: 40px;">
+    <button type="button" class="btn btn-sm btn-primary pull-right" ng-click="nuevoMes()" ng-class="{ 'hidden' : nuevo }"><i class="fa fa-plus"> </i> Nuevo mes</button>
+    <button type="button" class="btn btn-sm btn-warning pull-right" ng-click="nuevoMes()" ng-class="{ 'hidden' : !nuevo }"><i class="fa fa-angle-double-left"> </i> Volver</button>
+  </div>
+  
+</div>
+<div class="modal-footer" style="margin-top: 40px;">
+  <button class="btn btn-primary" type="button" ng-click="guardar(objeto.mes)" ng-disabled="mesForm.$invalid" ng-class="{'hidden':!isIngresado}">Seleccionar</button>
+  <button class="btn btn-primary" type="button" confirmation-click="openDatosMes(objeto.mes, false)" confirmation-needed="{{ noIngresado }}" ng-disabled="mesForm.$invalid" ng-class="{'hidden':isIngresado}">Seleccionar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
+</div>  

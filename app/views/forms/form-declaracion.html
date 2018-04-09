@@ -1,0 +1,128 @@
+<style type="text/css">
+  th{
+    font-size: 10px;
+  }
+</style>
+
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Declaración F1887 {{ anio }}</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default">
+    <div class="panel-heading">RESUMEN {{ anio }}</div>
+
+    <div class="panel-body">   
+
+      <div class="col-sm-12 text-center">
+        <h3>Folio: <b>{{ totales.folio }}</b></h3>
+      </div>
+
+      <div class="col-sm-12 text-center" style="margin-top: 20px;">
+        <h3>Datos de los Informados</h3>
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 40px;">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <th class="col-sm-3 text-center">RUT</th>
+            <th class="col-sm-2 text-center">Renta Total Neta Pagada</th>
+            <th class="col-sm-2 text-center">Impuesto Único Retenido</th>
+            <th class="col-sm-1 text-center">Mayor Retención Solicitada</th>
+            <th class="col-sm-1 text-center">Renta Total Exenta No Gravada</th>
+            <th class="col-sm-1 text-center">Renta Total Exenta</th>
+            <th class="col-sm-1 text-center">Rebaja por Zonas Extremas</th>
+            <th class="col-sm-1 text-center">N° Certificado</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="dato in declaraciones">
+              <td>{{ ::dato.rutFormato }}</td>
+              <td>${{ ::dato.rentaAfecta | currency :"":0 }}</td>
+              <td>${{ ::dato.impuestoUnicoRetenido | currency :"":0 }}</td>
+              <td>${{ ::dato.mayorRetencionImpuesto | currency :"":0 }}</td>
+              <td>${{ ::dato.rentaTotalNoGravada | currency :"":0 }}</td>
+              <td>${{ ::dato.rentaTotalExenta | currency :"":0 }}</td>
+              <td>${{ ::dato.rebajaZonasExtremas | currency :"":0 }}</td>
+              <td>{{ ::dato.folio }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-sm-12 text-center">
+        <h3>Total Montos Anuales sin Actualizar</h3>
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 40px;">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th class="col-sm-2 text-center" rowspan="2">Renta Total Neta Pagada</th>
+              <th class="col-sm-2 text-center" colspan="2">Impuesto Único Retenido</th>              
+              <th class="col-sm-2 text-center" rowspan="2">Renta Total Exenta No Gravada</th>
+              <th class="col-sm-1 text-center" rowspan="2">Renta Total Exenta</th>
+              <th class="col-sm-1 text-center" rowspan="2">Rebaja por Zonas Extremas</th>
+              <th class="col-sm-2 text-center" rowspan="2">Total Remuneración Imponible para Efetos Previsionales Actualizada</th>
+            </tr>
+            <tr>
+              <th class="col-sm-2 text-center">Por Renta Total Neta Pagada durante el Año</th>
+              <th class="col-sm-2 text-center">Por Rentas Accesorias y/o Complementaria</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${{ ::totales.rentaImponible | currency :"":0 }}</td>
+              <td>${{ ::totales.impuestoUnico | currency :"":0 }}</td>
+              <td>$0</td>
+              <td>${{ ::totales.rentaNoGravada | currency :"":0 }}</td>
+              <td>${{ ::totales.rentaTotal | currency :"":0 }}</td>
+              <td>${{ ::totales.rebaja | currency :"":0 }}</td>
+              <td>${{ ::totales.rentaImponibleActualizada | currency :"":0 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-sm-12 text-center">
+        <h3>Cuadro Resumen Final de la Declaración</h3>
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 40px;">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th class="col-sm-2 text-center" colspan="6">Total montos Anuales Actualizados</th>
+              <th class="col-sm-2 text-center" rowspan="2">Total Casos Informados</th>
+            </tr>
+            <tr>
+              <th class="col-sm-2 text-center">Renta Total Neta Pagada</th>
+              <th class="col-sm-2 text-center">Impuesto Único Retenido</th>
+              <th class="col-sm-2 text-center">Retención Solicitada</th>                          
+              <th class="col-sm-2 text-center">Renta Total Exenta y No Gravada</th>
+              <th class="col-sm-1 text-center">Renta Total Exenta</th>
+              <th class="col-sm-1 text-center">Rebaja por Zonas Extremas</th>              
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${{ ::totales.rentaAfecta | currency :"":0 }}</td>
+              <td>${{ ::totales.impuestoUnicoRetenido | currency :"":0 }}</td>
+              <td>${{ ::totales.mayorRetencionImpuesto | currency :"":0 }}</td>
+              <td>${{ ::totales.rentaTotalNoGravada | currency :"":0 }}</td>
+              <td>${{ ::totales.rentaTotalExenta | currency :"":0 }}</td>
+              <td>${{ ::totales.rebajaZonasExtremas | currency :"":0 }}</td>
+              <td>{{ declaraciones.length }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <a class="btn btn-primary" href="{{ constantes.URL }}/stories/{{ nombreExcel }}" download="{{ aliasExcel }}">Descargar Excel</a>
+  <a class="btn btn-primary" href="{{ constantes.URL }}/stories/{{ nombreCSV }}" download="{{ aliasCSV }}">Descargar CSV</a>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button> 
+</div>

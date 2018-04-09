@@ -1,0 +1,72 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Detalle Centralización</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="centralizarForm" name="centralizarForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ datos.comentario }}</div>      
+
+      <div class="panel-body" style="margin-bottom: 40px;">
+        <h2 class="text-center">Comprobante Contable N°{{ datos.numero }}</h2>
+        <div class="col-sm-12">
+          <div class="col-sm-12" style="margin-top: 40px; margin-bottom: 40px;">
+
+            <div class="col-sm-2 col-sm-offset-3">Comentario:</div>
+            <div class="col-sm-7"><b>{{ datos.comentario }}</b></div>
+
+            <div class="col-sm-1">Empresa:</div>
+            <div class="col-sm-2"><b>{{ datos.empresa }}</b></div>          
+            <div class="col-sm-1">Fecha:</div>
+            <div class="col-sm-2"><b>{{ datos.fecha }}</b></div>
+            <div class="col-sm-2">Referencia:</div>
+            <div class="col-sm-2"><b>{{ datos.referencia }}</b></div>
+
+          </div>
+
+          <div style="margin: 0px;">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th class="col-sm-1">Cuenta</th>
+                  <th class="col-sm-2">Comentario</th>
+                  <th class="col-sm-2">Debe</th>
+                  <th class="col-sm-2">Haber</th>
+                  <th class="col-sm-1">Referencia</th>
+                  <th class="col-sm-1">País</th>
+                  <th class="col-sm-1">Canal</th>
+                  <th class="col-sm-2">Tienda</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat='dato in datos.detalles'>
+                  <td>{{ dato.cuenta }}</td>
+                  <td>{{ dato.comentario }}</td>
+                  <td>${{ dato.debe | currency :"":0 }}</td>
+                  <td>${{ dato.haber | currency :"":0}}</td>
+                  <td>{{ dato.referencia }}</td>
+                  <td>{{ dato.pais }}</td>
+                  <td>{{ dato.canal }}</td>
+                  <td>{{ dato.tienda }}</td>
+                </tr>
+                <tr ng-if="false">
+                  <td colspan="2">Totales:</td>
+                  <td>${{ sumaDebe | currency :"":0 }}</td>
+                  <td>${{ sumaHaber | currency :"":0 }}</td>
+                  <td colspan="4"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cerrar</button>
+</div>

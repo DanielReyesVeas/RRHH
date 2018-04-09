@@ -1,0 +1,63 @@
+<div class="box">
+  <div class="row">
+    <div class="column col-sm-12">
+      <h2> <i class="fa fa-usd"> </i> Gratificación</h2>
+
+      <div class="container text-center" ng-if="cargado && datos.length==0" style="margin-top: 80px;">
+        <i>Aún no hay datos</i>
+      </div>
+
+      <div class="panel-body" ng-if="cargado && datos.length>0" style="margin-top: 80px;">  
+
+        <div class="col-sm-8 col-sm-offset-2">
+
+          <table class="table table-striped table-hover table-bordered">
+            <thead>
+              <tr>    
+                <th class="col-sm-2">Año</th>
+                <th class="col-sm-4">Estado</th>
+                <th class="col-sm-2">Mes a Pagar</th>
+                <th class="col-sm-3">Utilidad Líquida</th>
+                <th class="col-sm-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="anio in datos">
+                <td style="font-size: 20px;">{{ anio.nombre }}</td>
+                <td>
+                  <div class="col-sm-12">
+
+                    <div class="col-sm-6">
+                      <p class="text-success" ng-if="anio.pagar"><b>PAGAR</b></p>
+                      <p class="text-danger" ng-if="!anio.pagar"><b>NO PAGAR</b></p>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <label class="switch switch-green">
+                        <input id="pagar" class="switch-input" ng-click="pagar(anio)" ng-model="anio.pagar" type="checkbox">
+                        <span class="switch-label"></span>
+                        <span class="switch-handle"></span>
+                      </label>
+                    </div>
+                  </div>
+                </td>
+                <td><span ng-if="anio.pagar">{{ anio.mes }}</span>            
+                <td><span ng-if="anio.pagar">${{ anio.utilidad | currency:'':0 }}</span>            
+                <td>
+                    <span ng-if="anio.pagar">
+                    <a href="" ng-click="editar(anio);" uib-tooltip-html="toolTipEdicion(anio.nombre)">
+                      <i class="fa fa-pencil"></i>
+                    </a>
+                  </span> 
+                </td>           
+              </tr>
+            </tbody>
+          </table>
+
+        </div>         
+
+      </div>
+        
+    </div>
+  </div>  
+</div>

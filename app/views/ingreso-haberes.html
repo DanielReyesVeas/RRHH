@@ -1,0 +1,178 @@
+<div class="box">
+  <div class="row">
+    <h2><i class="fa fa-bar-chart"></i> Ingreso de Haberes</h2>
+    
+    <div class="col-sm-12" ng-if="cargado">
+
+      <div class="col-sm-12">
+        <a ng-click="reporteTrabajadores()" href="" class="btn btn-primary btn-xs pull-right"><i class="fa fa-user"></i> Reporte Trabajador</a>
+      </div>
+
+      <div class="col-sm-12" style="margin-bottom: 10px;">        
+        <div class="btn-group pull-right">
+          <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> <i class="fa fa-table"></i>
+          Planilla de Importación Masiva <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-sm">
+            <li><a target="_self" id="descargarPlanillaHaberes" href="{{ constantes.URL }}trabajadores/planilla-masivo/descargar-excel/haberes" download="planilla.xls"><i class="fa fa-download"></i> Descargar planilla</a></li>
+            <li><a href="javascript:void(0);" ng-click="importarPlanillaMasivo()"><i class="fa fa-upload"></i> Subir</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-sm-12" ng-if="accesos.crear && accesos.abierto && false">
+        <a target="_self" id="descargarPlanillaHaberes" href="{{ constantes.URL }}trabajadores/planilla/descargar-excel/haberes" download="planillas.xls" class="btn btn-primary btn-xs pull-right"><i class="fa fa-download"></i> Descargar planilla</a>
+      </div> 
+
+      <ul class="nav nav-tabs form-tabs" style="margin-bottom: 40px;">
+        <li class="active"><a data-toggle="tab" ng-click="openTab('imponibles')">Imponibles</a></li>
+        <li class=""> <a data-toggle="tab" ng-click="openTab('noImponibles')">No Imponibles</a></li>
+      </ul>
+
+      <div class="row" ng-if="tabImponibles">
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-class="{ 'hidden' : imponibles.length==0}">
+          <div class="form-group">
+            <label for="orden" class="control-label col-md-1">
+              Ordenar:
+            </label>
+            <div class="col-md-3">
+              <select ng-model="orden" id="orden" ng-init="orden='codigo'" class="form-control form-white" ng-change="reverse = false">
+                <option value="codigo">Código</option>
+                <option value="nombre">Nombre</option>
+              </select>
+            </div>
+            <div class="col-md-1">
+              <a ng-click="reverse=!reverse" ng-init="reverse=false" href="">
+                <i ng-class="{ 'hidden' : reverse }" class="fa fa-arrow-down"></i>
+                <i ng-class="{ 'hidden' : !reverse }" class="fa fa-arrow-up"></i>
+              </a>
+            </div>
+            <label for="filtro" class="col-md-1 control-label">Filtrar:</label>
+            <div class="col-md-4">
+              <input id="filtro" type="text" class="form-control form-white form-white" ng-model="filtro">
+            </div>
+          </div>
+        </div> 
+
+        <div class="text-center" ng-if="imponibles.length==0" style="margin-top: 40px;">
+          <i>No se existen haberes imponibles</i>
+        </div>
+        
+        <div class="col-sm-12" style="margin-top: 40px;">
+          <table class="table table-striped table-hover" style="margin-bottom: 120px;" ng-if="imponibles.length>0">
+            <thead>
+              <tr>
+                <th class="col-sm-1">#</th>
+                <th class="col-sm-3">Código</th>
+                <th class="col-sm-5">Nombre</th>
+                <th class="col-sm-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat='dato in imponibles | orderObjectBy:orden : reverse | filter : filtro'>
+                <td>{{ $index + 1 }}</td>
+                <td>#{{ dato.codigo }}</td>
+                <td>{{ dato.nombre }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Ingresar <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-sm" role="menu">
+                      <li ng-if="accesos.crear && accesos.abierto">
+                        <a href="" ng-click="openIngresoHaber( dato );"><span class="fa fa-user" aria-hidden="true"></span> Individual</a>
+                      </li>
+                      <li ng-if="accesos.crear && accesos.abierto">
+                        <a href="javascript:void(0);" ng-click="ingresoSeccion( dato );"><span class="fa fa-users" aria-hidden="true"></span>Masivo (por sección)</a>
+                      </li>
+                      <!--<li ng-if="accesos.crear && accesos.abierto">
+                        <a href="javascript:void(0);" ng-click="importarPlanilla(dato);"><span class="fa fa-upload" aria-hidden="true"></span> Masivo (planilla.xls)</a>
+                      </li>-->
+                      <li ng-if="accesos.crear && accesos.abierto" role="separator" class="divider"></li>
+                      <li>
+                        <a href="javascript:void(0);" ng-click="reporte( dato );"><span class="fa fa-archive" aria-hidden="true"></span> Reporte</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row" ng-if="tabNoImponibles">
+
+        <div class="col-sm-12" style="margin-top: 20px;" ng-class="{ 'hidden' : noImponibles.length==0}">        
+          <div class="form-group">
+            <label for="orden2" class="control-label col-md-1">
+              Ordenar:
+            </label>
+            <div class="col-md-3">
+              <select ng-model="orden2" id="orden2" ng-init="orden2='codigo'" class="form-control form-white" ng-change="reverse2 = false">
+                <option value="codigo">Código</option>
+                <option value="nombre">Nombre</option>
+              </select>
+            </div>
+            <div class="col-md-1">
+              <a ng-click="reverse2=!reverse2" ng-init="reverse2=false" href="">
+                <i ng-class="{ 'hidden' : reverse2 }" class="fa fa-arrow-down"></i>
+                <i ng-class="{ 'hidden' : !reverse2 }" class="fa fa-arrow-up"></i></a>
+            </div>
+            <label for="filtro2" class="col-md-1 control-label" >Filtrar:</label>
+            <div class="col-md-4">
+              <input id="filtro2" type="text"  class="form-control form-white form-white" ng-model="filtro2">
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center" ng-if="noImponibles.length==0" style="margin-top: 40px;">
+          <i>No se existen haberes no imponibles</i>
+        </div>
+      
+        <div class="col-sm-12" style="margin-top: 40px;">
+          <table class="table table-striped table-hover" style="margin-bottom: 120px;" ng-if="noImponibles.length>0">
+            <thead>
+              <tr>
+                <th class="col-sm-1">#</th>
+                <th class="col-sm-3">Código</th>
+                <th class="col-sm-5">Nombre</th>
+                <th class="col-sm-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat='dato in noImponibles | orderObjectBy:orden2 : reverse2 | filter : filtro2'>
+                <td>{{ $index + 1 }}</td>
+                <td>#{{ dato.codigo }}</td>
+                <td>{{ dato.nombre }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Ingresar <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-sm" role="menu">
+                      <li>
+                        <a href="javascript:void(0);" ng-click="openIngresoHaber( dato );"><span class="fa fa-user" aria-hidden="true"></span> Individual</a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0);" ng-click="ingresoSeccion( dato );"><span class="fa fa-users" aria-hidden="true"></span> Masivo (por sección)</a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0);" ng-click="importarPlanilla(dato);"><span class="fa fa-upload" aria-hidden="true"></span> Masivo (planilla.xls)</a>
+                      </li>
+                      <li role="separator" class="divider"></li>
+                      <li>
+                        <a href="javascript:void(0);" ng-click="reporte( dato );"><span class="fa fa-archive" aria-hidden="true"></span> Reporte</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>   
+
+      </div>
+
+    </div>
+  </div>
+</div>

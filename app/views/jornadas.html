@@ -1,0 +1,39 @@
+<div class="box">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2><i class="fa fa-hourglass-end"></i> Tipos de Jornada Laboral</h2>
+    <div class="row">
+      <div class="col-sm-12">
+        <a ng-click="openForm()" ng-if="accesos.crear" href="" class="btn btn-primary btn-xs pull-right"><i class="fa fa-plus"></i> Nueva Jornada</a>
+      </div>
+      <div class="col-sm-12">
+        <a ng-click="gestionar()" href="" ng-if="accesos.ver" class="btn btn-primary btn-xs pull-right"><i class="fa fa-cog"></i> Tramos Horas Extra</a>
+      </div>
+
+      <div class="container text-center" ng-if="datos.length<=0 && cargado" style="margin-top: 80px;" >
+        <i>No se han ingresado Jornadas</i>
+      </div>
+      
+      <table class="table table-striped table-hover" ng-if="datos.length>0" style="margin-top: 80px;">
+        <thead>
+          <th class="col-sm-1">#</th>
+          <th class="col-sm-4">Jornada</th>
+          <th class="col-sm-2">N° de Horas</th>
+          <th class="col-sm-4">Tramo Horas Extra</th>
+          <th class="col-sm-1"></th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="jornada in datos">
+            <td>{{ $index + 1 }}</td>
+            <td>{{ jornada.nombre }}</td>
+            <td>{{ jornada.numeroHoras }}</td>
+            <td>{{ jornada.tramoHoraExtra.factor }}</td>
+            <td class="text-right">
+              <a href="" ng-if="accesos.editar" ng-click="editar(jornada)"><i class="fa fa-pencil"></i></a>
+              <a href="" ng-if="accesos.eliminar" confirmation-click="eliminar(jornada)" confirmation-needed="El Tipo de Jornada <b>{{jornada.nombre}}</b> será eliminado del sistema. ¿Desea continuar?"><i class="fa fa-trash"></i></a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

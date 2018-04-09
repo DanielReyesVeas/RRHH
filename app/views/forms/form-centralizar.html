@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <button type="button" class="close" confirmation-needed="No se ha realizado la Centralización de <b>{{ mesActual }}</b>. <br />¿Desea salir?" confirmation-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Centralización</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="centralizarForm" name="centralizarForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ mesActual }}</div>
+
+      <div class="panel-body" style="margin-bottom: 40px;">
+
+        <div class="text-center" ng-class="{ 'hidden' : preCentralizado }" style="margin-top: 40px;">
+          <a class="btn btn-primary" href="" ng-if="empresa.cme" ng-click="preCentralizar()">Simular Centralización</a>
+          <a class="btn btn-primary" href="" ng-if="!empresa.cme" ng-click="preCentralizar()">Centralizar</a>
+        </div>
+
+        <div class="col-sm-12" ng-if="preCentralizado">
+          <h2 class="text-center" ng-if="empresa.cme">Vista Previa Centralización</h2>
+          <h2 class="text-center" ng-if="!empresa.cme">{{ comprobante.Comentario }}</h2>
+
+          <div class="col-sm-12" style="margin-top: 40px; margin-bottom: 40px;" ng-if="empresa.rut=='965799206'">
+
+            <div class="col-sm-2 col-sm-offset-3">Comentario:</div>
+            <div class="col-sm-7"><b>{{ comprobante.Comentario }}</b></div>
+
+            <div class="col-sm-1">Empresa:</div>
+            <div class="col-sm-2"><b>{{ comprobante.Empresa }}</b></div>          
+            <div class="col-sm-1">Fecha:</div>
+            <div class="col-sm-2"><b>{{ comprobante.Fecha }}</b></div>
+            <div class="col-sm-2">Referencia:</div>
+            <div class="col-sm-2"><b>{{ comprobante.Referencia }}</b></div>
+
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 40px; margin-bottom: 40px;" ng-if="empresa.rut!='965799206'">
+
+            <div class="col-sm-2">Empresa:</div>
+            <div class="col-sm-4"><b>{{ empresa.empresa }}</b></div>          
+            <div class="col-sm-2">Fecha:</div>
+            <div class="col-sm-4"><b>{{ comprobante.Fecha }}</b></div>
+
+          </div>
+
+          <div style="margin: 0px;">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th class="col-sm-1">Cuenta</th>
+                  <th class="col-sm-2">Comentario</th>
+                  <th class="col-sm-2">Debe</th>
+                  <th class="col-sm-2">Haber</th>
+                  <th class="col-sm-1">Referencia</th>
+                  <th class="col-sm-1" ng-repeat="colum in columnasCC">{{ colum }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat='dato in comprobante.Detalle'>
+                  <td>{{ dato.Cuenta }}</td>
+                  <td>{{ dato.Comentario }}</td>
+                  <td>${{ dato.Debe | currency :"":0 }}</td>
+                  <td>${{ dato.Haber | currency :"":0}}</td>
+                  <td>{{ dato.Referencia }}</td>
+                  <td  ng-repeat="colum in columnasCC">
+                      {{  dato['CentroCosto' + ($index+1)] }}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2"><b>Totales:</b></td>
+                  <td><b>${{ sumaDebe | currency :"":0 }}</b></td>
+                  <td><b>${{ sumaHaber | currency :"":0 }}</b></td>
+                  <td colspan="{{ columnasCC.length + 1 }}"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <div ng-if="erroresCentralizacion.length">
+            
+            <h2 class="text-center text-danger">Errores en la Centralización</h2>
+
+            <div style="margin: 0px; height:350px; overflow-y:scroll">
+
+                <table class="table table-bordered table-condensed">
+                    <tr ng-repeat='value in erroresCentralizacion'>
+                        <td>{{ value }}</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+
+      </div>      
+
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-if="empresa.cme" confirmation-needed="Se enviará la información a CME del mes de <b>{{ mesActual }}</b>. <br />¿Desea continuar?" confirmation-click="centralizar()" ng-disabled="!preCentralizado || comprobante.Detalle.length==0">Enviar a CME</button>
+  <button class="btn btn-warning" type="button" ng-if="empresa.cme" confirmation-needed="No se ha realizado la Centralización de <b>{{ mesActual }}</b>. <br />¿Desea salir?" confirmation-click="$dismiss()">Cancelar</button>
+
+  <a class="btn btn-primary" ng-if="!empresa.cme && preCentralizado" href="{{ constantes.URL }}/stories/{{ nombreDocumentoExcel }}" download="{{ nombreDocumentoExcel }}">Descargar Excel</a>
+  <a class="btn btn-primary" ng-if="!empresa.cme && preCentralizado" href="{{ constantes.URL }}/stories/{{ nombreDocumentoPDF }}" download="{{ nombreDocumentoPDF }}">Descargar PDF</a>
+  <button class="btn btn-warning" type="button" ng-if="!empresa.cme" ng-click="$dismiss()">Cerrar</button>  
+</div>

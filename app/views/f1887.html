@@ -1,0 +1,174 @@
+<div class="box">
+  <div class="row">
+    <h2> <i class="fa fa-table"> </i> F 1887</h2>
+    
+    <div class="col-sm-12" ng-if="cargado">      
+
+      <div class="col-sm-12 text-center" style="margin-top: 30px;">
+        <label class="col-sm-1 control-label">Año:</label>
+        <div class="col-sm-2">
+          <select class="form-control form-white" ng-model="objeto.anio" ng-options="anio as anio.nombre for anio in anios" ng-change="selectAnio()"> 
+          </select>
+        </div> 
+      </div>
+
+      <div class="col-sm-12" ng-if="accesos.crear && accesos.abierto">
+        <div class="btn-group pull-right">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false" ng-disabled="!objeto.anio.isDiciembre || datos.length==0">Declaración F1887 <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-sm" role="menu" ng-if="isDeclaracion">
+            <li>
+              <a href="javascript:void(0);" ng-click="generarArchivo();"><i class="fa fa-refresh"> </i>Volver a Generar</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a href="javascript:void(0);" ng-click="verDeclaracion();"><i class="fa fa-search"> </i>Ver</a>
+            </li>
+          </ul>
+          <ul class="dropdown-menu dropdown-menu-sm" role="menu" ng-if="!isDeclaracion">
+            <li>
+              <a href="javascript:void(0);" ng-click="generarArchivo();"><i class="fa fa-print"> </i>Generar</a>
+            </li>
+          </ul>
+        </div>
+      </div> 
+
+      <div class="col-sm-12" style="margin-top: 20px;" ng-if="objeto.anio.isDiciembre">
+
+        <div class="col-sm-12 text-center">
+          <h3>Trabajadores Pendientes</h3>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 50px;" ng-class="{ 'hidden' : trabajadores[0].length==0}">        
+          <div class="form-group">
+            <label for="orden" class="control-label col-md-1">
+              Ordenar:
+            </label>
+            <div class="col-md-3">
+              <select ng-model="orden" id="orden" ng-init="orden='apellidos'" class="form-control form-white" ng-change="reverse = false">
+                <option value="rut">RUT</option>
+                <option value="apellidos">Nombre</option>
+                <option value="cargoOrden">Cargo</option>
+              </select>
+            </div>
+            <div class="col-md-1">
+              <a ng-click="reverse=!reverse" ng-init="reverse=false" href="">
+                <i ng-class="{ 'hidden' : reverse }" class="fa fa-arrow-down"></i>
+                <i ng-class="{ 'hidden' : !reverse }" class="fa fa-arrow-up"></i></a>
+            </div>
+            <label for="filtro" class="col-md-1 control-label" >Filtrar:</label>
+            <div class="col-md-4">
+              <input id="filtro" type="text"  class="form-control form-white form-white" ng-model="filtro">
+            </div>
+            <div class="col-md-2">
+              <a href="" confirmation-click="generar(0, null, true, false)" confirmation-needed="{{ mensaje[0] }} ¿Desea continuar?" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect[0] }"><i class="fa fa-print"></i> Generar</a>  
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12 text-center" ng-if="trabajadores[0].length<=0" style="margin-top: 60px;">
+          <i>No hay trabajadores pendientes</i>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 40px;">
+          <table class="table table-striped table-hover" ng-if="trabajadores[0].length>0">
+            <thead>
+              <tr>    
+                <th class="col-sm-1"><input type="checkbox" ng-model="objeto.todos[0]" ng-if="accesos.crear && accesos.abierto" ng-change="selectAll(0,objeto.todos[0])" icheck></th>
+                <th class="col-sm-2">RUT</th>
+                <th class="col-sm-5">Nombre</th>              
+                <th class="col-sm-3">Cargo</th>
+                <th class="col-sm-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in trabajadores[0] | orderObjectBy:orden : reverse | filter : filtro">
+                <td><input type="checkbox" ng-model="dato.check" ng-change="select($index, 0)" ng-if="accesos.crear && accesos.abierto" icheck></td>
+                <td>{{ ::dato.rutFormato }}</td>
+                <td>{{ ::dato.nombreCompleto }}</td>
+                <td>{{ ::dato.cargo }}</td>
+                <td>
+                  <a href="javascript:void(0);" ng-if="accesos.crear && accesos.abierto" confirmation-click="generar(0, dato, false, false)" confirmation-needed="Se generará la Declaración F1887 de <b>{{ dato.nombreCompleto }}</b>. ¿Desea continuar?" ng-class="{ 'hidden' : isSelect[0] }"><i class="fa fa-print"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>  
+
+        <div class="col-sm-12 text-center" style="margin-top: 60px;">
+          <h3>Trabajadores con Declaración</h3>
+        </div>
+
+        <div class="col-sm-12 text-center" ng-if="trabajadores[1].length<=0" style="margin-top: 60px; margin-bottom: 150px;">
+          <i>No se han generado Declaraciones</i>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 50px;" ng-class="{ 'hidden' : trabajadores[1].length==0}">        
+          <div class="form-group">
+            <label for="orden2" class="control-label col-md-1">
+              Ordenar:
+            </label>
+            <div class="col-md-3">
+              <select ng-model="orden2" id="orden2" ng-init="orden2='apellidos'" class="form-control form-white" ng-change="reverse2 = false">
+                <option value="rut">RUT</option>
+                <option value="apellidos">Nombre</option>
+                <option value="cargoOrden">Cargo</option>
+              </select>
+            </div>
+            <div class="col-md-1">
+              <a ng-click="reverse2=!reverse2" ng-init="reverse2=false" href="">
+                <i ng-class="{ 'hidden' : reverse2 }" class="fa fa-arrow-down"></i>
+                <i ng-class="{ 'hidden' : !reverse2 }" class="fa fa-arrow-up"></i></a>
+            </div>
+            <label for="filtro2" class="col-md-1 control-label" >Filtrar:</label>
+            <div class="col-md-4">
+              <input id="filtro2" type="text"  class="form-control form-white form-white" ng-model="filtro2">
+            </div>
+          </div>
+        </div>      
+
+        <div class="col-sm-12" style="margin-top: 40px; margin-bottom: 150px;">
+          <table class="table table-striped table-hover" ng-if="trabajadores[1].length>0">
+            <thead>
+              <tr>    
+                <th class="col-sm-1"><input type="checkbox" ng-model="objeto.todos[1]" ng-if="accesos.crear && accesos.abierto" ng-change="selectAll(1, objeto.todos[1])" icheck></th>
+                <th class="col-sm-2">RUT</th>
+                <th class="col-sm-4">Nombre</th>              
+                <th class="col-sm-3">Cargo</th>
+                <th class="col-sm-1">Folio</th>
+                <th class="col-sm-1">
+                  <div ng-class="{ 'hidden' : !isSelect[1] }">
+                    <a href="javascript:void(0);" confirmation-click="generar(1, null, true, true)" confirmation-needed="{{ mensaje[1] }} ¿Desea continuar?"><i class="fa fa-refresh fa-2x"></i></a>
+                    <a href="javascript:void(0);" ng-if="accesos.eliminar" confirmation-click="eliminar(null, true)" confirmation-needed="{{ mensaje[2] }} ¿Desea continuar?"><i class="fa fa-trash fa-2x"></i></a>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dato in trabajadores[1] | orderObjectBy:orden2 : reverse2 | filter : filtro2">
+                <td><input type="checkbox" ng-model="dato.check" ng-change="select($index, 1)" ng-if="accesos.crear && accesos.abierto" icheck></td>
+                <td>{{ ::dato.rutFormato }}</td>
+                <td>{{ ::dato.nombreCompleto }}</td>
+                <td>{{ ::dato.cargo }}</td>
+                <td>{{ ::dato.declaracion.folio }}</td>
+                <td>
+                  <div ng-class="{ 'hidden' : isSelect[1] }">
+                    <a href="{{ constantes.URL }}/stories/{{ dato.declaracion.nombre }}" download="{{ Declaracion }}"><i class="fa fa-download"></i></a>
+                    <a href="javascript:void(0);" ng-if="accesos.crear && accesos.editar && accesos.abierto" confirmation-click="generar(1, dato, false, true)" confirmation-needed="Se generará una nueva Declaración F1887 de <b>{{ dato.nombreCompleto }}</b>, sobreescribiendo la anterior. ¿Desea continuar?"><i class="fa fa-refresh"></i></a>
+                    <a href="javascript:void(0);" ng-if="accesos.eliminar && accesos.abierto" confirmation-click="eliminar(dato.declaracion, false)" confirmation-needed="Se eliminará la Declaración F1887 de <b>{{ dato.nombreCompleto }}</b>. ¿Desea continuar?"><i class="fa fa-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div> 
+
+      </div>   
+
+      <div class="col-sm-12 text-center" ng-if="!objeto.anio.isDiciembre" style="margin-top: 40px;">
+        <h3>La Emisión de la Declaracion F1887 sólo está disponible en el mes de Diciembre</h3>
+      </div>
+
+    </div>
+  </div>  
+</div>

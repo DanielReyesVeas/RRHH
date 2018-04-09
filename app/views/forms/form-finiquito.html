@@ -1,0 +1,161 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Cálculo de Finiquito</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="finiquitoForm" name="finiquitoForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{ trabajador.nombreCompleto }}</div>
+
+      <div class="panel-body">
+          
+        <div style="margin: 20px;">
+
+          <div class="col-sm-12" style="margin: 20px;">
+            <div class="form-group form-group-md">
+
+              <label class="col-sm-3 control-label required" style="padding: 0px;">Plantilla de Finiquito:</label>
+              <div class="col-sm-6">
+                <select class="form-control form-white" ng-model="finiquito.plantillaFiniquito" ng-options="plantilla as plantilla.nombre for plantilla in plantillasFiniquitos" ng-change="seleccionarPlantilla()" required> 
+                </select>
+              </div>              
+              
+            </div>
+          </div>
+
+          <div class="text-center" ng-if="clausulas.length<=0 && cargado" style="margin: 50px;">
+            <i>No se han ingresado Cláusulas de Finiquito</i>
+          </div>
+
+          <div class="col-sm-12" style="margin: 20px;" ng-if="clausulas.length>0 && cargado">
+            <div class="form-group form-group-md">
+              <label class="col-sm-3 control-label required" style="padding: 0px;">Cláusulas Finiquito:</label>
+              <div class="col-sm-6">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th class="col-sm-3"><input type="checkbox" ng-model="clausulas.todos" ng-change="selectAllClausulas()" icheck></th>
+                      <th class="col-sm-9">Nombre</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="dato in clausulas">
+                      <td><input type="checkbox" ng-model="dato.check" ng-change="selectClausulas(dato.check)" icheck></td>
+                      <td>{{ dato.nombre }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-1 pull-right" ng-show="!isOtro">
+            <button class="btn btn-sm btn-primary" type="button" ng-click="agregarOtro()"><i class="fa fa-plus"></i> Otro</button>
+          </div>
+
+          <table class="table table-striped table-hover table-bordered">
+            <thead>
+              <tr>
+                <th class="col-sm-1"><input type="checkbox" ng-if="mesAviso.mesAviso || vacaciones.vacaciones || indemnizacion.indemnizacion" ng-model="objeto.todos" ng-change="selectAll()" icheck ></th>
+                <th class="col-sm-4" colspan="2">Concepto</th>
+                <th class="col-sm-4">Detalle</th>
+                <th class="col-sm-3">Monto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-if="mesAviso.mesAviso">
+                <td rowspan="{{ rows }}">
+                  <input type="checkbox" ng-model="mesAviso.check" ng-change="selectMesAviso(mesAviso.check)" icheck>
+                </td>
+                <td rowspan="{{ rows }}">Mes de Aviso <p ng-if="sueldoVariable">(Promedio últimos {{ meses }} meses)</p></td>
+                <tr ng-if="mesAviso.mesAviso" ng-repeat="det in detalle">
+                  <td>
+                    <input type="checkbox" ng-model="det.imponibles.rentaImponible.check" ng-change="select(det.imponibles.rentaImponible.check)" icheck>
+                  </td>
+                  <td>Sueldo {{ det.mes }}</td>
+                  <td>${{ det.imponibles.rentaImponible.monto | currency:'':0 }}<a href="" class="pull-right" ng-click="detalles(det, 'Imponibles', $index)"><i class="fa fa-search"></i></a></td>
+                </tr>
+                <tr ng-if="sueldoVariable && mesAviso.mesAviso">
+                  <td></td>
+                  <td><b>Promedio:</b></td>
+                  <td><b>${{ imponibles.suma | currency:'':0 }}</b></td>
+                </tr>
+
+                <tr ng-if="noImponibles.noImponibles && mesAviso.mesAviso">
+                  <td>
+                    <input type="checkbox" ng-model="noImponibles.check" ng-change="select(noImponibles.check)" icheck>
+                  </td>
+                  <td><span ng-if="sueldoVariable">Promedio </span>No Imponibles</td>
+                  <td>${{ noImponibles.suma | currency:'':0 }}<a href="" class="pull-right" ng-click="detalles(detalle,'No Imponibles')"><i class="fa fa-search"></i></a></td>
+                </tr>
+              </tr>              
+              <tr ng-if="indemnizacion.indemnizacion">
+                <td>
+                  <input type="checkbox" ng-model="indemnizacion.check" ng-change="select(indemnizacion.check)" icheck>
+                </td>
+                <td colspan="2">Indemnización:</td>
+                <td>{{ indemnizacion.anios }} años de Servicio</td>
+                <td>
+                  <span ng-if="!indemnizacion.edit">${{ indemnizacion.monto | currency:'':0 }}               
+                    <a href="" class="pull-right" ng-click="edit(indemnizacion)"><i class="fa fa-pencil"></i></a>
+                  </span>   
+                  <span ng-if="indemnizacion.edit">
+                    $<input type="number" ng-if="indemnizacion.edit" ng-model="indemnizacion.monto" style="width: 90px" />
+                    <a href="" class="pull-right" ng-click="edit(indemnizacion)"><i class="fa fa-check"></i></a>
+                  </span>
+                </td>
+              </tr>         
+              <tr ng-if="vacaciones.vacaciones">
+                <td>
+                  <input type="checkbox" ng-model="vacaciones.check" ng-change="select(vacaciones.check)" icheck>
+                </td>
+                <td colspan="2">Vacaciones Disponibles:</td>
+                <td>{{ vacaciones.dias }} <span ng-if="vacaciones.dias!=1"> días</span><span ng-if="vacaciones.dias==1"> día</span></td>
+                <td>
+                  <span ng-if="!vacaciones.edit">${{ vacaciones.monto | currency:'':0 }}               
+                    <a href="" class="pull-right" ng-click="edit(vacaciones)"><i class="fa fa-pencil"></i></a>
+                  </span>   
+                  <span ng-if="vacaciones.edit">
+                    $<input type="number" ng-if="vacaciones.edit" ng-model="vacaciones.monto" style="width: 90px" />
+                    <a href="" class="pull-right" ng-click="edit(vacaciones)"><i class="fa fa-check"></i></a>
+                  </span>
+                </td>
+              </tr>        
+              <tr ng-repeat-start="otro in otros track by $index" ng-init="otroIndex = $index">
+                <td rowspan="{{otro.row}}">
+                  <input type="checkbox" ng-model="otro.check" ng-change="selectOtro(otroIndex)" icheck>
+                </td>
+                <td rowspan="{{otro.row}}">{{ otro.nombre }}
+                  <span class="text-right">
+                    <a href="" ng-click="editar(otro)"><i class="fa fa-pencil"></i></a>
+                    <a href="" confirmation-click="eliminar(otro)" confirmation-needed="El ítem {{ otro.nombre }} será eliminado. ¿Desea continuar?"><i class="fa fa-trash"></i></a>
+                  </span>
+                </td>
+                <tr ng-repeat-end ng-repeat="detalle in otro.detalles">
+                  <td>
+                    <input type="checkbox" ng-model="detalle.check" ng-change="selectDetalle(otroIndex, detalle.check)" icheck>
+                  </td>
+                  <td>{{ detalle.nombre }}</td>
+                  <td>${{ detalle.monto | currency:'':0 }}</td>
+                </tr>
+              </tr>
+              <tr>
+                <td></td>
+                <td colspan="3"><b>Total:</b></td>
+                <td><b>${{ suma | currency:'':0 }}</b></td>
+              </tr>       
+            </tbody>
+          </table>          
+
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="finiquitar(finiquito, trabajador)" ng-disabled="finiquitoForm.$invalid" ng-if="isEdit">Modificar Finiquito</button>
+  <button class="btn btn-primary" type="button" ng-click="generar(finiquito, trabajador)" ng-disabled="finiquitoForm.$invalid" ng-if="!isEdit">Generar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>

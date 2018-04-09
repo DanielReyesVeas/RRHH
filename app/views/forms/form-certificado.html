@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-if="isIngresar" confirmation-click="$dismiss()" confirmation-needed="El Certificado no ha sido ingresado, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <button type="button" class="close" ng-if="!isIngresar" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Certificado</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{ certificado.nombre }}</div>
+    <div class="panel-body"> 
+
+      <div class="col-sm-12" style="margin-bottom: 120px;">
+        <textarea ui-tinymce="tinymceOptions" ng-model="certificado.cuerpo"></textarea>
+      </div>        
+
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-2 text-center" style="border-bottom: 1px solid black;"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-2 text-center">{{ trabajador.nombreCompleto }}</div>
+      </div>
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-sm-3 col-sm-offset-2 text-center">c.c. carpeta personal</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-2 text-center">Inspección del Trabajo</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer" style="margin-top: 20px;">
+  <button class="btn btn-primary" type="button" confirmation-click="ingresar()" confirmation-needed="El Certificado será ingresado al trabajador <b>{{ trabajador.nombreCompleto }}</b>. ¿Desea continuar?" ng-if="!isDetail">Ingresar</button>
+  <button class="btn btn-warning" type="button" confirmation-click="$dismiss()" confirmation-needed="El Certificado no ha sido ingresado, los datos se perderán al cerrar esta ventana. ¿Desea continuar?" ng-if="!isDetail">Cerrar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()" ng-if="isDetail">Cerrar</button>
+</div>

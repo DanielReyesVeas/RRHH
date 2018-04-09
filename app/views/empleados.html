@@ -1,0 +1,89 @@
+<div class="box">
+  <div class="row">
+    <h2> <i class="fa fa-address-book"> </i> Acceso Empleados</h2>
+
+    <div class="col-md-12" ng-if="cargado">       
+      
+      <div class="form-group" style="margin-top: 40px;" ng-class="{ 'hidden' : datos.length==0}">
+        <label for="orden" class="control-label col-md-1">
+          Ordenar:
+        </label>
+        <div class="col-md-2">
+          <select ng-model="orden" id="orden" ng-init="orden='apellidos'" class="form-control form-white" ng-change="reverse = false">
+            <option value="rut">RUT</option>
+            <option value="apellidos">Nombre</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+        <div class="col-md-1">
+          <a ng-click="reverse=!reverse" ng-init="reverse=false" href="">
+            <i ng-class="{ 'hidden' : reverse }" class="fa fa-arrow-down"></i>
+            <i ng-class="{ 'hidden' : !reverse }" class="fa fa-arrow-up"></i></a>
+        </div>
+        <label for="filtro" class="col-md-1 control-label" >Filtrar:</label>
+        <div class="col-md-4">
+          <input id="filtro" type="text"  class="form-control form-white form-white" ng-model="filtro">
+        </div>
+        <div class="col-md-3">
+          <a href="" ng-click="advertencia()" ng-if="!todosInactivos && !todosActivos && !todosNuevos" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect }" uib-tooltip-html="toolTipActivarDesactivarMasivo()"><i class="fa fa-power-off"></i> </a> 
+
+          <a href="" confirmation-click="activarMasivo()" ng-if="todosInactivos" confirmation-needed="Se activarán los {{ count }} usuarios seleccionados. ¿Desea Continuar?" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect }" uib-tooltip-html="toolTipActivarMasivo()"><i class="fa fa-power-off"></i> </a>  
+
+          <a href="" confirmation-click="desactivarMasivo()" ng-if="todosActivos" confirmation-needed="Se desactivarán los {{ count }} usuarios seleccionados. ¿Desea Continuar?" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect }" uib-tooltip-html="toolTipDesactivarMasivo()"><i class="fa fa-power-off"></i> </a>
+
+
+          <a href="" ng-click="editarMasivo()" ng-if="todosActivos" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect }" uib-tooltip-html="toolTipEditarMasivo()"><i class="fa fa-pencil"></i> </a>  
+
+          <a href="" confirmation-click="editarMasivo(true)" confirmation-needed="Existen usuarios activos e inactivos, sólo se editarán los permisos de los {{ countActivos }} usuarios activos. <br />¿Desea Continuar?" ng-if="!todosActivos && !todosInactivos && !todosNuevos" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect }" uib-tooltip-html="toolTipEditarMasivo()"><i class="fa fa-pencil"></i> </a>
+
+
+          <a href="" ng-click="generarClaveMasivo()"  ng-if="todosActivos" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect }" uib-tooltip-html="toolTipGenerarClaveMasivo()"><i class="fa fa-key"></i> </a>
+
+          <a href="" confirmation-click="generarClaveMasivo(true)" confirmation-needed="Existen usuarios activos e inactivos, sólo se editarán los permisos de los {{ countActivos }} usuarios activos. <br />¿Desea Continuar?" ng-if="!todosActivos && !todosInactivos && !todosNuevos" class="btn btn-primary pull-right" ng-class="{ 'hidden' : !isSelect }" uib-tooltip-html="toolTipGenerarClaveMasivo()"><i class="fa fa-key"></i> </a>
+        </div>
+      </div>
+
+      <div class="col-md-12" style="margin-top: 40px;">
+        <table class="table table-striped table-hover">
+          <thead>
+          <tr>
+            <th class="col-sm-1"><input type="checkbox" ng-model="objeto.todos" ng-if="accesos.crear && accesos.abierto" ng-change="selectAll()" icheck></th>
+            <th class="col-sm-1">RUT</th>
+            <th class="col-sm-4">Nombre</th>
+            <th class="col-sm-2">Usuario</th>
+            <th class="col-sm-2">Email</th>
+            <th class="col-sm-1">Activo</th>
+            <th class="col-sm-1">Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="dato in datos | orderBy:orden : reverse | filter : filtro">
+              <td><input type="checkbox" ng-model="dato.check" ng-change="select($index)" ng-if="accesos.crear && accesos.abierto" icheck></td>
+              <td>{{ dato.rutFormato }}</td>
+              <td>{{ dato.nombreCompleto }}</td>
+              <td>{{ dato.username }}</td>
+              <td>{{ dato.email }}</td>
+              <td>
+                <label class="switch switch-green" ng-class="{ 'hidden' : isSelect }">
+                  <input class="switch-input" ng-model="dato.activo" type="checkbox" ng-change="activar(dato)">
+                  <span class="switch-label" data-on="SI" data-off="NO"></span>
+                  <span class="switch-handle"></span>
+                </label>
+              </td>
+              <td>
+                <a class="btn-acciones btn btn-default" ng-class="{ 'hidden' : isSelect }" href="javascript:void(0);" ng-if="dato.activo" ng-click="editar(dato);" uib-tooltip-html="toolTipEdicion(dato.nombreCompleto)">
+                  <i class="fa fa-pencil"></i>
+                </a>
+                <a class="btn-acciones btn btn-default" ng-class="{ 'hidden' : isSelect }" href="javascript:void(0);" ng-if="dato.activo" ng-click="generarClave(dato);" uib-tooltip-html="toolTipPassword(dato.nombreCompleto)">
+                  <i class="fa fa-key"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>      
+
+    </div>
+
+  </div>
+</div>

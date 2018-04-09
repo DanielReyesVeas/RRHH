@@ -1,0 +1,55 @@
+<div class="modal-header">
+  <button type="button" class="close" confirmation-click="$dismiss()" confirmation-needed="La Plantilla de Finiquito no ha sido guardada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body centered">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{ encabezado }}</div>
+    <div class="panel-body">          
+
+      <div class="col-sm-12" style="margin: 20px;">
+        <div class="form-group form-group-md required">
+          <label class="col-sm-2 col-sm-offset-1 control-label">Nombre:</label>
+          <div class="col-sm-7">
+            <input ng-model="plantillaFiniquito.nombre" class="form-control form-white" type="text" placeholder="ingrese el nombre de la Plantilla de Finiquito" required >
+          </div>
+        </div>
+      </div>
+
+      <div class="container col-sm-12 text-center" style="margin-bottom: 150px;">
+        <textarea ui-tinymce="tinymceOptions" ng-model="plantillaFiniquito.cuerpo"></textarea>
+      </div>        
+
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-1" style="border-bottom: 1px solid black;"></div>
+        <div class="col-sm-4 col-sm-offset-2" style="border-bottom: 1px solid black;"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-1 text-center">NOMBRE TRABAJADOR</div>
+        <div class="col-sm-4 col-sm-offset-2 text-center">{{ empresa.empresa | uppercase }}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-1 text-center">RUT TRABAJADOR</div>
+        <div class="col-sm-4 col-sm-offset-2 text-center">{{ empresa.rutFormato }}</div>
+      </div>
+
+      <div class="row" style="margin-top: 80px;">
+        <div class="row">
+          <div class="col-sm-4 pull-right" style="font-size: 10px"><i>Finiquito-{{ empresa.empresa }} Rut: {{ empresa.rutFormato }}</i></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 pull-right" style="font-size: 10px"><i>{{ empresa.direccion }} - {{ empresa.comuna.nombre }}</i></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pull-right" style="padding: 6px;">
+      <button class="btn btn-primary" type="button" confirmation-click="guardar(plantillaFiniquito)" confirmation-needed="La Plantilla de Finiquito ha sido modificada. ¿Desea conservar los cambios?">Guardar Cambios</button>
+      <button class="btn btn-warning" type="button" confirmation-click="$dismiss()" confirmation-needed="La Plantilla de Finiquito no ha sido guardada, los datos se perderán al cerrar esta ventana. ¿Desea continuar?">Cerrar</button>
+    </div>
+  </div>
+</div>

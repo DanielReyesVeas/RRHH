@@ -1,0 +1,82 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="horasExtraForm" name="horasExtraForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{trabajador.nombreCompleto}}</div>
+
+      <div class="panel-body">
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md">
+            <label class="col-sm-3 control-label required">Fecha:</label>            
+            <div class="col-sm-5" >
+              <div class="input-group"> 
+                <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="horaExtra.fecha" is-open="popupFecha.opened" datepicker-options="dateOptions" close-text="Close" ng-required />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="openFecha()">
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </span>
+              </div>
+            </div>            
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md ">          
+            <label class="col-sm-3 control-label required">Cantidad:</label>
+            <div class="col-sm-4">
+              <div class="input-group">
+                <input class="form-control form-white" min="0.01" ng-model="horaExtra.cantidad" aria-describedby="basic-addon1" required>
+                <span class="input-group-addon" id="basic-addon1">horas</span>
+              </div> 
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md required">          
+            <label class="col-sm-3 control-label">Factor:</label>
+            <div class="col-sm-6">
+              <select class="form-control form-white" ng-model="horaExtra.tramo" ng-options="tram as tram.factor for tram in tramos" required> 
+                <option value="">-- Seleccione un Tramo --</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md ">          
+            <label class="col-sm-3 control-label">Jornada:</label>
+            <div class="col-sm-5">
+              <select class="form-control form-white" ng-model="horaExtra.jornada" ng-options="jor.nombre as jor.nombre for jor in jornadas" required>  
+              </select>
+            </div>
+          </div>
+        </div>-->
+
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <div class="form-group form-group-md ">          
+            <label class="col-sm-3 control-label">Observación:</label>
+              <div class="col-sm-8">
+                <textarea ng-model="horaExtra.observacion" class="form-control form-white" placeholder="ingrese una observación" rows="6" cols="6"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+     
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="guardar(horaExtra, trabajador)" ng-disabled="horasExtraForm.$invalid" ng-show="!isEdit">Ingresar Hora Extra</button>
+  <button class="btn btn-primary" type="button" ng-click="guardar(horaExtra, trabajador)" ng-disabled="horasExtraForm.$invalid" ng-show="isEdit">Modificar Hora Extra</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>

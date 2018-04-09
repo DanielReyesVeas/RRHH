@@ -1,0 +1,121 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Importación de Haberes mediante Archivo Excel</h3>
+</div>
+<div class="modal-body">
+  <form class="form-horizontal" name="form">
+    <div class="panel panel-default">
+      <div class="panel-heading">Gestión de archivo</div>
+      <div class="panel-body">
+        <div class="form-group form-group-md">
+          <div class="col-sm-12" style="font-style: italic;">
+            <strong>
+            PASO 1: </strong> Seleccione el archivo que contiene el o los haberes con el formato de la planilla. El sistema realizará una pre-carga de los datos que serán importados para que usted pueda confirmar el Proceso de Importación.
+          </div>
+        </div>
+        <div class="form-group form-group-md">
+          <div class="col-sm-5">
+            <button ng-model-rejected="rejFiles" ngf-select ngf-pattern="'.xls,.csv,.xlsx'" ng-model="files" class="btn btn-primary" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,text/comma-separated-values, text/csv, application/csv">Seleccionar Archivo</button>
+          </div>
+        </div>
+        <div class="col-sm-12" ng-show="dynamic > 0">
+          <uib-progressbar class="progress-striped active" value="dynamic" type="success"><strong>{{ dynamic + "%" }}</strong></uib-progressbar>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-warning" ng-if="datos.length > 0">
+      <div class="panel-heading">Confirmación de Datos</div>
+      <div class="panel-body">
+        <div class="form-group form-group-md">
+          <div class="col-sm-12" style="font-style: italic;">
+            <strong>
+            PASO 2:</strong> Confirme los datos que se presentan a continuación. de lo contrario vuelva a seleccionar un nuevo archivo en el PASO 1
+          </div>
+        </div>
+        <div class="col-sm-10 text-center" style="margin-top: 20px;">
+          <h3>#{{ haber.codigo }} <b>{{ haber.nombre }}</b></h3>
+        </div>
+        <div class="col-sm-12" style="margin-top: 20px;">
+          <table class="table table-striped">
+            <tr>
+              <th>RUT</th>
+              <th>Nombre</th>
+              <th>Temporalidad</th>
+              <th>Monto</th>
+            </tr>
+            <tr ng-repeat="dato in datos">
+              <td>{{ dato.trabajador.rutFormato }}</td>
+              <td>{{ dato.trabajador.nombreCompleto }}</td>
+              <td>{{ dato.trabajador.haber.temporalidad }}<span ng-if="!dato.trabajador.haber.temporalidad">{{ mesActual }}</span></td>
+              <td>
+                <div ng-show="dato.trabajador.haber.moneda==='$'">${{ dato.trabajador.haber.monto | currency:'':0 }}</div>                 
+                <div ng-show="dato.trabajador.haber.moneda!=='$'">{{ dato.trabajador.haber.monto }} {{ dato.trabajador.haber.moneda }}</div>                 
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn btn-success pull-right" confirmation-click="confirmarDatos();" confirmation-needed="Los Haberes serán importados al sistema. ¿Desea Continuar?">Confirmar Carga de Datos</button>
+      </div>
+    </div>
+
+    <div class="panel panel-danger" ng-if="listaErrores.length > 0">
+      <div class="panel-heading">Errores en archivo</div>
+      <div class="panel-body" style="height: 300px; overflow-y: scroll;">
+        <div class="form-group form-group-md">
+          <div class="col-sm-12" style="font-style: italic;">                            
+          El proceso de importación no puede continuar debido a errores que se detallan a continuación
+          </div>
+        </div>
+        <table class="table table-striped">
+          <tr>
+            <th>Error</th>
+          </tr>
+          <tr ng-repeat="fila in listaErrores track by $index">
+            <td>{{ fila }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel panel-success" ng-if="resumen.length > 0">
+      <div class="panel-heading">Resumen de la Importación</div>
+      <div class="panel-body">
+        <div class="form-group form-group-md">
+          <div class="col-sm-12" style="font-style: italic;">
+          El proceso de importación se realizó correctamente. El resumen de la importación se detalle a continuación
+          </div>
+        </div>
+        <table class="table table-striped">
+          <tr>
+            <th>Hoja</th>
+            <th>Glosa</th>
+            <th>Tipo</th>
+            <th>Fecha</th>
+            <th>Numero</th>
+            <th>Asientos</th>
+            <th>Debe</th>
+            <th>Haber</th>
+          </tr>
+          <tr ng-repeat="fila in resumen">
+            <td>{{ fila.hoja }}</td>
+            <td>{{ fila.glosa }}</td>
+            <td>{{ fila.tipo }}</td>
+            <td>{{ fila.fecha }}</td>
+            <td>{{ fila.numero }}</td>
+            <td>{{ fila.asientos }}</td>
+            <td>{{ fila.debe }}</td>
+            <td>{{ fila.haber }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-warning" ng-click="$dismiss()">Cancelar</button>
+</div>

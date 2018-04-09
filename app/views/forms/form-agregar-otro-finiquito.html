@@ -1,0 +1,95 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">Adicional Finiquito</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{ trabajador.nombreCompleto }}</div>
+
+    <div class="panel-body">
+
+      <div class="col-sm-12" style="margin-top: 30px;">
+        <div class="form-group form-group-md col-sm-12">
+          <label class="col-sm-2 col-sm-offset-2 control-label">Concepto:</label>
+          <div class="col-sm-6">
+            <input ng-model="otro.nombre" class="form-control form-white" type="text" ng-change="check()" placeholder="ingrese un nombre" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12" style="margin-top: 20px;" ng-class="{ 'hidden' : otro.detalles.length <= 0 }">
+        <fieldset>
+          <legend>Detalles</legend>
+          <div class="col-sm-12" ng-repeat="detalle in otro.detalles">
+            <div class="form-group form-group-md">
+              <label class="col-sm-4 control-label">{{ detalle.nombre }}:</label>
+              <div class="col-sm-2">
+                <label class="form-white" ng-show="detalle.moneda==='$'">${{ detalle.monto | currency:'':0  }}</label>                 
+                <label class="form-white" ng-show="detalle.moneda!=='$'">{{ detalle.monto }} {{ detalle.moneda }}</label>              
+              </div>
+              <div class="text-right" ng-class="{ 'hidden' : isOtro }">
+                <a href="" ng-click="editar(detalle)"><i class="fa fa-pencil"></i></a>
+                <a href="" confirmation-click="eliminar(detalle)" confirmation-needed="El Detalle {{ detalle.nombre }} será eliminado. ¿Desea continuar?"><i class="fa fa-trash"></i></a>
+              </div>
+            </div>  
+          </div>
+          <div class="col-sm-12">
+            <div class="col-sm-4"><b>Total:</b></div>
+            <div class="col-sm-4"><b>${{ suma | currency:'':0 }}</b></div>
+          </div>
+        </fieldset>
+      </div>
+
+
+      <div class="col-sm-3 pull-right" ng-class="{ 'hidden' : isOtro }" style="margin-top: 20px;">
+        <button class="btn btn-sm btn-primary" type="button" ng-click="agregarDetalle()"><i class="fa fa-plus"></i> Detalle</button>
+      </div>
+
+
+      <div class="col-sm-12" style="margin-top: 20px;" ng-class="{ 'hidden' : !isOtro }">
+        <fieldset>
+          <button type="button" class="close" ng-click="agregarDetalle()">
+            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+          </button>
+          <legend>{{ titulo }}</legend>
+
+          <form class="simple-form" id="detalleForm" name="detalleForm">
+
+            <div class="form-group form-group-md col-sm-12 required">
+              <label class="col-sm-2 control-label">Nombre:</label>
+              <div class="col-sm-6">
+                <input ng-model="detalle.nombre" class="form-control form-white" type="text" placeholder="ingrese un nombre" required />
+              </div>
+              <div class="col-sm-3 pull-right">
+                <button class="btn btn-sm btn-primary" ng-class="{ 'hidden' : isEdit }" type="button" ng-disabled="detalleForm.$invalid" ng-click="guardar(detalle)"><i class="fa fa-plus"></i> Agregar</button>
+                <button class="btn btn-sm btn-primary" ng-class="{ 'hidden' : !isEdit }" type="button" ng-disabled="detalleForm.$invalid" ng-click="update(detalle)"><i class="fa fa-pencil"></i> Modificar</button>
+              </div>
+            </div>
+
+            <div class="form-group form-group-md col-sm-12 required">
+              <label class="col-sm-2 control-label">Monto:</label>
+              <div class="col-sm-10">
+                <div class="col-sm-3" style="padding: 0px;">
+                  <select class="form-control form-white" ng-model="detalle.moneda" ng-change="cambiarMoneda()" ng-options="mon.nombre as mon.nombre for mon in monedas"> 
+                  </select>
+                </div>                            
+                <div class="col-sm-7" style="padding: 0px;">
+                  <input ng-model="detalle.monto" class="form-control form-white" type="text" ng-change="calcularPesos()" placeholder="ingrese el monto en {{ monedaActual }}" required />
+                </div>                
+              </div>
+            </div> 
+
+          </form>
+
+        </fieldset>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-if="!isEdit" ng-click="agregarConcepto(otro)" ng-disabled="!isOK">Agregar</button>
+  <button class="btn btn-primary" type="button" ng-if="isEdit" ng-click="guardar(otro)" ng-disabled="!isOK">Modificar</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button>
+</div>

@@ -1,0 +1,202 @@
+<div class="header">
+    <h2>Administración de <b>Perfiles de Usuario</b></h2>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-md-12">        
+        <div class="form-group">
+            <label for="orden" class="control-label col-md-1">
+                Ordenar:
+            </label>
+            <div class="col-md-3">
+                <select ng-model="orden" id="orden" class="form-control form-white">
+                    <option value="perfil">Perfil</option>
+                    <option value="descripcion">Descripción</option>
+                    <option value="asignaciones">Asignaciones</option>
+                </select>
+            </div>
+            <label for="filtro" class="col-md-1 control-label" >Filtrar:</label>
+            <div class="col-md-4">
+              <input id="filtro" type="text"  class="form-control form-white" ng-model="filtro">
+            </div>
+            <div class="col-md-3" style="text-align:right; padding-right:0px;">
+                <button class="btn btn-primary btn-md" ng-click="open({});">
+                    <i class="fa fa-plus"></i> Nuevo
+                </button>
+
+                <div class="btn-group">
+	            	<button class="btn btn-dark btn-md" type="button" data-toggle="dropdown" aria-expanded="false">
+	                    <i class="fa fa-wrench"></i> Herramientas <span class="caret"></span>
+	                </button>
+	                <ul class="dropdown-menu dropdown-menu-sm" role="menu">
+	                    <li>
+	                        <a ng-href="{{ constantes.URL + 'perfiles/exportar/excel/2007' }}">
+	                            <i class="fa fa-file-excel-o"></i> Exportar a Excel 2007 (.xlsx)
+	                        </a>
+	                    </li>
+	                    <li>
+	                        <a ng-href="{{ constantes.URL + 'perfiles/exportar/excel/97' }}">
+	                            <i class="fa fa-file-excel-o"></i> Exportar a Excel 97/2003 (.xls)
+	                        </a>
+	                    </li>
+	                    <li>
+	                        <a ng-href="{{ constantes.URL + 'perfiles/exportar/pdf' }}" >
+	                            <i class="fa fa-file-pdf-o"></i> Exportar PDF (.pdf)
+	                        </a>
+	                    </li>
+	                    <li>
+	                        <a href="javascript:void(0);">
+	                            <i class="fa fa-print"></i> Imprimir
+	                        </a>
+	                    </li>
+	                </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+		    <table class="table table-striped table-nonfluid">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="col-sm-2">Perfil</th>
+                        <th class="col-sm-7">Descripción</th>
+                        <th class="col-sm-1">Asignaciones</th>
+                        <th class="col-sm-2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  	<tr ng-repeat='dato in datos | filter:filtro | orderBy : orden'>
+             			<td class="text-right">{{ $index + 1 }}</td>
+             			<td>{{ dato.perfil }}</td>
+             			<td>{{ dato.descripcion }}</td>
+                        <td>{{ dato.asignaciones }}</td>
+             			<td>
+             		        <a class="btn-acciones btn btn-default" href="javascript:void(0);" ng-click="editar(dato);" uib-tooltip-html="toolTipEdicion(dato.perfil)">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <a class="btn-acciones btn btn-danger" href="javascript:void(0);" confirmation-click="eliminar( dato );" confirmation-needed="El Perfil: <b>{{ dato.perfil }}</b> será eliminado.Desea continuar?">
+                                <i class="fa fa-remove"></i>
+                            </a>
+             			</td>
+             		</tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="myModalPerfil.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Mantención de Perfiles de Usuarios</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" role="form" name="formMenu" ng-submit="opcionMenuSave()" novalidate>
+          
+          <div class="form-group " ng-class="{ 'has-error' : formMenu.perfil.$invalid && !formMenu.perfil.$pristine }">
+            <label for="perfil" class="col-xs-3 control-label">
+                Perfil:
+            </label>
+            <div class="col-xs-8">
+                <input type="text" name="perfil" ng-model="objeto.perfil" class="form-control form-white" id="perfil" placeholder="Nombre del Perfil" required>
+                <div ng-show="formMenu.perfil.$invalid && !formMenu.perfil.$pristine" class="fa fa-remove form-control-feedback" aria-hidden="true"></div>
+                <span ng-show="formMenu.perfil.$invalid && !formMenu.perfil.$pristine" class="help-block">Obligatorio!.</span>
+            </div>
+          </div>
+
+          <div class="form-group " ng-class="{ 'has-error' : formMenu.descripcion.$invalid && !formMenu.descripcion.$pristine }">
+            <label for="descripcion" class="col-xs-3 control-label">
+                Descripción:
+            </label>
+            <div class="col-xs-8">
+                <textarea name="descripcion" ng-model="objeto.descripcion" class="form-control form-white" id="descripcion" placeholder="Descripción del Perfil" required></textarea>
+                <div ng-show="formMenu.descripcion.$invalid && !formMenu.descripcion.$pristine" class="fa fa-remove form-control-feedback" aria-hidden="true"></div>
+                <span ng-show="formMenu.descripcion.$invalid && !formMenu.descripcion.$pristine" class="help-block">Obligatorio!.</span>
+            </div>
+          </div>
+
+          <div class="form-group ">
+                <label for="perfil" class="col-xs-3 control-label">
+                    Empresa:
+                </label>
+                <div class="col-xs-7">
+                    <select ng-model="objeto.empresa" ng-options="emp as emp.razonSocial for emp in empresas" class="form-control form-white">
+                        <option value='{{ empresaGlobal }}'>{{ empresaGlobal.razonSocial }}</option>
+                    </select>
+                    <span ng-if="objeto.empresa.nRut=='global'" class="text-primary"><strong>
+                        Esta configuración permite copiar los accesos seleccionados para Todas las Empresas.
+                        </strong>
+                    </span>
+                </div>
+            </div>
+
+          <div class="panel panel-default" style="margin-top:20px;">
+                <div class="panel-heading">Accesos del Perfil </div>
+                
+                <table class="table" align="center">
+                    <thead>
+                                <tr>
+                                    <th rowspan="2">#</th>
+                                    <th rowspan="2" class="col-xs-3">Menú</th>
+                                    <th rowspan="2" class="col-xs-5">Descripción</th>
+                                    <th colspan="4" class="col-xs-4" style="text-align:center;">{{  objeto.empresa.razonSocial }}</th>
+                                </tr>
+                                <tr>
+                                    <th ng-if="!objeto.empresa.nRut" colspan="4">&nbsp;</th>
+                                    <th ng-if="objeto.empresa.nRut" class="col-xs-1" style="text-align:center;">
+                                        Crear<br/>
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['crear']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'crear' );" icheck  />
+                                    </th>
+                                    <th ng-if="objeto.empresa.nRut" class="col-xs-1" style="text-align:center;">
+                                        Editar<br/>
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['editar']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'editar' );" icheck  />
+                                    </th>
+                                    <th ng-if="objeto.empresa.nRut" class="col-xs-1" style="text-align:center;">
+                                        Eliminar<br/>
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['eliminar']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'eliminar' );" icheck  />
+                                    </th>
+                                    <th ng-if="objeto.empresa.nRut" class="col-xs-1" style="text-align:center;">
+                                        Ver<br/>
+                                        <input type="checkbox" ng-model="checkmasterEmpresa[ objeto.empresa.nRut ]['ver']" ng-change="marcarTodosEmpresa( objeto.empresa.nRut, 'ver' );" icheck  />
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                <tr ng-repeat="opc in menu.datos" ng-class="{ 'bg-warning' : opc.tipo == 1 }">
+                                    <td style="text-align: right; font-size: 12px; width: 20px !important; color:#000 !important;">
+                                        {{ opc.posicion }}
+                                    </td>
+                                    <td style="font-weight: bold; font-size: 12px; color:#000 !important;">
+                                        {{ opc.menu }}
+                                    </td>
+                                    <td style="color:#000 !important; font-size: 12px;">
+                                        {{ opc.title }}
+                                    </td>                  
+                                    <td style="text-align: center;color:#fff !important;">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['crear']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'crear')" icheck />
+                                    </td>
+
+                                    <td style="text-align: center;color:#fff !important;">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['editar']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'editar')" icheck />
+                                    </td>
+
+                                    <td style="text-align: center;color:#fff !important;">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['eliminar']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'eliminar')" icheck />
+                                    </td>
+
+                                    <td style="text-align: center;color:#fff !important;">
+                                        <input type="checkbox" ng-model="checklistEmpresa[ objeto.empresa.nRut ][ opc.sid ]['ver']" ng-change="seleccionarOpcion(objeto.empresa.nRut, opc.sid, 'ver')" icheck />
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                </table> 
+              </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()" >Salir</button>
+        <button class="btn btn-primary" type="submit" ng-disabled="formMenu.$invalid || !comprobarSeleccion()"  ng-click="grabar(false)" >Grabar</button>
+    </div>
+</script>

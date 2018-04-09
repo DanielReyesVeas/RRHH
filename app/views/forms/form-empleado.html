@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()">
+    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title">Permisos Acceso Empleados</h3>
+</div>
+<div class="modal-body">
+
+  <div class="panel panel-default" style="margin-top:20px;">
+    <div class="panel-heading">{{ titulo }} </div>
+
+    <div class="panel-body"> 
+      <div class="col-sm-12" style="margin-top: 20px;">
+        <table class="table" align="center">
+          <thead>
+            <tr>
+              <th class="col-xs-1">#</th>
+              <th class="col-xs-4">Menú</th>
+              <th class="col-xs-6">Descripción</th>
+              <th class="col-xs-1">
+                <input type="checkbox" ng-model="select.all" ng-change="selectAll()" icheck />
+              </th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr ng-repeat="opc in usuario.accesos">
+              <td style="font-size: 12px; width: 20px !important; color:#000 !important;">
+                {{ $index + 1 }}
+              </td>
+              <td style="font-weight: bold; font-size: 12px; color:#000 !important;">
+                {{ opc.menu }}
+              </td>
+              <td style="color:#000 !important; font-size: 12px;">
+                {{ opc.title }}
+              </td>                  
+              <td style="color:#fff !important;">
+                <input type="checkbox" ng-model="opc.check" ng-change="seleccionarOpcion(opc)" icheck />
+              </td>
+            </tr>
+          </tbody>
+        </table> 
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-if="!isActivar" type="submit" ng-click="guardar()" >Guardar</button>
+  <button class="btn btn-primary" ng-if="isActivar" type="submit" ng-click="activar()" >Activar</button>
+  <button class="btn btn-warning" ng-click="close()" >Cancelar</button>
+</div>

@@ -1,0 +1,119 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h3 class="modal-title">{{ titulo }}</h3>
+</div>
+<div class="modal-body">
+  <form class="simple-form" id="prestamoForm" name="prestamoForm">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{trabajador.nombreCompleto}}</div>
+
+      <div class="panel-body">
+          
+        <fieldset>
+          <legend>Datos Préstamo</legend>
+          <!--<div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md">
+              <label class="col-sm-3 control-label required">Fecha:</label>            
+              <div class="col-sm-5" >
+                <div class="input-group"> 
+                  <input type="text" class="form-control form-white" uib-datepicker-popup="dd-MM-yyyy" regularFecha ng-model="prestamo.fecha" is-open="popupFecha.opened" datepicker-options="dateOptions" close-text="Close" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openFecha()">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>            
+            </div>
+          </div>-->
+          
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md ">          
+              <label class="col-sm-3 control-label required">Glosa:</label>
+              <div class="col-sm-5">
+                <input type="text" ng-model="prestamo.glosa" class="form-control form-white" placeholder="ingrese la glosa" >
+              </div>
+              <label class="col-sm-4">
+                <input type="checkbox" ng-model="prestamo.prestamoCaja" value="true" icheck> Préstamo Caja
+              </label>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md ">          
+              <label class="col-sm-3 control-label required">Nombre para Liquidación:</label>
+              <div class="col-sm-5">
+                <input type="text" ng-model="prestamo.nombreLiquidacion" class="form-control form-white" placeholder="ingrese un nombre" >
+              </div>
+              <!--<label class="col-sm-4">
+                <input type="checkbox" ng-model="prestamo.leassingCaja" value="true" icheck> Leassing Caja
+              </label>-->
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Monto y Cuotas</legend>
+
+          <div class="col-sm-12" style="margin-top: 20px;">
+            <div class="form-group form-group-md ">          
+              <label class="col-sm-2 control-label required">Monto:</label>
+              <div class="col-sm-10" style="padding: 0px;">
+                <div class="col-sm-4">
+                  <select class="form-control form-white" ng-model="prestamo.moneda" ng-options="mon.nombre as mon.nombre for mon in monedas" ng-change="cambiarMoneda()" > 
+                  </select>
+                </div>                            
+                <div class="col-sm-6" style="padding-left: 0px;">
+                  <input ng-model="prestamo.monto" class="form-control form-white" type="text" placeholder="ingrese el monto en {{ monedaActual }}" >
+                </div>                   
+                <div class="col-sm-2" ng-show="prestamo.monto && prestamo.moneda!=='$'">
+                  ${{ convertir(prestamo.monto, prestamo.moneda) | currency:'':0  }}
+                </div>       
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12" style="margin-top: 20px; margin-bottom: 20px;">
+            <div class="form-group form-group-md ">          
+              <label class="col-sm-2 control-label required">Cuotas:</label>
+              <div class="col-sm-3">
+                <input type="number" class="form-control form-white" min="1" ng-model="prestamo.cuotas" aria-describedby="basic-addon1" required>
+              </div>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>Primera Cuota</legend>
+
+            <div class="col-sm-12" style="margin-top: 20px;">
+              <div class="form-group form-group-md">
+                <label class="col-sm-3 control-label required">Mes:</label>            
+                <div class="col-sm-6" >
+                  <div class="input-group"> 
+                    <input type="text" class="form-control form-white" uib-datepicker-popup="MM-yyyy" regularFecha ng-model="prestamo.primeraCuota" is-open="popupFechaMes.opened" datepicker-options="dateOptionsMes" close-text="Close" required />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="openFechaMes()">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-3 pull-right">
+                  <button class="btn btn-sm btn-primary" type="button" ng-disabled="prestamoForm.$invalid" ng-click="detalleCuotas()">Detalle cuotas</button>
+                </div>             
+              </div>
+            </div>  
+
+          </fieldset>
+
+        </fieldset>     
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="guardar(prestamo, trabajador)" ng-disabled="prestamoForm.$invalid" ng-show="!isEdit">Ingresar Préstamo</button>
+  <button class="btn btn-primary" type="button" ng-click="guardar(prestamo, trabajador)" ng-disabled="prestamoForm.$invalid" ng-show="isEdit">Modificar Préstamo</button>
+  <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancelar</button> 
+</div>
